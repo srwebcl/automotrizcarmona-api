@@ -8,10 +8,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // En producción puedes establecer reglas como: return str_ends_with($this->email, '@automotrizcarmona.cl');
+        // Por ahora dejaremos entrar a cualquier administrador creado por consola
+        return true;
+    }
 
     /**
      * The attributes that are mass assignable.
