@@ -65,7 +65,7 @@ class VehicleVersionResource extends Resource
                         TextInput::make('consumption_mixed')->label('Rendimiento Mixto (km/l)'),
                         TextInput::make('electric_range')->label('Autonomía (km)'),
                         TextInput::make('airbags')->label('Airbags')->numeric(),
-                        Forms\Components\Toggle::make('iva_included')
+                        Forms\Components\Toggle::make('includes_iva')
                             ->label('Precio Incluye IVA')
                             ->default(true)
                             ->onIcon('heroicon-m-check')
@@ -148,11 +148,11 @@ class VehicleVersionResource extends Resource
                     ->type('number')
                     ->sortable()
                     ->extraAttributes(['style' => 'text-align: right; min-width: 120px;', 'class' => 'font-bold text-green-600']),
-                TextColumn::make('engine')
+                TextColumn::make('motor')
                     ->label('Motor')
                     ->toggleable()
                     ->sortable(),
-                TextColumn::make('power_hp')
+                TextColumn::make('power')
                     ->label('Potencia')
                     ->toggleable()
                     ->sortable(),

@@ -11,7 +11,7 @@ class VehicleVersion extends Model
         'vehicle_model_id', 'name', 'transmission', 'traction', 'fuel', 
         'motor', 'power', 'torque', 'consumption_mixed', 'electric_range',
         'list_price', 'finance_price', 'brand_bonus', 'finance_bonus',
-        'iva_included', 'airbags'
+        'includes_iva', 'airbags'
     ];
 
     protected $casts = [
@@ -19,7 +19,7 @@ class VehicleVersion extends Model
         'finance_price' => 'integer',
         'brand_bonus' => 'integer',
         'finance_bonus' => 'integer',
-        'iva_included' => 'boolean',
+        'includes_iva' => 'boolean',
         'airbags' => 'integer',
     ];
 
