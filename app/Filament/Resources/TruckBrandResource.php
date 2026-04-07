@@ -36,10 +36,14 @@ class TruckBrandResource extends Resource
                     ->required()
                     ->unique(TruckBrand::class, 'slug', ignoreRecord: true)
                     ->maxLength(255),
-                Forms\Components\TextInput::make('logo_url')
-                    ->label('URL del Logo')
-                    ->helperText('Usa la URL de Cloudflare si ya la tienes.')
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('logo_url')
+                    ->label('Logo de la Marca')
+                    ->disk('r2')
+                    ->directory('truck-brands')
+                    ->visibility('public')
+                    ->image()
+                    ->imageEditor()
+                    ->helperText('Sube el logo de la marca directamente a Cloudflare R2.'),
                 Forms\Components\Toggle::make('is_active')
                     ->label('¿Está activa?')
                     ->default(true)
@@ -55,8 +59,9 @@ class TruckBrandResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('logo_url')
-                    ->searchable(),
+                Tables\Columns\ImageColumn::make('logo_url')
+                    ->label('Logo')
+                    ->disk('r2'),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')

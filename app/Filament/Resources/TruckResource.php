@@ -42,10 +42,14 @@ class TruckResource extends Resource
                     ->required()
                     ->unique(Truck::class, 'slug', ignoreRecord: true)
                     ->maxLength(255),
-                Forms\Components\TextInput::make('image_url')
-                    ->label('URL de la Imagen (Cloudflare)')
-                    ->helperText('Pega aquí la URL de la miniatura del camión.')
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('image_url')
+                    ->label('Miniatura del Camión')
+                    ->disk('r2')
+                    ->directory('trucks')
+                    ->visibility('public')
+                    ->image()
+                    ->imageEditor()
+                    ->helperText('Sube la miniatura del camión directamente a Cloudflare R2.'),
                 Forms\Components\Toggle::make('is_active')
                     ->label('¿Está activo?')
                     ->default(true)
@@ -64,7 +68,9 @@ class TruckResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image_url'),
+                Tables\Columns\ImageColumn::make('image_url')
+                    ->label('Imagen')
+                    ->disk('r2'),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
