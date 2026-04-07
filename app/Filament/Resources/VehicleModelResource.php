@@ -170,7 +170,7 @@ class VehicleModelResource extends Resource
                                             ->label('Precio Lista')
                                             ->numeric()
                                             ->prefix('$'),
-                                        TextInput::make('bonus_price')
+                                        TextInput::make('finance_bonus')
                                             ->label('Bono Financiamiento')
                                             ->numeric()
                                             ->prefix('$'),
@@ -238,7 +238,7 @@ class VehicleModelResource extends Resource
                 TextColumn::make('vehicleVersions.list_price')
                     ->label('Precio (Desde)')
                     ->money('clp')
-                    ->getStateUsing(fn (\App\Models\VehicleModel $record) => $record->vehicleVersions->min('list_price'))
+                    ->getStateUsing(fn (\App\Models\VehicleModel $record) => optional($record->vehicleVersions)->min('list_price') ?? 0)
                     ->sortable(),
                 TextColumn::make('vehicle_type')
                     ->label('Tipo')
@@ -335,7 +335,7 @@ class VehicleModelResource extends Resource
                                     ->label('Precio Lista')
                                     ->numeric()
                                     ->prefix('$'),
-                                Forms\Components\TextInput::make('bonus_price')
+                                Forms\Components\TextInput::make('finance_bonus')
                                     ->label('Bono Financiamiento')
                                     ->numeric()
                                     ->prefix('$'),
