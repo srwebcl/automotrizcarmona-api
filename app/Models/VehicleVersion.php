@@ -8,12 +8,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class VehicleVersion extends Model
 {
     protected $fillable = [
-        'vehicle_model_id', 'name', 'transmission', 'traction', 'fuel', 'list_price', 'bonus_price'
+        'vehicle_model_id', 'name', 'transmission', 'traction', 'fuel', 
+        'motor', 'power', 'torque', 'consumption_mixed', 'electric_range',
+        'list_price', 'finance_price', 'brand_bonus', 'finance_bonus',
+        'iva_included', 'airbags'
     ];
 
     protected $casts = [
         'list_price' => 'integer',
-        'bonus_price' => 'integer',
+        'finance_price' => 'integer',
+        'brand_bonus' => 'integer',
+        'finance_bonus' => 'integer',
+        'iva_included' => 'boolean',
+        'airbags' => 'integer',
     ];
 
     public function vehicleModel(): BelongsTo

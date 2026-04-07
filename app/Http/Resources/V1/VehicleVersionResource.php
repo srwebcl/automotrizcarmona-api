@@ -15,9 +15,17 @@ class VehicleVersionResource extends JsonResource
             'transmission' => $this->transmission,
             'traction' => $this->traction,
             'fuel' => $this->fuel,
+            'motor' => $this->engine,
+            'consumption_mixed' => $this->mixed_performance,
+            'electric_range' => $this->autonomy_km,
+            'power' => $this->power_hp,
+            'torque' => $this->torque_nm,
             'list_price' => (int) $this->list_price,
-            'bonus_price' => (int) $this->bonus_price,
-            'final_price' => (int) ($this->list_price - $this->bonus_price),
+            'brand_bonus' => (int) $this->brand_bonus,
+            'financing_bonus' => (int) $this->finance_bonus,
+            'final_price' => (int) $this->finance_price,
+            'airbags' => $this->airbags,
+            'includes_iva' => $this->includes_iva,
         ];
     }
 }
