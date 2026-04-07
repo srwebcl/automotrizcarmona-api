@@ -20,4 +20,8 @@ Route::prefix('v1')->group(function () {
 
     // Captura de Leads (Marketing & Ventas)
     Route::post('/leads', [LeadController::class, 'store']);
+
+    // Camiones
+    Route::get('/truck-brands', [App\Http\Controllers\Api\TruckController::class, 'getBrands']);
+    Route::get('/truck-brands/{slug}/trucks', [App\Http\Controllers\Api\TruckController::class, 'getTrucksByBrand']);
 });

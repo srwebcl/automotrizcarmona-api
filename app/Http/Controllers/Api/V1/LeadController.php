@@ -28,6 +28,7 @@ class LeadController extends Controller
             'name' => trim($fullName),
             'email' => $customerData['email'] ?? '',
             'phone' => $customerData['phone'] ?? '',
+            'company' => $customerData['company'] ?? null,
             'vehicle_id' => $validated['vehicle']['model_name'] ?? null,
             'service_type' => $validated['request_details']['service_type'] ?? null,
             'message' => $validated['request_details']['message'] ?? '',
