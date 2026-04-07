@@ -14,10 +14,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('truck_brands', function (Blueprint $table) {
-            $table->string('hero_banner_desktop')->nullable()->after('logo_url');
-            $table->string('hero_banner_mobile')->nullable()->after('hero_banner_desktop');
-        });
+        \Illuminate\Support\Facades\DB::statement('ALTER TABLE "truck_brands" ADD COLUMN IF NOT EXISTS "hero_banner_desktop" VARCHAR(255) NULL');
+        \Illuminate\Support\Facades\DB::statement('ALTER TABLE "truck_brands" ADD COLUMN IF NOT EXISTS "hero_banner_mobile" VARCHAR(255) NULL');
     }
 
     /**
