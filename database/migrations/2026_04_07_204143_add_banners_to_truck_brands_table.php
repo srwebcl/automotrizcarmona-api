@@ -12,7 +12,7 @@ return new class extends Migration
     /**
      * Disable transactions for this migration to avoid Postgres aborted transaction deadlocks.
      */
-    public bool $withinTransaction = false;
+    public $withinTransaction = false;
 
     /**
      * Run the migrations.
