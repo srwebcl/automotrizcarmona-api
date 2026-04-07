@@ -7,11 +7,11 @@ use App\Models\VehicleVersion;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Table;
 
 class VehicleVersionResource extends Resource
@@ -40,26 +40,52 @@ class VehicleVersionResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('vehicle_model_id')
-                    ->relationship('vehicleModel', 'name')
-                    ->required(),
-                TextInput::make('name')
-                    ->label('Nombre de la Versión')
-                    ->required(),
-                TextInput::make('transmission')
-                    ->label('Transmisión'),
-                TextInput::make('traction')
-                    ->label('Tracción'),
-                TextInput::make('fuel')
-                    ->label('Combustible'),
-                TextInput::make('list_price')
-                    ->label('Precio Lista')
-                    ->numeric()
-                    ->prefix('$'),
-                TextInput::make('bonus_price')
-                    ->label('Bono Financiamiento')
-                    ->numeric()
-                    ->prefix('$'),
+                Section::make('Identificación')
+                    ->schema([
+                        Select::make('vehicle_model_id')
+                            ->relationship('vehicleModel', 'name')
+                            ->label('Modelo')
+                            ->required(),
+                        TextInput::make('name')
+                            ->label('Nombre de la Versión')
+                            ->required(),
+                        TextInput::make('slug')
+                            ->label('Slug (URL)')
+                            ->helperText('Se genera automáticamente.'),
+                    ])->columns(3),
+
+                Section::make('Características del Vehículo')
+                    ->schema([
+                        TextInput::make('transmission')->label('Transmisión'),
+                        TextInput::make('traction')->label('Tracción'),
+                        TextInput::make('fuel')->label('Combustible'),
+                        TextInput::make('engine')->label('Motor (CC)'),
+                        TextInput::make('power_hp')->label('Potencia (HP)'),
+                        TextInput::make('torque_nm')->label('Torque (Nm)'),
+                        TextInput::make('mixed_performance')->label('Rendimiento Mixto (km/l)'),
+                        TextInput::make('autonomy_km')->label('Autonomía (km)'),
+                        TextInput::make('airbags')->label('Airbags')->numeric(),
+                    ])->columns(3),
+
+                Section::make('Precios y Bonos')
+                    ->schema([
+                        TextInput::make('list_price')
+                            ->label('Precio Lista ($)')
+                            ->numeric()
+                            ->prefix('$'),
+                        TextInput::make('brand_bonus')
+                            ->label('Bono Marca ($)')
+                            ->numeric()
+                            ->prefix('$'),
+                        TextInput::make('finance_bonus')
+                            ->label('Bono Financiamiento ($)')
+                            ->numeric()
+                            ->prefix('$'),
+                        TextInput::make('finance_price')
+                            ->label('Precio con Financiamiento ($)')
+                            ->numeric()
+                            ->prefix('$'),
+                    ])->columns(4),
             ]);
     }
 
@@ -92,16 +118,39 @@ class VehicleVersionResource extends Resource
                     ->wrap()
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('fuel')
+                    ->label('Combustible')
+                    ->badge()
+                    ->color('success')
+                    ->sortable(),
                 Tables\Columns\TextInputColumn::make('list_price')
                     ->label('Precio Lista')
                     ->type('number')
                     ->sortable()
                     ->extraAttributes(['style' => 'text-align: right; min-width: 120px;', 'class' => 'font-bold text-primary-600']),
-                Tables\Columns\TextInputColumn::make('bonus_price')
-                    ->label('Precio Bono')
+                Tables\Columns\TextInputColumn::make('brand_bonus')
+                    ->label('Bono Marca')
                     ->type('number')
                     ->sortable()
-                    ->extraAttributes(['style' => 'text-align: right; min-width: 120px;', 'class' => 'font-bold text-primary-600']),
+                    ->extraAttributes(['style' => 'text-align: right; min-width: 120px;']),
+                Tables\Columns\TextInputColumn::make('finance_bonus')
+                    ->label('Bono Financ.')
+                    ->type('number')
+                    ->sortable()
+                    ->extraAttributes(['style' => 'text-align: right; min-width: 120px;']),
+                Tables\Columns\TextInputColumn::make('finance_price')
+                    ->label('Precio Financ.')
+                    ->type('number')
+                    ->sortable()
+                    ->extraAttributes(['style' => 'text-align: right; min-width: 120px;', 'class' => 'font-bold text-green-600']),
+                TextColumn::make('engine')
+                    ->label('Motor')
+                    ->toggleable()
+                    ->sortable(),
+                TextColumn::make('power_hp')
+                    ->label('Potencia')
+                    ->toggleable()
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('category')
