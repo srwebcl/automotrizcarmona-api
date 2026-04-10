@@ -67,31 +67,38 @@ class BannerResource extends Resource
                     ->disk('r2')
                     ->directory('banners')
                     ->required(),
-                FileUpload::make('image_mobile')->label('Imagen Móvil')
+                FileUpload::make('image_mobile')->label('Imagen Móvil (Opcional)')
                     ->image()
                     ->disk('r2')
-                    ->directory('banners')
-                    ->required(),
+                    ->directory('banners'),
                 TextInput::make('link')->label('Enlace (URL) o Página')
-                    ->datalist([
-                        '/' => 'Inicio',
-                        '/servicios' => 'Servicio Técnico',
-                        '/repuestos' => 'Repuestos',
-                        '/dyp' => 'Desabolladura y Pintura',
-                        '/noticias' => 'Noticias',
-                        '/nosotros' => 'Nosotros',
-                        '/nuevos/volkswagen' => 'Marca Volkswagen',
-                        '/nuevos/toyota' => 'Marca Toyota',
-                        '/nuevos/audi' => 'Marca Audi',
-                        '/nuevos/seat' => 'Marca Seat',
-                        '/nuevos/cupra' => 'Marca Cupra',
-                        '/nuevos/honda' => 'Marca Honda',
-                        '/nuevos/bmw' => 'Marca BMW',
-                        '/nuevos/maxus' => 'Marca Maxus',
-                        '/nuevos/geely' => 'Marca Geely',
-                        '/nuevos/mg' => 'Marca MG',
-                    ])
-                    ->helperText('Puedes seleccionar una página del sistema o escribir un link externo (ej: https://...).'),
+                    ->datalist(function () {
+                        $baseLinks = [
+                            '/',
+                            '/servicios',
+                            '/repuestos',
+                            '/dyp',
+                            '/noticias',
+                            '/nosotros',
+                            '/nuevos/volkswagen',
+                            '/nuevos/toyota',
+                            '/nuevos/audi',
+                            '/nuevos/seat',
+                            '/nuevos/cupra',
+                            '/nuevos/honda',
+                            '/nuevos/bmw',
+                            '/nuevos/maxus',
+                            '/nuevos/geely',
+                            '/nuevos/mg',
+                        ];
+                        
+                        $modelLinks = \App\Models\VehicleModel::with('brand')->get()->map(function($m) {
+                            return '/nuevos/' . $m->brand->slug . '/' . $m->slug;
+                        })->toArray();
+                        
+                        return array_merge($baseLinks, $modelLinks);
+                    })
+                    ->helperText('Puedes seleccionar una página del sistema, modelo, o escribir un link externo (ej: https://...).'),
                 TextInput::make('order')->label('Orden')
                     ->numeric()
                     ->default(0),
