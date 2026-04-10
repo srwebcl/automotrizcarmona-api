@@ -126,15 +126,18 @@ class VehicleModelResource extends Resource
                                 FileUpload::make('thumbnail_url')
                                     ->label('Miniatura (Thumbnail)')
                                     ->image()
+                                    ->disk('r2')
                                     ->directory('models/thumbnails')
                                     ->columnSpanFull(),
                                 FileUpload::make('desktop_banner_url')
                                     ->label('Banner Desktop')
                                     ->image()
+                                    ->disk('r2')
                                     ->directory('models/banners'),
                                 FileUpload::make('mobile_banner_url')
                                     ->label('Banner Mobile')
                                     ->image()
+                                    ->disk('r2')
                                     ->directory('models/banners'),
                                 TextInput::make('video_url')
                                     ->label('URL de Video (YouTube/Vimeo)')
@@ -145,6 +148,7 @@ class VehicleModelResource extends Resource
                                     ->label('Galería de Imágenes')
                                     ->multiple()
                                     ->image()
+                                    ->disk('r2')
                                     ->reorderable()
                                     ->directory('models/galleries')
                                     ->columnSpanFull(),
@@ -195,6 +199,7 @@ class VehicleModelResource extends Resource
                                         FileUpload::make('image_url')
                                             ->label('Imagen / Icono')
                                             ->image()
+                                            ->disk('r2')
                                             ->directory('models/features'),
                                     ])
                                     ->collapsible()
@@ -213,7 +218,7 @@ class VehicleModelResource extends Resource
             ->columns([
                 ImageColumn::make('thumbnail_url')
                     ->label('Imagen')
-                    ->disk('public')
+                    ->disk('r2')
                     ->defaultImageUrl(url('/images/placeholder.png'))
                     ->square()
                     ->size(40)

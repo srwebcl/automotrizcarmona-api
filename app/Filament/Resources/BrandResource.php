@@ -50,6 +50,7 @@ class BrandResource extends Resource
                         FileUpload::make('logo_url')
                             ->label('Logo de la Marca')
                             ->image()
+                            ->disk('r2')
                             ->directory('brands/logos'),
                     ])->columns(2),
 
@@ -104,10 +105,12 @@ class BrandResource extends Resource
                                 FileUpload::make('desktop_image')
                                     ->label('Imagen Desktop')
                                     ->image()
+                                    ->disk('r2')
                                     ->directory('brands/banners'),
                                 FileUpload::make('mobile_image')
                                     ->label('Imagen Mobile')
                                     ->image()
+                                    ->disk('r2')
                                     ->directory('brands/banners'),
                             ])
                             ->columns(1)
@@ -123,7 +126,7 @@ class BrandResource extends Resource
             ->columns([
                 ImageColumn::make('logo_url')
                     ->label('Logo')
-                    ->disk('public')
+                    ->disk('r2')
                     ->defaultImageUrl(url('/images/placeholder.png'))
                     ->square(),
                 TextColumn::make('name')
