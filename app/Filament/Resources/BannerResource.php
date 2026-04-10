@@ -43,9 +43,20 @@ class BannerResource extends Resource
                     ->default('home_hero')
                     ->required()
                     ->live(),
-                TextInput::make('title')->label('Título')
+                Toggle::make('custom_data.show_text')
+                    ->label('Mostrar Textos sobre la Imagen')
+                    ->helperText('Aplica principalmente al Home Slider. Si está inactivo, el banner será solo la imagen con su enlace.')
+                    ->default(false)
+                    ->live(),
+                TextInput::make('title')
+                    ->label('Título (Interno y para Lectores de Pantalla)')
                     ->required(),
-                TextInput::make('subtitle')->label('Subtítulo'),
+                TextInput::make('subtitle')
+                    ->label('Subtítulo')
+                    ->visible(fn (\Filament\Forms\Get $get) => $get('custom_data.show_text')),
+                TextInput::make('custom_data.cta')
+                    ->label('Texto del Botón (Opcional)')
+                    ->visible(fn (\Filament\Forms\Get $get) => $get('custom_data.show_text')),
                 TextInput::make('custom_data.recipient_email')
                     ->label('Email Destinatario Formulario')
                     ->email()
@@ -61,7 +72,26 @@ class BannerResource extends Resource
                     ->disk('r2')
                     ->directory('banners')
                     ->required(),
-                TextInput::make('link')->label('Enlace (URL)'),
+                TextInput::make('link')->label('Enlace (URL) o Página')
+                    ->datalist([
+                        '/' => 'Inicio',
+                        '/servicios' => 'Servicio Técnico',
+                        '/repuestos' => 'Repuestos',
+                        '/dyp' => 'Desabolladura y Pintura',
+                        '/noticias' => 'Noticias',
+                        '/nosotros' => 'Nosotros',
+                        '/nuevos/volkswagen' => 'Marca Volkswagen',
+                        '/nuevos/toyota' => 'Marca Toyota',
+                        '/nuevos/audi' => 'Marca Audi',
+                        '/nuevos/seat' => 'Marca Seat',
+                        '/nuevos/cupra' => 'Marca Cupra',
+                        '/nuevos/honda' => 'Marca Honda',
+                        '/nuevos/bmw' => 'Marca BMW',
+                        '/nuevos/maxus' => 'Marca Maxus',
+                        '/nuevos/geely' => 'Marca Geely',
+                        '/nuevos/mg' => 'Marca MG',
+                    ])
+                    ->helperText('Puedes seleccionar una página del sistema o escribir un link externo (ej: https://...).'),
                 TextInput::make('order')->label('Orden')
                     ->numeric()
                     ->default(0),
