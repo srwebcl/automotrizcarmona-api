@@ -8,6 +8,7 @@ use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -31,15 +32,33 @@ class BannerResource extends Resource
     {
         return $form
             ->schema([
+                Select::make('location')->label('Ubicación del Banner')
+                    ->options([
+                        'home_hero' => 'Home Slider Principal',
+                        'home_promotional' => 'Home Sección Destacados (Promocional)',
+                        'servicios' => 'Banner Servicios',
+                        'repuestos' => 'Banner Repuestos',
+                        'dyp' => 'Banner Desabolladura y Pintura',
+                    ])
+                    ->default('home_hero')
+                    ->required()
+                    ->live(),
                 TextInput::make('title')->label('Título')
                     ->required(),
                 TextInput::make('subtitle')->label('Subtítulo'),
+                TextInput::make('custom_data.recipient_email')
+                    ->label('Email Destinatario Formulario')
+                    ->email()
+                    ->helperText('Solo aplica si el banner incluye un formulario de contacto.')
+                    ->visible(fn (\Filament\Forms\Get $get) => $get('location') === 'home_promotional'),
                 FileUpload::make('image_desktop')->label('Imagen Desktop')
                     ->image()
+                    ->disk('r2')
                     ->directory('banners')
                     ->required(),
                 FileUpload::make('image_mobile')->label('Imagen Móvil')
                     ->image()
+                    ->disk('r2')
                     ->directory('banners')
                     ->required(),
                 TextInput::make('link')->label('Enlace (URL)'),
@@ -57,10 +76,10 @@ class BannerResource extends Resource
             ->columns([
                 ImageColumn::make('image_desktop')
                     ->label('Imagen')
-                    ->disk('public')
-                    ->defaultImageUrl(url('/images/placeholder.png'))
+                    ->disk('r2')
                     ->square(),
                 TextColumn::make('title')->label('Título')->searchable(),
+                TextColumn::make('location')->label('Ubicación')->sortable(),
                 TextColumn::make('order')->label('Orden')->sortable(),
                 ToggleColumn::make('active')->label('Estado'),
             ])

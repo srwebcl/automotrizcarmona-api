@@ -13,10 +13,13 @@ class Banner extends Model
         'image_mobile',
         'link',
         'order',
-        'active'
+        'active',
+        'location',
+        'custom_data'
     ];
 
     protected $casts = [
         'active' => 'boolean',
+        'custom_data' => 'array',
     ];
 }
