@@ -10,16 +10,12 @@ use App\Models\TruckBrand;
 class Branch extends Model
 {
     protected $fillable = [
-        'name',
-        'type',
-        'address',
-        'city',
-        'manager_name',
-        'schedule',
-        'phone',
-        'email',
-        'map_link',
-        'image_url'
+        'name', 'type', 'address', 'city', 'manager_name',
+        'schedule', 'phone', 'email', 'map_link', 'image_url', 'brands_list'
+    ];
+
+    protected $casts = [
+        'brands_list' => 'array',
     ];
 
     public function brands(): BelongsToMany

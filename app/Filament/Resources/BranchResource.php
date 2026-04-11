@@ -4,15 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BranchResource\Pages;
 use App\Models\Branch;
-use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -40,26 +39,27 @@ class BranchResource extends Resource
                         Select::make('type')
                             ->label('Tipo de Sucursal')
                             ->options([
-                                'Sala de Ventas'         => 'Sala de Ventas',
-                                'Servicio Técnico'       => 'Servicio Técnico',
-                                'Repuestos'              => 'Repuestos',
+                                'Sala de Ventas'          => 'Sala de Ventas',
+                                'Servicio Técnico'        => 'Servicio Técnico',
+                                'Repuestos'               => 'Repuestos',
                                 'Desabolladura y Pintura' => 'Desabolladura y Pintura',
                             ])
                             ->required(),
                     ])->columns(2),
 
                 Section::make('Marcas que atiende')
+                    ->description('Escribe el nombre exacto de cada marca y presiona Enter o coma para agregarla.')
                     ->schema([
-                        Forms\Components\CheckboxList::make('brands')
-                            ->label('Marcas de Autos')
-                            ->relationship('brands', 'name')
-                            ->columns(4)
-                            ->gridDirection('row'),
-                        Forms\Components\CheckboxList::make('truckBrands')
-                            ->label('Marcas de Camiones')
-                            ->relationship('truckBrands', 'name')
-                            ->columns(4)
-                            ->gridDirection('row'),
+                        TagsInput::make('brands_list')
+                            ->label('Marcas')
+                            ->placeholder('Ej: Toyota, Volkswagen, Iveco...')
+                            ->suggestions([
+                                'Toyota', 'Volkswagen', 'Audi', 'Seat', 'Cupra',
+                                'Honda', 'BMW', 'BMW Motorrad', 'Mini', 'MG',
+                                'Maxus', 'Jetour', 'Geely', 'Dongfeng', 'Kaiyi',
+                                'Karry', 'Soueast', 'Foton', 'Iveco', 'MAN',
+                                'VW Camiones', 'Foton Camiones',
+                            ]),
                     ]),
 
                 Section::make('Ubicación y Contacto')
@@ -73,8 +73,8 @@ class BranchResource extends Resource
                             ->label('Horario de Atención')
                             ->rows(3),
                         Textarea::make('map_link')
-                            ->label('Link Google Maps (Iframe o URL)')
-                            ->rows(3),
+                            ->label('Link Google Maps (URL)')
+                            ->rows(2),
                     ])->columns(2),
 
                 Section::make('Imagen de Sucursal')
@@ -83,8 +83,8 @@ class BranchResource extends Resource
                             ->label('URL Imagen Sucursal')
                             ->url()
                             ->placeholder('https://...')
-                            ->helperText('Pega la URL de una imagen (desde Cloudflare R2 u otra fuente).'),
-                    ])
+                            ->helperText('Pega una URL de imagen (desde Cloudflare R2 u otra fuente).'),
+                    ]),
             ]);
     }
 
@@ -92,10 +92,6 @@ class BranchResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('image_url')
-                    ->label('Foto')
-                    ->disk('r2')
-                    ->circular(),
                 TextColumn::make('name')
                     ->label('Nombre')
                     ->searchable()
@@ -106,9 +102,10 @@ class BranchResource extends Resource
                 TextColumn::make('city')
                     ->label('Ciudad')
                     ->sortable(),
-                TextColumn::make('brands.name')
+                TextColumn::make('brands_list')
                     ->label('Marcas')
-                    ->badge(),
+                    ->badge()
+                    ->separator(','),
                 TextColumn::make('phone')
                     ->label('Teléfono'),
             ])
@@ -116,9 +113,9 @@ class BranchResource extends Resource
                 Tables\Filters\SelectFilter::make('type')
                     ->label('Tipo')
                     ->options([
-                        'Sala de Ventas' => 'Sala de Ventas',
-                        'Servicio Técnico' => 'Servicio Técnico',
-                        'Repuestos' => 'Repuestos',
+                        'Sala de Ventas'          => 'Sala de Ventas',
+                        'Servicio Técnico'        => 'Servicio Técnico',
+                        'Repuestos'               => 'Repuestos',
                         'Desabolladura y Pintura' => 'Desabolladura y Pintura',
                     ]),
             ])
@@ -136,9 +133,9 @@ class BranchResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBranches::route('/'),
+            'index'  => Pages\ListBranches::route('/'),
             'create' => Pages\CreateBranch::route('/create'),
-            'edit' => Pages\EditBranch::route('/{record}/edit'),
+            'edit'   => Pages\EditBranch::route('/{record}/edit'),
         ];
     }
 }

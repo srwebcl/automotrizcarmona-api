@@ -30,7 +30,7 @@ class CatalogController extends Controller
      */
     public function branches(): AnonymousResourceCollection
     {
-        return BranchResource::collection(Branch::with(['brands', 'truckBrands'])->get());
+        return BranchResource::collection(Branch::all());
     }
 
     /**
