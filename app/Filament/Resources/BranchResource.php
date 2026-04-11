@@ -35,23 +35,27 @@ class BranchResource extends Resource
                     ->schema([
                         TextInput::make('name')
                             ->label('Nombre de Sucursal')
-                            ->placeholder('Ej: Sala de Ventas Talca')
+                            ->placeholder('Ej: Sala de Ventas Toyota La Serena')
                             ->required(),
                         Select::make('type')
                             ->label('Tipo de Sucursal')
                             ->options([
-                                'Sala de Ventas' => 'Sala de Ventas',
-                                'Servicio Técnico' => 'Servicio Técnico',
-                                'Repuestos' => 'Repuestos',
+                                'Sala de Ventas'         => 'Sala de Ventas',
+                                'Servicio Técnico'       => 'Servicio Técnico',
+                                'Repuestos'              => 'Repuestos',
                                 'Desabolladura y Pintura' => 'Desabolladura y Pintura',
                             ])
                             ->required(),
-                        Select::make('brands')
-                            ->label('Marcas que atiende')
-                            ->multiple()
-                            ->relationship('brands', 'name')
-                            ->searchable(),
                     ])->columns(2),
+
+                Section::make('Marcas que atiende')
+                    ->schema([
+                        Forms\Components\CheckboxList::make('brands')
+                            ->label('Selecciona las marcas (Autos)')
+                            ->relationship('brands', 'name')
+                            ->columns(4)
+                            ->gridDirection('row'),
+                    ]),
 
                 Section::make('Ubicación y Contacto')
                     ->schema([
