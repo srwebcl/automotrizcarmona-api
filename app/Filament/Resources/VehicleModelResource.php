@@ -128,17 +128,20 @@ class VehicleModelResource extends Resource
                                     ->image()
                                     ->disk('r2')
                                     ->directory('models/thumbnails')
+                                    ->fetchFileInformation(false)
                                     ->columnSpanFull(),
                                 FileUpload::make('desktop_banner_url')
                                     ->label('Banner Desktop')
                                     ->image()
                                     ->disk('r2')
-                                    ->directory('models/banners'),
+                                    ->directory('models/banners')
+                                    ->fetchFileInformation(false),
                                 FileUpload::make('mobile_banner_url')
                                     ->label('Banner Mobile')
                                     ->image()
                                     ->disk('r2')
-                                    ->directory('models/banners'),
+                                    ->directory('models/banners')
+                                    ->fetchFileInformation(false),
                                 TextInput::make('video_url')
                                     ->label('URL de Video (YouTube/Vimeo)')
                                     ->url()
@@ -151,6 +154,7 @@ class VehicleModelResource extends Resource
                                     ->disk('r2')
                                     ->reorderable()
                                     ->directory('models/galleries')
+                                    ->fetchFileInformation(false)
                                     ->columnSpanFull(),
                             ])->columns(2),
 
@@ -200,7 +204,8 @@ class VehicleModelResource extends Resource
                                             ->label('Imagen / Icono')
                                             ->image()
                                             ->disk('r2')
-                                            ->directory('models/features'),
+                                            ->directory('models/features')
+                                            ->fetchFileInformation(false),
                                     ])
                                     ->collapsible()
                                     ->itemLabel(fn (array $state): ?string => $state['title'] ?? 'Nueva Característica'),

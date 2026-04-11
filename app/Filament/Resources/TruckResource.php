@@ -49,6 +49,7 @@ class TruckResource extends Resource
                     ->visibility('public')
                     ->image()
                     ->imageEditor()
+                    ->fetchFileInformation(false)
                     ->helperText('Sube la miniatura del camión directamente a Cloudflare R2.'),
                 Forms\Components\Select::make('category')
                     ->label('Categoría')
