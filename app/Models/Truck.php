@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Truck extends Model
 {
-    protected $fillable = ['truck_brand_id', 'name', 'slug', 'image_url', 'is_active'];
+    protected $fillable = ['truck_brand_id', 'name', 'slug', 'image_url', 'is_active', 'category'];
 
     public function brand()
     {

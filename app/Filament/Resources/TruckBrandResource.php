@@ -81,7 +81,11 @@ class TruckBrandResource extends Resource
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('logo_url')
                     ->label('Logo')
-                    ->disk('r2'),
+                    ->disk('r2')
+                    ->defaultImageUrl(url('/images/placeholder.png'))
+                    ->height(40)
+                    ->width(80)
+                    ->extraImgAttributes(['style' => 'object-fit: contain; background: white; padding: 4px; border-radius: 6px;']),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
