@@ -134,4 +134,10 @@ class TruckResource extends Resource
             'edit' => Pages\EditTruck::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['brand']);
+    }
 }

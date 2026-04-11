@@ -213,7 +213,6 @@ class VehicleModelResource extends Resource
     {
         return $table
             ->striped()
-            ->modifyQueryUsing(fn (\Illuminate\Database\Eloquent\Builder $query) => $query->select(['id', 'brand_id', 'name', 'slug', 'category', 'thumbnail_url', 'vehicle_type', 'is_active', 'is_featured'])->with('brand', 'vehicleVersions'))
             ->defaultPaginationPageOption(10)
             ->columns([
                 ImageColumn::make('thumbnail_url')
@@ -274,7 +273,7 @@ class VehicleModelResource extends Resource
                 Tables\Filters\SelectFilter::make('brand_id')
                     ->label('MARCA')
                     ->multiple()
-                    ->options(\App\Models\Brand::pluck('name', 'id')->toArray())
+                    ->relationship('brand', 'name')
                     ->preload(),
                 Tables\Filters\SelectFilter::make('vehicle_type')
                     ->label('TIPO')
@@ -381,5 +380,11 @@ class VehicleModelResource extends Resource
     public static function getPluralModelLabel(): string
     {
         return 'Modelos de Vehículos';
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['brand', 'vehicleVersions', 'features']);
     }
 }
