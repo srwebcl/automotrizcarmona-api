@@ -6,10 +6,13 @@ use App\Filament\Resources\BranchResource\Pages;
 use App\Models\Branch;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -18,11 +21,8 @@ use Filament\Tables\Table;
 class BranchResource extends Resource
 {
     protected static ?string $model = Branch::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
-    
     protected static ?string $navigationGroup = 'Empresa';
-
     protected static ?string $label = 'Sucursal';
     protected static ?string $pluralLabel = 'Sucursales';
 
@@ -30,6 +30,7 @@ class BranchResource extends Resource
     {
         return $form
             ->schema([
+                // ── INFORMACIÓN BÁSICA ──────────────────────────────────────────
                 Section::make('Información de la Sucursal')
                     ->schema([
                         TextInput::make('name')
@@ -47,8 +48,9 @@ class BranchResource extends Resource
                             ->required(),
                     ])->columns(2),
 
+                // ── MARCAS ──────────────────────────────────────────────────────
                 Section::make('Marcas que atiende')
-                    ->description('Escribe el nombre exacto de cada marca y presiona Enter o coma para agregarla.')
+                    ->description('Escribe el nombre de cada marca y presiona Enter para agregarla.')
                     ->schema([
                         TagsInput::make('brands_list')
                             ->label('Marcas')
@@ -57,33 +59,90 @@ class BranchResource extends Resource
                                 'Toyota', 'Volkswagen', 'Audi', 'Seat', 'Cupra',
                                 'Honda', 'BMW', 'BMW Motorrad', 'Mini', 'MG',
                                 'Maxus', 'Jetour', 'Geely', 'Dongfeng', 'Kaiyi',
-                                'Karry', 'Soueast', 'Foton', 'Iveco', 'MAN',
+                                'Karry', 'Foton', 'Iveco', 'MAN',
                                 'VW Camiones', 'Foton Camiones',
                             ]),
                     ]),
 
+                // ── UBICACIÓN Y CONTACTO ────────────────────────────────────────
                 Section::make('Ubicación y Contacto')
                     ->schema([
-                        TextInput::make('address')->label('Dirección')->required(),
-                        TextInput::make('city')->label('Ciudad')->required(),
-                        TextInput::make('manager_name')->label('Jefe de Sucursal / Contacto'),
-                        TextInput::make('phone')->label('Teléfono'),
-                        TextInput::make('email')->label('Email')->email(),
-                        Textarea::make('schedule')
+                        TextInput::make('address')
+                            ->label('Dirección')
+                            ->placeholder('Ej: Av. Balmaceda 3681')
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
+                                $city = $get('city') ?? '';
+                                if ($state) {
+                                    $set('map_link', 'https://maps.google.com/?q=' . urlencode(trim($state . ', ' . $city)));
+                                }
+                            }),
+
+                        TextInput::make('city')
+                            ->label('Ciudad')
+                            ->placeholder('Ej: La Serena')
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
+                                $address = $get('address') ?? '';
+                                if ($address) {
+                                    $set('map_link', 'https://maps.google.com/?q=' . urlencode(trim($address . ', ' . $state)));
+                                }
+                            }),
+
+                        TextInput::make('manager_name')
+                            ->label('Jefe de Sucursal / Contacto'),
+
+                        TextInput::make('phone')
+                            ->label('Teléfono')
+                            ->placeholder('+56 9 1234 5678'),
+
+                        TextInput::make('email')
+                            ->label('Email')
+                            ->email()
+                            ->placeholder('sucursal@carmonaycia.cl'),
+
+                        // ── HORARIO ─────────────────────────────────────────────
+                        Select::make('schedule')
                             ->label('Horario de Atención')
-                            ->rows(3),
-                        Textarea::make('map_link')
-                            ->label('Link Google Maps (URL)')
-                            ->rows(2),
+                            ->options([
+                                'L-V: 8:30 a 19:00 | Sáb: 9:00 a 14:00'  => 'L-V: 8:30 a 19:00 | Sáb: 9:00 a 14:00 (Ventas)',
+                                'L-V: 8:00 a 18:00 | Sáb: 9:00 a 13:00'  => 'L-V: 8:00 a 18:00 | Sáb: 9:00 a 13:00 (Servicio/Repuestos)',
+                                'L-V: 8:30 a 18:30 | Sáb: 9:00 a 13:00'  => 'L-V: 8:30 a 18:30 | Sáb: 9:00 a 13:00 (Repuestos)',
+                                'L-V: 8:00 a 18:00'                        => 'L-V: 8:00 a 18:00 (sin sábado)',
+                                'L-V: 8:30 a 18:30'                        => 'L-V: 8:30 a 18:30 (sin sábado)',
+                            ])
+                            ->searchable()
+                            ->createOptionForm([
+                                TextInput::make('schedule')
+                                    ->label('Horario personalizado')
+                                    ->placeholder('L-V: 9:00 a 18:00 | Sáb: 9:00 a 13:00')
+                                    ->required(),
+                            ])
+                            ->createOptionUsing(fn (array $data) => $data['schedule'])
+                            ->helperText('Selecciona un horario predefinido o escribe uno nuevo con "Crear".'),
+
+                        // ── GOOGLE MAPS ────────────────────────────────────────
+                        TextInput::make('map_link')
+                            ->label('Link Google Maps (generado automáticamente)')
+                            ->url()
+                            ->placeholder('https://maps.google.com/?q=...')
+                            ->helperText('Se completa solo al ingresar la dirección. Puedes ajustarlo manualmente.')
+                            ->columnSpanFull(),
                     ])->columns(2),
 
+                // ── IMAGEN ──────────────────────────────────────────────────────
                 Section::make('Imagen de Sucursal')
                     ->schema([
-                        TextInput::make('image_url')
-                            ->label('URL Imagen Sucursal')
-                            ->url()
-                            ->placeholder('https://...')
-                            ->helperText('Pega una URL de imagen (desde Cloudflare R2 u otra fuente).'),
+                        FileUpload::make('image_url')
+                            ->label('Foto de la Sucursal')
+                            ->image()
+                            ->disk('r2')
+                            ->directory('branches')
+                            ->visibility('public')
+                            ->imageEditor()
+                            ->helperText('Sube la foto de la sucursal directamente a Cloudflare R2.'),
                     ]),
             ]);
     }
