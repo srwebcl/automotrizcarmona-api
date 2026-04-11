@@ -74,8 +74,9 @@ class BranchResource extends Resource
                         FileUpload::make('image_url')
                             ->label('Foto Sucursal')
                             ->image()
-                            ->disk('r2')
-                            ->directory('branches'),
+                            ->disk('public')
+                            ->directory('branches')
+                            ->visibility('public'),
                     ])
             ]);
     }
