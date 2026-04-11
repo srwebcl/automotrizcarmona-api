@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\BranchResource\Pages;
 use App\Models\Branch;
 use Filament\Forms;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -71,12 +70,11 @@ class BranchResource extends Resource
 
                 Section::make('Imagen de Sucursal')
                     ->schema([
-                        FileUpload::make('image_url')
-                            ->label('Foto Sucursal')
-                            ->image()
-                            ->disk('public')
-                            ->directory('branches')
-                            ->visibility('public'),
+                        TextInput::make('image_url')
+                            ->label('URL Imagen Sucursal')
+                            ->url()
+                            ->placeholder('https://...')
+                            ->helperText('Pega la URL de una imagen (desde Cloudflare R2 u otra fuente).'),
                     ])
             ]);
     }
