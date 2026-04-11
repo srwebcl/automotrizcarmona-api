@@ -51,8 +51,13 @@ class BranchResource extends Resource
                 Section::make('Marcas que atiende')
                     ->schema([
                         Forms\Components\CheckboxList::make('brands')
-                            ->label('Selecciona las marcas (Autos)')
+                            ->label('Marcas de Autos')
                             ->relationship('brands', 'name')
+                            ->columns(4)
+                            ->gridDirection('row'),
+                        Forms\Components\CheckboxList::make('truckBrands')
+                            ->label('Marcas de Camiones')
+                            ->relationship('truckBrands', 'name')
                             ->columns(4)
                             ->gridDirection('row'),
                     ]),

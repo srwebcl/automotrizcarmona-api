@@ -30,6 +30,11 @@ class BranchResource extends JsonResource
             'map_link'     => $this->map_link,
             'image_url'    => $imageUrl,
             'brands'       => BrandResource::collection($this->whenLoaded('brands')),
+            'truck_brands' => $this->whenLoaded('truckBrands', fn() => $this->truckBrands->map(fn($b) => [
+                'id'       => $b->id,
+                'name'     => $b->name,
+                'logo_url' => $b->logo_url ? (str_starts_with($b->logo_url, 'http') ? $b->logo_url : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($b->logo_url, '/')) : null,
+            ])),
         ];
     }
 }

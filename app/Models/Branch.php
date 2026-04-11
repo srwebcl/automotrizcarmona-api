@@ -24,4 +24,9 @@ class Branch extends Model
     {
         return $this->belongsToMany(Brand::class);
     }
+
+    public function truckBrands(): BelongsToMany
+    {
+        return $this->belongsToMany(TruckBrand::class, 'branch_truck_brand');
+    }
 }
