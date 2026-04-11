@@ -51,8 +51,7 @@ class BranchResource extends Resource
                             ->label('Marcas que atiende')
                             ->multiple()
                             ->relationship('brands', 'name')
-                            ->preload()
-                            ->required(),
+                            ->searchable(),
                     ])->columns(2),
 
                 Section::make('Ubicación y Contacto')
@@ -87,6 +86,7 @@ class BranchResource extends Resource
             ->columns([
                 ImageColumn::make('image_url')
                     ->label('Foto')
+                    ->disk('r2')
                     ->circular(),
                 TextColumn::make('name')
                     ->label('Nombre')
