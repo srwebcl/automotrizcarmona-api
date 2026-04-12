@@ -109,19 +109,20 @@ class VehicleModelResource extends Resource
                                                 ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
                                             TextInput::make('finance_bonus')->label('Bono Financ.')->numeric()->prefix('$')->live(onBlur: true)
                                                 ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
-                                            TextInput::make('finance_price')->label('Financio Final')->numeric()->prefix('$')->disabled()->dehydrated(false),
+                                            TextInput::make('finance_price')->label('Precio Final')->numeric()->prefix('$')->disabled()->dehydrated(false),
                                         ]),
                                         Forms\Components\Grid::make(4)->schema([
-                                            TextInput::make('motor')->label('Motor'),
-                                            TextInput::make('power')->label('Potencia'),
-                                            TextInput::make('torque')->label('Torque'),
+                                            TextInput::make('engine')->label('Motor'),
+                                            TextInput::make('power_hp')->label('Potencia'),
+                                            TextInput::make('torque_nm')->label('Torque'),
                                             TextInput::make('airbags')->label('Airbags')->numeric(),
                                         ]),
                                         Forms\Components\Grid::make(2)->schema([
-                                            TextInput::make('consumption_mixed')->label('Consumo'),
-                                            TextInput::make('electric_range')->label('Autonomía'),
+                                            TextInput::make('mixed_performance')->label('Consumo / Rendimiento'),
+                                            TextInput::make('autonomy_km')->label('Autonomía'),
                                         ]),
                                     ])->columns(1)->collapsible()
+                                    ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Nueva Versión'),
                             ]),
 
                         Tabs\Tab::make('Equipamiento Destacado')
@@ -171,7 +172,7 @@ class VehicleModelResource extends Resource
                     ->icon('heroicon-o-currency-dollar')
                     ->color('success')
                     ->slideOver()
-                    ->modalHeading(fn ($record) => "Precios: {$record->name}")
+                    ->modalHeading(fn ($record) => "Precios y Versiones: {$record->name}")
                     ->form([
                         Forms\Components\Repeater::make('vehicleVersions')
                             ->relationship()
@@ -191,7 +192,14 @@ class VehicleModelResource extends Resource
                                         ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
                                     TextInput::make('finance_price')->label('Precio Final')->numeric()->prefix('$')->disabled()->dehydrated(false),
                                 ]),
+                                Forms\Components\Grid::make(4)->schema([
+                                    TextInput::make('engine')->label('Motor'),
+                                    TextInput::make('power_hp')->label('Potencia'),
+                                    TextInput::make('torque_nm')->label('Torque'),
+                                    TextInput::make('mixed_performance')->label('Consumo'),
+                                ]),
                             ])->columns(1)->collapsible()
+                            ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Nueva Versión'),
                     ]),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

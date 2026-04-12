@@ -9,7 +9,7 @@ class VehicleVersion extends Model
 {
     protected $fillable = [
         'vehicle_model_id', 'name', 'transmission', 'traction', 'fuel', 
-        'motor', 'power', 'torque', 'consumption_mixed', 'electric_range',
+        'engine', 'power_hp', 'torque_nm', 'mixed_performance', 'autonomy_km',
         'list_price', 'finance_price', 'brand_bonus', 'finance_bonus',
         'includes_iva', 'airbags'
     ];

@@ -59,11 +59,11 @@ class VehicleVersionResource extends Resource
                         TextInput::make('transmission')->label('Transmisión'),
                         TextInput::make('traction')->label('Tracción'),
                         TextInput::make('fuel')->label('Combustible'),
-                        TextInput::make('motor')->label('Motor (CC) / Motorización'),
-                        TextInput::make('power')->label('Potencia (HP/kW)'),
-                        TextInput::make('torque')->label('Torque (Nm)'),
-                        TextInput::make('consumption_mixed')->label('Rendimiento Mixto (km/l)'),
-                        TextInput::make('electric_range')->label('Autonomía (km)'),
+                        TextInput::make('engine')->label('Motor (CC) / Motorización'),
+                        TextInput::make('power_hp')->label('Potencia (HP/kW)'),
+                        TextInput::make('torque_nm')->label('Torque (Nm)'),
+                        TextInput::make('mixed_performance')->label('Rendimiento Mixto (km/l)'),
+                        TextInput::make('autonomy_km')->label('Autonomía (km)'),
                         TextInput::make('airbags')->label('Airbags')->numeric(),
                         Forms\Components\Toggle::make('includes_iva')
                             ->label('Precio Incluye IVA')
