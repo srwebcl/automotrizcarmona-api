@@ -24,6 +24,7 @@ class TruckBrandResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->schema([
                 Forms\Components\Section::make('Información Básica')
                     ->schema([
                         Forms\Components\TextInput::make('name')
