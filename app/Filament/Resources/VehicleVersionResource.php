@@ -127,6 +127,12 @@ class VehicleVersionResource extends Resource
                 'vehicleModel.brand'
             ]))
             ->defaultPaginationPageOption(10)
+            ->headerActions([
+                Tables\Actions\CreateAction::make()->label('Nueva Versión'),
+                Tables\Actions\ExportAction::make()
+                    ->exporter(\App\Filament\Exports\VehicleVersionExporter::class)
+                    ->label('Exportar'),
+            ])
             ->columns([
                 TextColumn::make('vehicleModel.brand.name')
                     ->label('Marca')
@@ -172,20 +178,6 @@ class VehicleVersionResource extends Resource
                     ->weight('bold'),
 
             ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('brand_id')
-                    ->label('Marca')
-                    ->relationship('vehicleModel.brand', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->multiple(),
-                Tables\Filters\SelectFilter::make('vehicle_model_id')
-                    ->label('Modelo')
-                    ->relationship('vehicleModel', 'name')
-                    ->searchable()
-                    ->preload(),
-            ], layout: \Filament\Tables\Enums\FiltersLayout::AboveContent)
-            ->filtersFormColumns(2)
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

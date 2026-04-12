@@ -12,12 +12,7 @@ class ListVehicleVersions extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            Actions\CreateAction::make()->label('Nueva Versión'),
-            Actions\ExportAction::make()
-                ->exporter(\App\Filament\Exports\VehicleVersionExporter::class)
-                ->label('Exportar'),
-        ];
+        return [];
     }
 
     public function getTabs(): array
