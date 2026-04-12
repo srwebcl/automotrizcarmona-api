@@ -33,7 +33,7 @@ class VehicleVersionResource extends Resource
 
     public static function getPluralModelLabel(): string
     {
-        return 'Versiones (Precios)';
+        return 'Lista de Precios';
     }
 
     public static function form(Form $form): Form
@@ -184,7 +184,8 @@ class VehicleVersionResource extends Resource
                     ->relationship('vehicleModel', 'name')
                     ->searchable()
                     ->preload(),
-            ])
+            ], layout: \Filament\Tables\Enums\FiltersLayout::AboveContent)
+            ->filtersFormColumns(2)
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
