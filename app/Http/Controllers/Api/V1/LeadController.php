@@ -29,9 +29,9 @@ class LeadController extends Controller
             'email' => $customerData['email'] ?? '',
             'phone' => $customerData['phone'] ?? '',
             'company' => $customerData['company'] ?? null,
-            'vehicle_id' => $validated['vehicle']['model_name'] ?? null,
-            'service_type' => $validated['request_details']['service_type'] ?? null,
-            'message' => $validated['request_details']['message'] ?? '',
+            'vehicle_id' => isset($validated['vehicle']['model_name']) ? $validated['vehicle']['model_name'] : null,
+            'service_type' => isset($validated['request_details']['service_type']) ? $validated['request_details']['service_type'] : null,
+            'message' => isset($validated['request_details']['message']) ? $validated['request_details']['message'] : '',
             'raw_request' => $validated, // Guardamos los datos validados como JSON
             'crm_synced' => false,
         ]);
