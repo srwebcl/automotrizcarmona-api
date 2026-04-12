@@ -19,6 +19,11 @@ Route::prefix('v1')->group(function () {
     Route::get('/news', [CatalogController::class, 'news']);
     Route::get('/news/{slug}', [CatalogController::class, 'newsBySlug']);
 
+    // Landings & Especiales
+    Route::get('/landings/{slug}', [CatalogController::class, 'landingInfo']);
+    Route::get('/promotions', [CatalogController::class, 'promotions']);
+    Route::get('/electromovilidad', [CatalogController::class, 'electromovilidad']);
+
     // Captura de Leads (Marketing & Ventas)
     Route::post('/leads', [LeadController::class, 'store']);
 

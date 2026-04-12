@@ -71,14 +71,34 @@ class VehicleModelResource extends Resource
                                         'Moto' => 'Moto',
                                     ])
                                     ->preload(),
-                                Forms\Components\Fieldset::make('Estado y Etiquetas')
+                                        Forms\Components\Fieldset::make('Estado y Etiquetas')
+                                            ->schema([
+                                                Toggle::make('is_active')->label('Activo')->default(true),
+                                                Toggle::make('is_featured')->label('Destacado'),
+                                                Toggle::make('is_hybrid')->label('Híbrido'),
+                                                Toggle::make('is_electric')->label('Eléctrico'),
+                                                Toggle::make('is_promotion')->label('En Promoción'),
+                                            ])->columns(5),
+                                    ])->columns(2),
+
+                                Tabs\Tab::make('Promociones e Inventario')
+                                    ->icon('heroicon-o-tag')
                                     ->schema([
-                                        Toggle::make('is_active')->label('Activo')->default(true),
-                                        Toggle::make('is_featured')->label('Destacado'),
-                                        Toggle::make('is_hybrid')->label('Híbrido'),
-                                        Toggle::make('is_electric')->label('Eléctrico'),
-                                    ])->columns(4),
-                            ])->columns(2),
+                                        Repeater::make('promotionUnits')
+                                            ->relationship()
+                                            ->schema([
+                                                Forms\Components\Grid::make(3)->schema([
+                                                    TextInput::make('vin')->label('N° VIN / Chasis')->required(),
+                                                    TextInput::make('version_name')->label('Versión Específica (Ej: 1.5 MT)'),
+                                                    Toggle::make('is_active')->label('Disponible')->default(true),
+                                                ]),
+                                                Forms\Components\Grid::make(2)->schema([
+                                                    TextInput::make('promo_bonus')->label('Bono Promocional ($)')->numeric()->prefix('$')->required(),
+                                                    TextInput::make('promo_price')->label('Precio Final Promoción ($)')->numeric()->prefix('$')->required(),
+                                                ]),
+                                            ])
+                                            ->itemLabel(fn (array $state): ?string => $state['vin'] ?? 'Nueva Unidad'),
+                                    ]),
 
                         Tabs\Tab::make('Multimedia')
                             ->icon('heroicon-o-photo')

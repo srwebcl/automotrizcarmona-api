@@ -22,6 +22,8 @@ class VehicleModelResource extends JsonResource
             'is_electric' => (bool) $this->is_electric,
             'is_featured' => (bool) $this->is_featured,
             'is_active' => (bool) $this->is_active,
+            'is_promotion' => (bool) $this->is_promotion,
+            'promotion_units' => PromotionUnitResource::collection($this->whenLoaded('promotionUnits')),
             'desktop_banner_url' => $this->desktop_banner_url ? (str_starts_with($this->desktop_banner_url, 'http') ? $this->desktop_banner_url : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($this->desktop_banner_url, '/')) : null,
             'mobile_banner_url' => $this->mobile_banner_url ? (str_starts_with($this->mobile_banner_url, 'http') ? $this->mobile_banner_url : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($this->mobile_banner_url, '/')) : null,
             'gallery' => collect(array_reverse($this->gallery ?? []))->map(fn($img) => str_starts_with($img, 'http') ? $img : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($img, '/'))->toArray(),
