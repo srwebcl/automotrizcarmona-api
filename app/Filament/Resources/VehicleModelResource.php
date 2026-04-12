@@ -67,13 +67,6 @@ class VehicleModelResource extends Resource
                                     ->required()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
-                                TextInput::make('slug')
-                                    ->label('Slug / URL')
-                                    ->required()
-                                    ->readOnly()
-                                    ->unique(ignoreRecord: true),
-                                TextInput::make('slogan')
-                                    ->label('Eslogan (Slogan)'),
                                 Select::make('category')
                                     ->label('Categorías')
                                     ->multiple()
@@ -90,15 +83,6 @@ class VehicleModelResource extends Resource
                                         'Moto' => 'Moto',
                                     ])
                                     ->preload(),
-                                Select::make('vehicle_type')
-                                    ->label('Tipo de Vehículo')
-                                    ->options([
-                                        'auto' => 'Automóvil / SUV / Camioneta',
-                                        'camion' => 'Camión / Maquinaria / Comercial',
-                                    ])
-                                    ->default('auto')
-                                    ->required()
-                                    ->prefixIcon('heroicon-o-truck'),
                                 Forms\Components\Fieldset::make('Estado y Etiquetas del Vehículo')
                                     ->schema([
                                         Toggle::make('is_active')
@@ -113,10 +97,7 @@ class VehicleModelResource extends Resource
                                         Toggle::make('is_electric')
                                             ->label('Eléctrico'),
                                     ])
-                                    ->columns(5)
-                                    ->columnSpanFull(),
-                                Textarea::make('description')
-                                    ->label('Descripción Principal')
+                                    ->columns(4)
                                     ->columnSpanFull(),
                             ])->columns(2),
 
@@ -166,25 +147,44 @@ class VehicleModelResource extends Resource
                                     ->label('Versiones del Modelo')
                                     ->relationship()
                                     ->schema([
-                                        TextInput::make('name')
-                                            ->label('Nombre de Versión')
-                                            ->required(),
-                                        TextInput::make('transmission')
-                                            ->label('Transmisión'),
-                                        TextInput::make('traction')
-                                            ->label('Tracción'),
-                                        TextInput::make('fuel')
-                                            ->label('Combustible'),
-                                        TextInput::make('list_price')
-                                            ->label('Precio Lista')
-                                            ->numeric()
-                                            ->prefix('$'),
-                                        TextInput::make('finance_bonus')
-                                            ->label('Bono Financiamiento')
-                                            ->numeric()
-                                            ->prefix('$'),
+                                        Forms\Components\Grid::make(4)
+                                            ->schema([
+                                                TextInput::make('name')->label('Versión')->required(),
+                                                TextInput::make('transmission')->label('Transmisión'),
+                                                TextInput::make('traction')->label('Tracción'),
+                                                TextInput::make('fuel')->label('Fuel'),
+                                            ]),
+                                        Forms\Components\Grid::make(4)
+                                            ->schema([
+                                                TextInput::make('list_price')->label('Precio Lista')->numeric()->prefix('$')->live(onBlur: true)
+                                                    ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
+                                                        $set('finance_price', (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus'));
+                                                    }),
+                                                TextInput::make('brand_bonus')->label('Bono Marca')->numeric()->prefix('$')->live(onBlur: true)
+                                                    ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
+                                                        $set('finance_price', (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus'));
+                                                    }),
+                                                TextInput::make('finance_bonus')->label('Bono Financ.')->numeric()->prefix('$')->live(onBlur: true)
+                                                    ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
+                                                        $set('finance_price', (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus'));
+                                                    }),
+                                                TextInput::make('finance_price')->label('Precio Final')->numeric()->prefix('$')->disabled()->dehydrated(false),
+                                            ]),
+                                        Forms\Components\Grid::make(4)
+                                            ->schema([
+                                                TextInput::make('motor')->label('Motor'),
+                                                TextInput::make('power')->label('Potencia'),
+                                                TextInput::make('torque')->label('Torque'),
+                                                TextInput::make('airbags')->label('Airbags')->numeric(),
+                                            ]),
+                                        Forms\Components\Grid::make(2)
+                                            ->schema([
+                                                TextInput::make('consumption_mixed')->label('Rendimiento Mixto'),
+                                                TextInput::make('electric_range')->label('Autonomía'),
+                                            ]),
+                                        Forms\Components\Toggle::make('includes_iva')->label('IVA Incluido')->default(true),
                                     ])
-                                    ->columns(2)
+                                    ->columns(1)
                                     ->collapsible()
                                     ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Nueva Versión'),
                             ]),
@@ -337,28 +337,54 @@ class VehicleModelResource extends Resource
                             ->label('Versiones del Modelo')
                             ->relationship()
                             ->schema([
-                                Forms\Components\TextInput::make('name')
-                                    ->label('Nombre de Versión')
-                                    ->required(),
-                                Forms\Components\TextInput::make('transmission')
-                                    ->label('Transmisión'),
-                                Forms\Components\TextInput::make('traction')
-                                    ->label('Tracción'),
-                                Forms\Components\TextInput::make('fuel')
-                                    ->label('Combustible'),
-                                Forms\Components\TextInput::make('list_price')
-                                    ->label('Precio Lista')
-                                    ->numeric()
-                                    ->prefix('$'),
-                                Forms\Components\TextInput::make('finance_bonus')
-                                    ->label('Bono Financiamiento')
-                                    ->numeric()
-                                    ->prefix('$'),
-                            ])
-                            ->columns(2)
-                            ->collapsible()
-                            ->addActionLabel('Añadir Versión')
-                            ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Nueva Versión'),
+                                Forms\Components\Grid::make(4)
+                                    ->schema([
+                                        Forms\Components\TextInput::make('name')->label('Versión')->required(),
+                                        Forms\Components\TextInput::make('transmission')->label('Transmisión'),
+                                        Forms\Components\TextInput::make('traction')->label('Tracción'),
+                                        Forms\Components\TextInput::make('fuel')->label('Combustible'),
+                                    ]),
+                                Forms\Components\Grid::make(4)
+                                    ->schema([
+                                        Forms\Components\TextInput::make('list_price')->label('Precio Lista')->numeric()->prefix('$')->live(onBlur: true)
+                                            ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
+                                                $list = (int)$get('list_price') ?: 0;
+                                                $brand = (int)$get('brand_bonus') ?: 0;
+                                                $fin = (int)$get('finance_bonus') ?: 0;
+                                                $set('finance_price', max(0, $list - $brand - $fin));
+                                            }),
+                                        Forms\Components\TextInput::make('brand_bonus')->label('Bono Marca')->numeric()->prefix('$')->live(onBlur: true)
+                                            ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
+                                                $list = (int)$get('list_price') ?: 0;
+                                                $brand = (int)$get('brand_bonus') ?: 0;
+                                                $fin = (int)$get('finance_bonus') ?: 0;
+                                                $set('finance_price', max(0, $list - $brand - $fin));
+                                            }),
+                                        Forms\Components\TextInput::make('finance_bonus')->label('Bono Financ.')->numeric()->prefix('$')->live(onBlur: true)
+                                            ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
+                                                $list = (int)$get('list_price') ?: 0;
+                                                $brand = (int)$get('brand_bonus') ?: 0;
+                                                $fin = (int)$get('finance_bonus') ?: 0;
+                                                $set('finance_price', max(0, $list - $brand - $fin));
+                                            }),
+                                        Forms\Components\TextInput::make('finance_price')->label('Precio Final')->numeric()->prefix('$')->disabled()->dehydrated(false),
+                                        Forms\Components\Grid::make(4)
+                                            ->schema([
+                                                Forms\Components\TextInput::make('motor')->label('Motor'),
+                                                Forms\Components\TextInput::make('power')->label('Potencia'),
+                                                Forms\Components\TextInput::make('torque')->label('Torque'),
+                                                Forms\Components\TextInput::make('airbags')->label('Airbags')->numeric(),
+                                            ]),
+                                        Forms\Components\Grid::make(2)
+                                            ->schema([
+                                                Forms\Components\TextInput::make('consumption_mixed')->label('Rendimiento Mixto'),
+                                                Forms\Components\TextInput::make('electric_range')->label('Autonomía'),
+                                            ]),
+                                    ])
+                                    ->columns(1)
+                                    ->collapsible()
+                                    ->addActionLabel('Añadir Versión')
+                                    ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Nueva Versión'),
                     ]),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
