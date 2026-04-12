@@ -151,8 +151,8 @@ class VehicleModelResource extends Resource
                                 Repeater::make('features')
                                     ->relationship()
                                     ->schema([
-                                        TextInput::make('title')->label('Título'),
-                                        Textarea::make('description')->label('Detalle'),
+                                        TextInput::make('title')->label('Título')->nullable(),
+                                        TextInput::make('description')->label('Detalle')->nullable(),
                                         FileUpload::make('image_url')->label('Icono/Imagen')->image()->disk('r2')->directory('models/features')->fetchFileInformation(false),
                                     ])->collapsible()
                             ]),
