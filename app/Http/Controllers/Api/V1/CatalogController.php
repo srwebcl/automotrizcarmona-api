@@ -60,6 +60,25 @@ class CatalogController extends Controller
     }
 
     /**
+     * Get minimal layout brands (Autos & Camiones) with visibility flags for Menu & Services.
+     */
+    public function layoutBrands(): \Illuminate\Http\JsonResponse
+    {
+        $cars = Brand::where('is_active', true)
+            ->orderBy('name')
+            ->get(['name', 'slug', 'logo_url', 'show_in_services', 'show_in_parts', 'show_in_dyp']);
+            
+        $trucks = \App\Models\TruckBrand::where('is_active', true)
+            ->orderBy('name')
+            ->get(['name', 'slug', 'logo_url', 'show_in_services', 'show_in_parts', 'show_in_dyp']);
+
+        return response()->json([
+            'cars' => $cars,
+            'trucks' => $trucks
+        ]);
+    }
+
+    /**
      * Get models for a specific brand (List view).
      */
     public function modelsByBrand(string $brand_slug): AnonymousResourceCollection

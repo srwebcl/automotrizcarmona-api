@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
     
     // Catálogo Público
+    Route::get('/layout/brands', [CatalogController::class, 'layoutBrands']);
     Route::get('/brands', [CatalogController::class, 'brands']);
     Route::get('/models/{brand_slug}', [CatalogController::class, 'modelsByBrand']);
     Route::get('/models/{brand_slug}/{model_slug}', [CatalogController::class, 'modelDetails']);

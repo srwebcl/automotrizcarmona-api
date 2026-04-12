@@ -31,4 +31,9 @@ class Brand extends Model
     {
         return $this->belongsToMany(Branch::class);
     }
+
+    public function legalDocuments(): HasMany
+    {
+        return $this->hasMany(LegalDocument::class);
+    }
 }

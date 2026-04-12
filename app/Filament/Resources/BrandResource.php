@@ -38,15 +38,8 @@ class BrandResource extends Resource
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
                         TextInput::make('slug')
-                            ->label('Slug / URL')
-                            ->required()
-                            ->readOnly()
+                            ->hidden()
                             ->unique(ignoreRecord: true),
-                        TextInput::make('seo_title')
-                            ->label('Título SEO'),
-                        TextInput::make('brand_color_css')
-                            ->label('Clase CSS Color de Marca')
-                            ->placeholder('e.g. text-red-700'),
                         FileUpload::make('logo_url')
                             ->label('Logo de la Marca')
                             ->image()
@@ -54,21 +47,12 @@ class BrandResource extends Resource
                             ->directory('brands/logos'),
                     ])->columns(2),
 
-                Forms\Components\Section::make('Configuración General')
-                    ->label('Categoría y Estado')
+                Forms\Components\Section::make('Estado')
                     ->schema([
-                        Forms\Components\Select::make('category')
-                            ->label('Categoría')
-                            ->options([
-                                'autos' => 'Autos',
-                                'camiones' => 'Camiones',
-                            ])
-                            ->default('autos')
-                            ->required(),
                         Forms\Components\Toggle::make('is_active')
                             ->label('¿Marca Activa?')
                             ->default(true),
-                    ])->columns(2),
+                    ]),
 
                 Forms\Components\Section::make('Visibilidad Post-Venta')
                     ->label('Mostrar en Formularios')
@@ -84,14 +68,6 @@ class BrandResource extends Resource
                             ->label('Desabolladura y Pintura')
                             ->default(true),
                     ])->columns(3),
-                
-                Forms\Components\Section::make('Contenido Legal')
-                    ->label('Textos Legales')
-                    ->description('Texto legal que aparecerá en el pie de página o en cotizaciones de esta marca.')
-                    ->schema([
-                        RichEditor::make('legal_text')
-                            ->label('Texto Legal General'),
-                    ]),
 
                 Forms\Components\Section::make('Banners Principales')
                     ->label('Slider de Marca (Hero Banners)')
@@ -133,9 +109,6 @@ class BrandResource extends Resource
                     ->label('Nombre')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('category')
-                    ->label('Categoría')
-                    ->badge(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->label('Activa')
                     ->boolean(),

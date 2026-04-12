@@ -35,7 +35,6 @@ class FormRecipientResource extends Resource
                             ->label('Correos Electrónicos')
                             ->placeholder('Nuevo correo')
                             ->helperText('Agrega los correos que deben recibir notificaciones y presiona Enter o Coma.')
-                            ->separator(',')
                             ->required(),
                     ])
             ]);
@@ -49,8 +48,7 @@ class FormRecipientResource extends Resource
                     ->label('Formulario')
                     ->searchable(),
                 Tables\Columns\TagsColumn::make('emails')
-                    ->label('Correos Destinatarios')
-                    ->separator(','),
+                    ->label('Correos Destinatarios'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

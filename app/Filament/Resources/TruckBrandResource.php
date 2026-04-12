@@ -24,26 +24,50 @@ class TruckBrandResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->label('Nombre de la Marca')
-                    ->required()
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', \Illuminate\Support\Str::slug($state)) : null)
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
-                    ->label('Slug / URL')
-                    ->required()
-                    ->unique(TruckBrand::class, 'slug', ignoreRecord: true)
-                    ->maxLength(255),
-                Forms\Components\FileUpload::make('logo_url')
-                    ->label('Logo de la Marca')
-                    ->disk('r2')
-                    ->directory('truck-brands')
-                    ->visibility('public')
-                    ->image()
-                    ->imageEditor()
-                    ->helperText('Sube el logo de la marca directamente a Cloudflare R2.'),
+                Forms\Components\Section::make('Información Básica')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Nombre de la Marca')
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', \Illuminate\Support\Str::slug($state)) : null)
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('slug')
+                            ->hidden()
+                            ->unique(TruckBrand::class, 'slug', ignoreRecord: true),
+                        Forms\Components\FileUpload::make('logo_url')
+                            ->label('Logo de la Marca')
+                            ->disk('r2')
+                            ->directory('truck-brands')
+                            ->visibility('public')
+                            ->image()
+                            ->imageEditor()
+                            ->helperText('Sube el logo de la marca directamente a Cloudflare R2.'),
+                    ]),
+
+                Forms\Components\Section::make('Estado')
+                    ->schema([
+                        Forms\Components\Toggle::make('is_active')
+                            ->label('¿Está activa?')
+                            ->default(true)
+                            ->required(),
+                    ]),
+
+                Forms\Components\Section::make('Visibilidad Post-Venta')
+                    ->label('Mostrar en Formularios')
+                    ->description('Habilita el logo de esta marca en los formularios de la web.')
+                    ->schema([
+                        Forms\Components\Toggle::make('show_in_services')
+                            ->label('Servicio Técnico')
+                            ->default(true),
+                        Forms\Components\Toggle::make('show_in_parts')
+                            ->label('Repuestos')
+                            ->default(true),
+                        Forms\Components\Toggle::make('show_in_dyp')
+                            ->label('Desabolladura y Pintura')
+                            ->default(true),
+                    ])->columns(3),
+
                 Forms\Components\Section::make('Banners Hero')
                     ->description('Banners que se mostrarán en la parte superior de la página de la marca.')
                     ->schema([
@@ -64,10 +88,6 @@ class TruckBrandResource extends Resource
                             ->imageEditor()
                             ->helperText('Recomendado: 600x800px'),
                     ])->columns(2),
-                Forms\Components\Toggle::make('is_active')
-                    ->label('¿Está activa?')
-                    ->default(true)
-                    ->required(),
             ]);
     }
 
