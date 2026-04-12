@@ -36,9 +36,6 @@ class FormRecipientResource extends Resource
                             ->placeholder('Nuevo correo')
                             ->helperText('Agrega los correos que deben recibir notificaciones y presiona Enter o Coma.')
                             ->separator(',')
-                            ->nestedRecursiveValidationRules([
-                                'email'
-                            ])
                             ->required(),
                     ])
             ]);
