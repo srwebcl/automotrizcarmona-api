@@ -198,9 +198,10 @@ class VehicleModelResource extends Resource
                                     ->schema([
                                         TextInput::make('title')
                                             ->label('Título de Característica')
-                                            ->required(),
+                                            ->nullable(),
                                         Textarea::make('description')
-                                            ->label('Descripción / Detalle'),
+                                            ->label('Descripción / Detalle')
+                                            ->nullable(),
                                         FileUpload::make('image_url')
                                             ->label('Imagen / Icono')
                                             ->image()
