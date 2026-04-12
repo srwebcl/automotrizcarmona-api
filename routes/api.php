@@ -17,6 +17,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/banners', [CatalogController::class, 'banners']);
     Route::get('/branches', [CatalogController::class, 'branches']);
     Route::get('/news', [CatalogController::class, 'news']);
+    Route::get('/news/{slug}', [CatalogController::class, 'newsBySlug']);
 
     // Captura de Leads (Marketing & Ventas)
     Route::post('/leads', [LeadController::class, 'store']);

@@ -42,6 +42,14 @@ class CatalogController extends Controller
     }
 
     /**
+     * Get single news item by slug.
+     */
+    public function newsBySlug(string $slug): NewsResource
+    {
+        return new NewsResource(News::where('slug', $slug)->firstOrFail());
+    }
+
+    /**
      * Get all brands.
      */
     public function brands(): AnonymousResourceCollection
