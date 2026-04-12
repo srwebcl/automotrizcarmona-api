@@ -44,7 +44,14 @@ class LeadController extends Controller
             
             if ($recipientConfig && !empty($recipientConfig->emails)) {
                 $emails = $recipientConfig->emails;
-                \Illuminate\Support\Facades\Mail::to($emails)->send(new \App\Mail\ContactFormMail($lead));
+                try {
+                    \Illuminate\Support\Facades\Mail::to($emails)->send(new \App\Mail\ContactFormMail($lead));
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'MAIL_ERROR: ' . $e->getMessage() . ' en ' . $e->getFile() . ':' . $e->getLine()
+                    ], 400); // 400 para q no devuelva 500
+                }
             }
         } else {
             // 2. Despachar Job para enviar al CRM (Background)
