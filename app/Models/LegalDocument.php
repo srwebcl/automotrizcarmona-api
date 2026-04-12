@@ -9,7 +9,6 @@ class LegalDocument extends Model
     protected $fillable = [
         'brand_id',
         'title',
-        'excerpt',
         'content',
     ];
 

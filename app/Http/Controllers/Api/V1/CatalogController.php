@@ -187,10 +187,12 @@ class CatalogController extends Controller
             ->orderBy('id', 'desc')
             ->get()
             ->map(function ($doc) {
+                $plainText = strip_tags($doc->content);
+                $excerpt = strlen($plainText) > 300 ? substr($plainText, 0, 300) . '...' : ($plainText ?: 'Ver condiciones y términos legales aplicables.');
                 return [
                     'id' => $doc->id,
                     'title' => $doc->title,
-                    'excerpt' => $doc->excerpt,
+                    'excerpt' => $excerpt,
                     'content' => $doc->content,
                     'brand_name' => $doc->brand ? $doc->brand->name : 'Carmona Auto',
                     'brand_slug' => $doc->brand ? $doc->brand->slug : 'carmona',

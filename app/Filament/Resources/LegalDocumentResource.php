@@ -49,11 +49,6 @@ class LegalDocumentResource extends Resource
                             ->placeholder('Ej: Términos y Condiciones Toyota')
                             ->required()
                             ->columnSpanFull(),
-                        Textarea::make('excerpt')
-                            ->label('Extracto (Resumen corto)')
-                            ->helperText('Texto breve que se mostrará en los formularios antes del botón "Ver Más".')
-                            ->rows(3)
-                            ->columnSpanFull(),
                         RichEditor::make('content')
                             ->label('Texto Legal Completo (Popup)')
                             ->helperText('Contenido completo que se verá al abrir el popup de condiciones.')
