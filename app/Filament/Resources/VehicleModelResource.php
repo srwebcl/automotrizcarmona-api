@@ -49,19 +49,7 @@ class VehicleModelResource extends Resource
                                     ->relationship('brand', 'name')
                                     ->searchable()
                                     ->preload()
-                                    ->required()
-                                    ->createOptionForm([
-                                        Forms\Components\TextInput::make('name')
-                                            ->label('Nombre de Marca')
-                                            ->required()
-                                            ->live(onBlur: true)
-                                            ->afterStateUpdated(fn ($state, $set) => $set('slug', \Illuminate\Support\Str::slug($state))),
-                                        Forms\Components\TextInput::make('slug')
-                                            ->label('Slug')
-                                            ->required()
-                                            ->unique('brands', 'slug'),
-                                    ])
-                                    ->createOptionModalHeading('Añadir Nueva Marca'),
+                                    ->required(),
                                 TextInput::make('name')
                                     ->label('Nombre del Modelo')
                                     ->required()
@@ -83,134 +71,69 @@ class VehicleModelResource extends Resource
                                         'Moto' => 'Moto',
                                     ])
                                     ->preload(),
-                                Forms\Components\Fieldset::make('Estado y Etiquetas del Vehículo')
+                                Forms\Components\Fieldset::make('Estado y Etiquetas')
                                     ->schema([
-                                        Toggle::make('is_active')
-                                            ->label('Público en Catálogo')
-                                            ->helperText('Visible para los clientes.')
-                                            ->default(true),
-                                        Toggle::make('is_featured')
-                                            ->label('Auto Destacado')
-                                            ->helperText('Mostrar en el Home.'),
-                                        Toggle::make('is_hybrid')
-                                            ->label('Híbrido'),
-                                        Toggle::make('is_electric')
-                                            ->label('Eléctrico'),
-                                    ])
-                                    ->columns(4)
-                                    ->columnSpanFull(),
+                                        Toggle::make('is_active')->label('Activo')->default(true),
+                                        Toggle::make('is_featured')->label('Destacado'),
+                                        Toggle::make('is_hybrid')->label('Híbrido'),
+                                        Toggle::make('is_electric')->label('Eléctrico'),
+                                    ])->columns(4),
                             ])->columns(2),
 
                         Tabs\Tab::make('Multimedia')
                             ->icon('heroicon-o-photo')
                             ->schema([
-                                FileUpload::make('thumbnail_url')
-                                    ->label('Miniatura (Thumbnail)')
-                                    ->image()
-                                    ->disk('r2')
-                                    ->directory('models/thumbnails')
-                                    ->fetchFileInformation(false)
-                                    ->columnSpanFull(),
-                                FileUpload::make('desktop_banner_url')
-                                    ->label('Banner Desktop')
-                                    ->image()
-                                    ->disk('r2')
-                                    ->directory('models/banners')
-                                    ->fetchFileInformation(false),
-                                FileUpload::make('mobile_banner_url')
-                                    ->label('Banner Mobile')
-                                    ->image()
-                                    ->disk('r2')
-                                    ->directory('models/banners')
-                                    ->fetchFileInformation(false),
-                                TextInput::make('video_url')
-                                    ->label('URL de Video (YouTube/Vimeo)')
-                                    ->url()
-                                    ->placeholder('https://www.youtube.com/...')
-                                    ->columnSpanFull(),
-                                FileUpload::make('gallery')
-                                    ->label('Galería de Imágenes')
-                                    ->multiple()
-                                    ->image()
-                                    ->disk('r2')
-                                    ->reorderable()
-                                    ->panelLayout('grid')
-                                    ->directory('models/galleries')
-                                    ->fetchFileInformation(false)
-                                    ->columnSpanFull(),
+                                FileUpload::make('thumbnail_url')->label('Miniatura')->image()->disk('r2')->directory('models/thumbnails')->fetchFileInformation(false)->columnSpanFull(),
+                                FileUpload::make('desktop_banner_url')->label('Banner Desktop')->image()->disk('r2')->directory('models/banners')->fetchFileInformation(false),
+                                FileUpload::make('mobile_banner_url')->label('Banner Mobile')->image()->disk('r2')->directory('models/banners')->fetchFileInformation(false),
+                                TextInput::make('video_url')->label('URL de Video')->url()->columnSpanFull(),
+                                FileUpload::make('gallery')->label('Galería')->multiple()->image()->disk('r2')->reorderable()->panelLayout('grid')->directory('models/galleries')->fetchFileInformation(false)->columnSpanFull(),
                             ])->columns(2),
 
-                        Tabs\Tab::make('Versiones y Precios')
+                        Tabs\Tab::make('Versiones y Especificaciones')
                             ->icon('heroicon-o-currency-dollar')
                             ->schema([
                                 Repeater::make('vehicleVersions')
-                                    ->label('Versiones del Modelo')
                                     ->relationship()
                                     ->schema([
-                                        Forms\Components\Grid::make(4)
-                                            ->schema([
-                                                TextInput::make('name')->label('Versión')->required(),
-                                                TextInput::make('transmission')->label('Transmisión'),
-                                                TextInput::make('traction')->label('Tracción'),
-                                                TextInput::make('fuel')->label('Fuel'),
-                                            ]),
-                                        Forms\Components\Grid::make(4)
-                                            ->schema([
-                                                TextInput::make('list_price')->label('Precio Lista')->numeric()->prefix('$')->live(onBlur: true)
-                                                    ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
-                                                        $set('finance_price', (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus'));
-                                                    }),
-                                                TextInput::make('brand_bonus')->label('Bono Marca')->numeric()->prefix('$')->live(onBlur: true)
-                                                    ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
-                                                        $set('finance_price', (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus'));
-                                                    }),
-                                                TextInput::make('finance_bonus')->label('Bono Financ.')->numeric()->prefix('$')->live(onBlur: true)
-                                                    ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
-                                                        $set('finance_price', (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus'));
-                                                    }),
-                                                TextInput::make('finance_price')->label('Precio Final')->numeric()->prefix('$')->disabled()->dehydrated(false),
-                                            ]),
-                                        Forms\Components\Grid::make(4)
-                                            ->schema([
-                                                TextInput::make('motor')->label('Motor'),
-                                                TextInput::make('power')->label('Potencia'),
-                                                TextInput::make('torque')->label('Torque'),
-                                                TextInput::make('airbags')->label('Airbags')->numeric(),
-                                            ]),
-                                        Forms\Components\Grid::make(2)
-                                            ->schema([
-                                                TextInput::make('consumption_mixed')->label('Rendimiento Mixto'),
-                                                TextInput::make('electric_range')->label('Autonomía'),
-                                            ]),
-                                        Forms\Components\Toggle::make('includes_iva')->label('IVA Incluido')->default(true),
-                                    ])
-                                    ->columns(1)
-                                    ->collapsible()
-                                    ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Nueva Versión'),
+                                        Forms\Components\Grid::make(4)->schema([
+                                            TextInput::make('name')->label('Versión')->required(),
+                                            TextInput::make('transmission')->label('Transmisión'),
+                                            TextInput::make('traction')->label('Tracción'),
+                                            TextInput::make('fuel')->label('Combustible'),
+                                        ]),
+                                        Forms\Components\Grid::make(4)->schema([
+                                            TextInput::make('list_price')->label('Precio Lista')->numeric()->prefix('$')->live(onBlur: true)
+                                                ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
+                                            TextInput::make('brand_bonus')->label('Bono Marca')->numeric()->prefix('$')->live(onBlur: true)
+                                                ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
+                                            TextInput::make('finance_bonus')->label('Bono Financ.')->numeric()->prefix('$')->live(onBlur: true)
+                                                ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
+                                            TextInput::make('finance_price')->label('Financio Final')->numeric()->prefix('$')->disabled()->dehydrated(false),
+                                        ]),
+                                        Forms\Components\Grid::make(4)->schema([
+                                            TextInput::make('motor')->label('Motor'),
+                                            TextInput::make('power')->label('Potencia'),
+                                            TextInput::make('torque')->label('Torque'),
+                                            TextInput::make('airbags')->label('Airbags')->numeric(),
+                                        ]),
+                                        Forms\Components\Grid::make(2)->schema([
+                                            TextInput::make('consumption_mixed')->label('Consumo'),
+                                            TextInput::make('electric_range')->label('Autonomía'),
+                                        ]),
+                                    ])->columns(1)->collapsible()
                             ]),
 
                         Tabs\Tab::make('Equipamiento Destacado')
                             ->icon('heroicon-o-star')
                             ->schema([
                                 Repeater::make('features')
-                                    ->label('Características')
                                     ->relationship()
                                     ->schema([
-                                        TextInput::make('title')
-                                            ->label('Título de Característica')
-                                            ->nullable(),
-                                        Textarea::make('description')
-                                            ->label('Descripción / Detalle')
-                                            ->nullable(),
-                                        FileUpload::make('image_url')
-                                            ->label('Imagen / Icono')
-                                            ->image()
-                                            ->disk('r2')
-                                            ->directory('models/features')
-                                            ->fetchFileInformation(false),
-                                    ])
-                                    ->collapsible()
-                                    ->itemLabel(fn (array $state): ?string => $state['title'] ?? 'Nueva Característica'),
+                                        TextInput::make('title')->label('Título'),
+                                        Textarea::make('description')->label('Detalle'),
+                                        FileUpload::make('image_url')->label('Icono/Imagen')->image()->disk('r2')->directory('models/features')->fetchFileInformation(false),
+                                    ])->collapsible()
                             ]),
                     ])->columnSpanFull(),
             ]);
@@ -220,109 +143,27 @@ class VehicleModelResource extends Resource
     {
         return $table
             ->striped()
-            ->defaultPaginationPageOption(10)
             ->columns([
-                ImageColumn::make('thumbnail_url')
-                    ->label('Imagen')
-                    ->disk('r2')
-                    ->defaultImageUrl(url('/images/placeholder.png'))
-                    ->square()
-                    ->size(40)
-                    ->extraImgAttributes(['loading' => 'lazy']),
-                TextColumn::make('brand.name')
-                    ->label('Marca')
-                    ->badge()
-                    ->color('info')
-                    ->wrap()
-                    ->sortable(),
-                TextColumn::make('name')
-                    ->label('Modelo')
-                    ->weight('bold')
-                    ->wrap()
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('category')
-                    ->label('Categoría')
-                    ->badge()
-                    ->color('success')
-                    ->sortable(),
+                ImageColumn::make('thumbnail_url')->label('Img')->disk('r2')->square()->size(40),
+                TextColumn::make('brand.name')->label('Marca')->badge()->color('info')->sortable(),
+                TextColumn::make('name')->label('Modelo')->weight('bold')->searchable()->sortable(),
+                TextColumn::make('category')->label('Categoría')->badge()->color('success'),
                 TextColumn::make('vehicleVersions.list_price')
-                    ->label('Precio (Desde)')
+                    ->label('Desde')
                     ->money('clp')
-                    ->getStateUsing(function (\App\Models\VehicleModel $record) {
-                        return $record->vehicleVersions->count() > 0 
-                            ? $record->vehicleVersions->min('list_price') 
-                            : 0;
-                    })
-                    ->sortable(),
-                TextColumn::make('vehicle_type')
-                    ->label('Tipo')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'auto' => 'info',
-                        'camion' => 'warning',
-                        default => 'gray',
-                    })
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'auto' => 'Auto/SUV',
-                        'camion' => 'Camión',
-                        default => $state,
-                    })
-                    ->sortable(),
-                ToggleColumn::make('is_active')
-                    ->label('Activo')
-                    ->sortable(),
-                ToggleColumn::make('is_featured')
-                    ->label('Destacado')
-                    ->sortable(),
+                    ->getStateUsing(fn ($record) => $record->vehicleVersions->count() > 0 ? $record->vehicleVersions->min('list_price') : 0),
+                ToggleColumn::make('is_active')->label('Activo'),
+                ToggleColumn::make('is_featured')->label('Destacado'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('brand_id')
-                    ->label('MARCA')
-                    ->multiple()
-                    ->relationship('brand', 'name')
-                    ->preload(),
-                Tables\Filters\SelectFilter::make('vehicle_type')
-                    ->label('TIPO')
+                Tables\Filters\SelectFilter::make('brand_id')->label('Marca')->multiple()->relationship('brand', 'name')->preload(),
+                Tables\Filters\SelectFilter::make('category')->label('Categoría')->multiple()
                     ->options([
-                        'auto' => 'Auto/SUV',
-                        'camion' => 'Camión Comercial',
-                    ]),
-                Tables\Filters\SelectFilter::make('category')
-                    ->label('CATEGORÍA')
-                    ->multiple()
-                    ->options([
-                        'SUV' => 'SUV',
-                        'Sedán' => 'Sedán',
-                        'Hatchback' => 'Hatchback',
-                        'Pickup' => 'Pickup',
-                        'Coupé' => 'Coupé',
-                        'Convertible' => 'Convertible',
-                        'Van' => 'Van',
-                        'Furgón' => 'Furgón',
-                        'Camión' => 'Camión',
-                        'Moto' => 'Moto',
+                        'SUV' => 'SUV', 'Sedán' => 'Sedán', 'Hatchback' => 'Hatchback', 'Pickup' => 'Pickup',
+                        'Coupé' => 'Coupé', 'Convertible' => 'Convertible', 'Van' => 'Van', 'Furgón' => 'Furgón',
+                        'Camión' => 'Camión', 'Moto' => 'Moto'
                     ])
-                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
-                        return $query->when($data['values'], function ($q) use ($data) {
-                            foreach ($data['values'] as $value) {
-                                $q->whereJsonContains('category', $value);
-                            }
-                        });
-                    })
-                    ->preload(),
-                Tables\Filters\Filter::make('equipment')
-                    ->label('EQUIPAMIENTO')
-                    ->form([
-                        Forms\Components\Toggle::make('is_hybrid')
-                            ->label('Híbrido'),
-                        Forms\Components\Toggle::make('is_electric')
-                            ->label('Eléctrico'),
-                    ])
-                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
-                        return $query->when($data['is_hybrid'], fn ($q) => $q->where('is_hybrid', true))
-                                     ->when($data['is_electric'], fn ($q) => $q->where('is_electric', true));
-                    }),
+                    ->query(fn ($query, $data) => $query->when($data['values'], fn ($q) => $q->whereJsonContains('category', $data['values']))),
             ])
             ->actions([
                 Tables\Actions\EditAction::make('manage_versions')
@@ -330,69 +171,33 @@ class VehicleModelResource extends Resource
                     ->icon('heroicon-o-currency-dollar')
                     ->color('success')
                     ->slideOver()
-                    ->url(null)
-                    ->modalHeading(fn (\App\Models\VehicleModel $record) => "Precios y Versiones de {$record->name}")
+                    ->modalHeading(fn ($record) => "Precios: {$record->name}")
                     ->form([
                         Forms\Components\Repeater::make('vehicleVersions')
-                            ->label('Versiones del Modelo')
                             ->relationship()
                             ->schema([
-                                Forms\Components\Grid::make(4)
-                                    ->schema([
-                                        Forms\Components\TextInput::make('name')->label('Versión')->required(),
-                                        Forms\Components\TextInput::make('transmission')->label('Transmisión'),
-                                        Forms\Components\TextInput::make('traction')->label('Tracción'),
-                                        Forms\Components\TextInput::make('fuel')->label('Combustible'),
-                                    ]),
-                                Forms\Components\Grid::make(4)
-                                    ->schema([
-                                        Forms\Components\TextInput::make('list_price')->label('Precio Lista')->numeric()->prefix('$')->live(onBlur: true)
-                                            ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
-                                                $list = (int)$get('list_price') ?: 0;
-                                                $brand = (int)$get('brand_bonus') ?: 0;
-                                                $fin = (int)$get('finance_bonus') ?: 0;
-                                                $set('finance_price', max(0, $list - $brand - $fin));
-                                            }),
-                                        Forms\Components\TextInput::make('brand_bonus')->label('Bono Marca')->numeric()->prefix('$')->live(onBlur: true)
-                                            ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
-                                                $list = (int)$get('list_price') ?: 0;
-                                                $brand = (int)$get('brand_bonus') ?: 0;
-                                                $fin = (int)$get('finance_bonus') ?: 0;
-                                                $set('finance_price', max(0, $list - $brand - $fin));
-                                            }),
-                                        Forms\Components\TextInput::make('finance_bonus')->label('Bono Financ.')->numeric()->prefix('$')->live(onBlur: true)
-                                            ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
-                                                $list = (int)$get('list_price') ?: 0;
-                                                $brand = (int)$get('brand_bonus') ?: 0;
-                                                $fin = (int)$get('finance_bonus') ?: 0;
-                                                $set('finance_price', max(0, $list - $brand - $fin));
-                                            }),
-                                        Forms\Components\TextInput::make('finance_price')->label('Precio Final')->numeric()->prefix('$')->disabled()->dehydrated(false),
-                                        Forms\Components\Grid::make(4)
-                                            ->schema([
-                                                Forms\Components\TextInput::make('motor')->label('Motor'),
-                                                Forms\Components\TextInput::make('power')->label('Potencia'),
-                                                Forms\Components\TextInput::make('torque')->label('Torque'),
-                                                Forms\Components\TextInput::make('airbags')->label('Airbags')->numeric(),
-                                            ]),
-                                        Forms\Components\Grid::make(2)
-                                            ->schema([
-                                                Forms\Components\TextInput::make('consumption_mixed')->label('Rendimiento Mixto'),
-                                                Forms\Components\TextInput::make('electric_range')->label('Autonomía'),
-                                            ]),
-                                    ])
-                                    ->columns(1)
-                                    ->collapsible()
-                                    ->addActionLabel('Añadir Versión')
-                                    ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Nueva Versión'),
+                                Forms\Components\Grid::make(4)->schema([
+                                    TextInput::make('name')->label('Versión')->required(),
+                                    TextInput::make('transmission')->label('Transmisión'),
+                                    TextInput::make('traction')->label('Tracción'),
+                                    TextInput::make('fuel')->label('Fuel'),
+                                ]),
+                                Forms\Components\Grid::make(4)->schema([
+                                    TextInput::make('list_price')->label('Precio Lista')->numeric()->prefix('$')->live(onBlur: true)
+                                        ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
+                                    TextInput::make('brand_bonus')->label('Bono Marca')->numeric()->prefix('$')->live(onBlur: true)
+                                        ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
+                                    TextInput::make('finance_bonus')->label('Bono Financ.')->numeric()->prefix('$')->live(onBlur: true)
+                                        ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
+                                    TextInput::make('finance_price')->label('Precio Final')->numeric()->prefix('$')->disabled()->dehydrated(false),
+                                ]),
+                            ])->columns(1)->collapsible()
                     ]),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()]),
             ]);
     }
 
@@ -405,19 +210,11 @@ class VehicleModelResource extends Resource
         ];
     }
 
-    public static function getModelLabel(): string
-    {
-        return 'Modelo de Vehículo';
-    }
-
-    public static function getPluralModelLabel(): string
-    {
-        return 'Modelos de Vehículos';
-    }
+    public static function getModelLabel(): string { return 'Modelo'; }
+    public static function getPluralModelLabel(): string { return 'Inventario'; }
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return parent::getEloquentQuery()
-            ->with(['brand', 'vehicleVersions', 'features']);
+        return parent::getEloquentQuery()->with(['brand', 'vehicleVersions', 'features']);
     }
 }
