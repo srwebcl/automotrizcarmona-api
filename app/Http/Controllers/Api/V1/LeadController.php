@@ -36,10 +36,22 @@ class LeadController extends Controller
             'crm_synced' => false,
         ]);
 
-        // 2. Despachar Job para enviar al CRM (Background)
-        SendLeadToTecnomJob::dispatch($lead, $validated);
+        $directForms = ['contacto', 'reclamos', 'dyp'];
 
-        Log::info("Lead recibido y guardado correctamente: id={$lead->id}");
+        if (in_array(strtolower($lead->source), $directForms)) {
+            // Obtenemos correos desde la Base de Datos
+            $recipientConfig = \App\Models\FormRecipient::where('identifier', strtolower($lead->source))->first();
+            
+            if ($recipientConfig && !empty($recipientConfig->emails)) {
+                $emails = $recipientConfig->emails;
+                \Illuminate\Support\Facades\Mail::to($emails)->send(new \App\Mail\ContactFormMail($lead));
+            }
+        } else {
+            // 2. Despachar Job para enviar al CRM (Background)
+            SendLeadToTecnomJob::dispatch($lead, $validated);
+        }
+
+        Log::info("Lead recibido y procesado correctamente: id={$lead->id}");
 
         return response()->json([
             'status' => 'success',
