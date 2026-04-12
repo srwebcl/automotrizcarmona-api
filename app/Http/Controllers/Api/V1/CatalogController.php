@@ -177,4 +177,27 @@ class CatalogController extends Controller
 
         return new LandingResource($landing);
     }
+
+    /**
+     * Get all legal documents.
+     */
+    public function legalDocuments(): \Illuminate\Http\JsonResponse
+    {
+        $docs = \App\Models\LegalDocument::with(['brand:id,name,slug,logo_url', 'truckBrand:id,name,slug,logo_url'])
+            ->orderBy('id', 'desc')
+            ->get()
+            ->map(function ($doc) {
+                return [
+                    'id' => $doc->id,
+                    'title' => $doc->title,
+                    'excerpt' => $doc->excerpt,
+                    'content' => $doc->content,
+                    'brand_name' => $doc->brand ? $doc->brand->name : ($doc->truckBrand ? $doc->truckBrand->name : 'Carmona Auto'),
+                    'brand_slug' => $doc->brand ? $doc->brand->slug : ($doc->truckBrand ? $doc->truckBrand->slug : 'carmona'),
+                    'logo_url' => $doc->brand ? $doc->brand->logo_url : ($doc->truckBrand ? $doc->truckBrand->logo_url : null),
+                ];
+            });
+
+        return response()->json($docs);
+    }
 }

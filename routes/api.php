@@ -24,6 +24,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/landings/{slug}', [CatalogController::class, 'landingInfo']);
     Route::get('/promotions', [CatalogController::class, 'promotions']);
     Route::get('/electromovilidad', [CatalogController::class, 'electromovilidad']);
+    Route::get('/legal-documents', [CatalogController::class, 'legalDocuments']);
 
     // Captura de Leads (Marketing & Ventas)
     Route::post('/leads', [LeadController::class, 'store']);
