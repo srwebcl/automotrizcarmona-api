@@ -147,11 +147,7 @@ class VehicleVersionResource extends Resource
                     ->wrap()
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('fuel')
-                    ->label('Combustible')
-                    ->badge()
-                    ->color('success')
-                    ->sortable(),
+
                 Tables\Columns\TextInputColumn::make('list_price')
                     ->label('Precio Lista ($)')
                     ->type('number')
@@ -174,14 +170,7 @@ class VehicleVersionResource extends Resource
                     ->badge()
                     ->color('success')
                     ->weight('bold'),
-                TextColumn::make('motor')
-                    ->label('Motor')
-                    ->toggleable()
-                    ->sortable(),
-                TextColumn::make('power')
-                    ->label('Potencia')
-                    ->toggleable()
-                    ->sortable(),
+
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('brand_id')
