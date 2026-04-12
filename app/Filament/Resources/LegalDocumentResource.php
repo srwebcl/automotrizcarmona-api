@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\LegalDocumentResource\Pages;
 use App\Models\LegalDocument;
 use App\Models\Brand;
-use App\Models\TruckBrand;
 use Filament\Forms;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -41,12 +40,7 @@ class LegalDocumentResource extends Resource
                             ->options(Brand::all()->pluck('name', 'id'))
                             ->searchable()
                             ->nullable(),
-                        Select::make('truck_brand_id')
-                            ->label('Aplica a Marca de Camiones')
-                            ->options(TruckBrand::all()->pluck('name', 'id'))
-                            ->searchable()
-                            ->nullable(),
-                    ])->columns(2),
+                    ])->columns(1),
 
                 Forms\Components\Section::make('Contenido Legal')
                     ->schema([
@@ -77,14 +71,9 @@ class LegalDocumentResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('brand.name')
-                    ->label('Marca Autos')
+                    ->label('Marca')
                     ->sortable()
                     ->badge(),
-                TextColumn::make('truckBrand.name')
-                    ->label('Marca Camiones')
-                    ->sortable()
-                    ->badge()
-                    ->color('info'),
                 TextColumn::make('updated_at')
                     ->label('Última actualización')
                     ->dateTime()

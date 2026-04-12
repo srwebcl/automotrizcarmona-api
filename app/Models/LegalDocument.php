@@ -8,7 +8,6 @@ class LegalDocument extends Model
 {
     protected $fillable = [
         'brand_id',
-        'truck_brand_id',
         'title',
         'excerpt',
         'content',
@@ -17,10 +16,5 @@ class LegalDocument extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class);
-    }
-
-    public function truckBrand()
-    {
-        return $this->belongsTo(TruckBrand::class);
     }
 }
