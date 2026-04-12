@@ -153,6 +153,7 @@ class VehicleModelResource extends Resource
                                     ->image()
                                     ->disk('r2')
                                     ->reorderable()
+                                    ->panelLayout('grid')
                                     ->directory('models/galleries')
                                     ->fetchFileInformation(false)
                                     ->columnSpanFull(),
