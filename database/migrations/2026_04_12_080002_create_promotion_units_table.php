@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     public function up(): void
     {
+        Schema::dropIfExists('promotion_units');
         Schema::create('promotion_units', function (Blueprint $table) {
             $table->id();
             $table->foreignId('vehicle_model_id')->constrained()->onDelete('cascade');

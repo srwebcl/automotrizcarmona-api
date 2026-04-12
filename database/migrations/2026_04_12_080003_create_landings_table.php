@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     public function up(): void
     {
+        Schema::dropIfExists('landings');
         Schema::create('landings', function (Blueprint $table) {
             $table->id();
             $table->string('slug')->unique(); // e.g., 'promociones', 'electromovilidad'
