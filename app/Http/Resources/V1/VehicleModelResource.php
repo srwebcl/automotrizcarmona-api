@@ -24,7 +24,7 @@ class VehicleModelResource extends JsonResource
             'is_active' => (bool) $this->is_active,
             'desktop_banner_url' => $this->desktop_banner_url ? (str_starts_with($this->desktop_banner_url, 'http') ? $this->desktop_banner_url : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($this->desktop_banner_url, '/')) : null,
             'mobile_banner_url' => $this->mobile_banner_url ? (str_starts_with($this->mobile_banner_url, 'http') ? $this->mobile_banner_url : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($this->mobile_banner_url, '/')) : null,
-            'gallery' => collect($this->gallery ?? [])->map(fn($img) => str_starts_with($img, 'http') ? $img : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($img, '/'))->toArray(),
+            'gallery' => collect(array_reverse($this->gallery ?? []))->map(fn($img) => str_starts_with($img, 'http') ? $img : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($img, '/'))->toArray(),
             'video_url' => $this->video_url,
             'description' => $this->description,
             'brand' => new BrandResource($this->whenLoaded('brand')),
