@@ -9,9 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('truck_brands', function (Blueprint $table) {
-            $table->boolean('show_in_services')->default(true)->after('is_active');
-            $table->boolean('show_in_parts')->default(true)->after('show_in_services');
-            $table->boolean('show_in_dyp')->default(true)->after('show_in_parts');
+            if (!Schema::hasColumn('truck_brands', 'show_in_services')) {
+                $table->boolean('show_in_services')->default(true)->after('is_active');
+            }
+            if (!Schema::hasColumn('truck_brands', 'show_in_parts')) {
+                $table->boolean('show_in_parts')->default(true)->after('is_active');
+            }
+            if (!Schema::hasColumn('truck_brands', 'show_in_dyp')) {
+                $table->boolean('show_in_dyp')->default(true)->after('is_active');
+            }
         });
     }
 
