@@ -46,7 +46,7 @@ class LeadController extends Controller
                 $emails = $recipientConfig->emails;
                 try {
                     \Illuminate\Support\Facades\Mail::to($emails)->send(new \App\Mail\ContactFormMail($lead));
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     return response()->json([
                         'status' => 'error',
                         'message' => 'MAIL_ERROR: ' . $e->getMessage() . ' en ' . $e->getFile() . ':' . $e->getLine()
