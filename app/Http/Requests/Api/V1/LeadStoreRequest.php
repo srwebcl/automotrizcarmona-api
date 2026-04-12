@@ -20,7 +20,7 @@ class LeadStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'source' => 'required|string|in:ventas,dyp,servicio_tecnico,repuestos,reclamos',
+            'source' => 'required|string|in:ventas,dyp,servicio_tecnico,repuestos,reclamos,contacto',
             'customer' => 'required|array',
             'customer.rut' => 'nullable|string',
             'customer.first_name' => 'required|string|max:255',
