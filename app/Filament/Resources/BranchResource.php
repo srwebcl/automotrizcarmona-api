@@ -57,13 +57,16 @@ class BranchResource extends Resource
                             ->multiple()
                             ->searchable()
                             ->placeholder('Ej: Toyota, Volkswagen, Iveco...')
-                            ->options([
-                                'Toyota' => 'Toyota', 'Volkswagen' => 'Volkswagen', 'Audi' => 'Audi', 'Seat' => 'Seat', 'Cupra' => 'Cupra',
-                                'Honda' => 'Honda', 'BMW' => 'BMW', 'BMW Motorrad' => 'BMW Motorrad', 'Mini' => 'Mini', 'MG' => 'MG',
-                                'Maxus' => 'Maxus', 'Jetour' => 'Jetour', 'Geely' => 'Geely', 'Dongfeng' => 'Dongfeng', 'Kaiyi' => 'Kaiyi',
-                                'Karry' => 'Karry', 'Foton' => 'Foton', 'Iveco' => 'Iveco', 'MAN' => 'MAN',
-                                'VW Camiones' => 'VW Camiones', 'Foton Camiones' => 'Foton Camiones',
-                            ]),
+                            ->options(function () {
+                                $brands = \App\Models\Brand::pluck('name', 'name')->toArray();
+                                $trucks = \App\Models\TruckBrand::pluck('name', 'name')->toArray();
+                                
+                                $allBrands = array_unique(array_merge(array_values($brands), array_values($trucks)));
+                                sort($allBrands);
+                                
+                                // Return as key => value pair identically
+                                return array_combine($allBrands, $allBrands);
+                            }),
                     ]),
 
                 // ── UBICACIÓN Y CONTACTO ────────────────────────────────────────
