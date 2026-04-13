@@ -32,20 +32,45 @@ class NewsResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title')->label('Título')
-                    ->required()
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
-                TextInput::make('slug')->label('Slug')
-                    ->required()
-                    ->unique(ignoreRecord: true),
-                FileUpload::make('image')->label('Imagen Principal')
-                    ->image()
-                    ->directory('news'),
-                DateTimePicker::make('published_at')->label('Fecha de Publicación'),
-                RichEditor::make('content')->label('Contenido')
-                    ->columnSpanFull()
-                    ->required(),
+                Forms\Components\Grid::make(3)->schema([
+                    // Columna Izquierda (Contenido Principal)
+                    Forms\Components\Group::make()->columnSpan(2)->schema([
+                        Forms\Components\Section::make('Información Principal')->schema([
+                            TextInput::make('title')->label('Título de la Noticia')
+                                ->required()
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
+                                
+                            TextInput::make('slug')->label('Slug (URL Amigable)')
+                                ->required()
+                                ->unique(ignoreRecord: true)
+                                ->helperText('Este texto se usa para formar el link de la noticia.'),
+                        ])->columns(2),
+
+                        Forms\Components\Section::make('Cuerpo de la Noticia')->schema([
+                            RichEditor::make('content')->label('Contenido')
+                                ->disableLabel()
+                                ->required(),
+                        ]),
+                    ]),
+
+                    // Columna Derecha (Medios y Publicación)
+                    Forms\Components\Group::make()->columnSpan(1)->schema([
+                        Forms\Components\Section::make('Archivo Multimedia')->schema([
+                            FileUpload::make('image')->label('Imagen de Portada o Cabecera')
+                                ->image()
+                                ->disk('r2')
+                                ->directory('news')
+                                ->required(),
+                        ]),
+
+                        Forms\Components\Section::make('Ajustes de Publicación')->schema([
+                            DateTimePicker::make('published_at')->label('Fecha de Publicación visible')
+                                ->default(now())
+                                ->required(),
+                        ]),
+                    ]),
+                ])
             ]);
     }
 
