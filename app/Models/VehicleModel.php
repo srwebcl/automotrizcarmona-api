@@ -11,7 +11,7 @@ class VehicleModel extends Model
     protected $fillable = [
         'brand_id', 'name', 'slug', 'category', 'thumbnail_url', 'desktop_banner_url', 
         'mobile_banner_url', 'video_url', 'gallery', 'base_price', 'slogan', 
-        'is_new', 'is_hybrid', 'is_electric', 'is_commercial', 'vehicle_type', 'is_promotion'
+        'is_new', 'is_hybrid', 'is_electric', 'is_commercial', 'vehicle_type', 'is_promotion', 'includes_iva'
     ];
 
     protected $casts = [
@@ -22,6 +22,7 @@ class VehicleModel extends Model
         'is_electric' => 'boolean',
         'is_commercial' => 'boolean',
         'is_promotion' => 'boolean',
+        'includes_iva' => 'boolean',
         'base_price' => 'integer',
     ];
 

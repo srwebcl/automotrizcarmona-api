@@ -90,6 +90,7 @@ class VehicleModelResource extends Resource
                                     }),
                                         Forms\Components\Fieldset::make('Estado y Etiquetas')
                                             ->schema([
+                                                Toggle::make('includes_iva')->label('Precios Incluyen IVA')->default(true)->columnSpanFull(),
                                                 Toggle::make('is_active')->label('Activo')->default(true),
                                                 Toggle::make('is_featured')->label('Destacado'),
                                                 Toggle::make('is_hybrid')->label('Híbrido'),
