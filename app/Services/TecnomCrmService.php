@@ -26,17 +26,15 @@ class TecnomCrmService
      */
     public function sendLead(array $leadData): bool
     {
-        $xmlBody = $this->generateAdfXml($leadData);
+        $payload = $this->generateAdfJson($leadData);
 
         try {
             $response = Http::withBasicAuth($this->user, $this->pass)
                 ->withHeaders([
-                    'Content-Type' => 'application/x-www-form-urlencoded'
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json'
                 ])
-                ->asForm()
-                ->post($this->endpoint, [
-                    'data' => $xmlBody
-                ]);
+                ->post($this->endpoint, $payload);
 
             if ($response->successful()) {
                 Log::info("Lead enviado exitosamente a Tecnom CRM", ['lead_id' => $leadData['id'] ?? 'unknown']);
@@ -57,12 +55,12 @@ class TecnomCrmService
     }
 
     /**
-     * Generar el string XML en formato ADF 1.0.
+     * Generar la estructura JSON en formato ADF 1.0.
      *
      * @param array $data
-     * @return string
+     * @return array
      */
-    protected function generateAdfXml(array $data): string
+    protected function generateAdfJson(array $data): array
     {
         $date = now()->toIso8601String();
         $source = $data['source'] ?? 'Sitio Web';
@@ -78,6 +76,9 @@ class TecnomCrmService
         $year = $data['vehicle']['year'] ?? '';
         $vin = $data['vehicle']['vin'] ?? '';
         
+        // El año debe ser entero si existe, si no null
+        $yearInt = is_numeric($year) ? (int) $year : null;
+        
         $rut = $data['customer']['rut'] ?? '';
         $company = $data['customer']['company'] ?? '';
 
@@ -87,36 +88,63 @@ class TecnomCrmService
         if (!empty($vin)) $extraInfo[] = "VIN: $vin";
         
         $extraStr = !empty($extraInfo) ? ' | ' . implode(' | ', $extraInfo) : '';
+        $fullComments = "Origen: {$source} | Mensaje: {$message}{$extraStr}";
 
-        return <<<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<?adf version="1.0"?>
-<adf>
-    <prospect>
-        <requestdate>{$date}</requestdate>
-        <vehicle interest="buy" status="new">
-            <year>{$year}</year>
-            <make>{$brand}</make>
-            <model>{$model}</model>
-            <trim>{$version}</trim>
-        </vehicle>
-        <customer>
-            <contact>
-                <name part="first">{$firstName}</name>
-                <name part="last">{$lastName}</name>
-                <email>{$email}</email>
-                <phone type="cell">{$phone}</phone>
-            </contact>
-            <comments>Origen: {$source} | Mensaje: {$message}{$extraStr}</comments>
-        </customer>
-        <vendor>
-            <vendorname>Automotriz Carmona</vendorname>
-        </vendor>
-        <provider>
-            <name>Sitio Web Automotriz Carmona</name>
-        </provider>
-    </prospect>
-</adf>
-XML;
+        $prospect = [
+            'requestdate' => $date,
+            'customer' => [
+                'comments' => $fullComments,
+                'contacts' => [
+                    [
+                        'names' => [
+                            [
+                                'part' => 'first',
+                                'value' => $firstName
+                            ],
+                            [
+                                'part' => 'last',
+                                'value' => $lastName
+                            ]
+                        ],
+                    ]
+                ]
+            ],
+            'provider' => [
+                'name' => [
+                    'value' => 'Sitio Web Automotriz Carmona'
+                ],
+                'service' => 'Integración Web'
+            ]
+        ];
+
+        // Añadir email si existe
+        if (!empty($email)) {
+            $prospect['customer']['contacts'][0]['emails'] = [
+                ['value' => $email]
+            ];
+        }
+
+        // Añadir teléfono si existe
+        if (!empty($phone)) {
+            $prospect['customer']['contacts'][0]['phones'] = [
+                ['type' => 'cellphone', 'value' => $phone]
+            ];
+        }
+
+        // Añadir vehículo si hay datos
+        if (!empty($brand) || !empty($model)) {
+            $vehicle = [];
+            if (!empty($brand)) $vehicle['make'] = $brand;
+            if (!empty($model)) $vehicle['model'] = $model;
+            if (!empty($version)) $vehicle['trim'] = $version;
+            if ($yearInt !== null) $vehicle['year'] = $yearInt;
+            
+            $vehicle['interest'] = 'buy';
+            $vehicle['status'] = 'new';
+            
+            $prospect['vehicles'] = [$vehicle];
+        }
+
+        return ['prospect' => $prospect];
     }
 }
