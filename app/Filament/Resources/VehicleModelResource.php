@@ -28,9 +28,9 @@ class VehicleModelResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
     
-    protected static ?string $navigationLabel = 'MODELOS';
+    protected static ?string $navigationLabel = 'Modelos';
     
-    protected static ?string $pluralLabel = 'MODELOS';
+    protected static ?string $pluralLabel = 'Modelos';
     
     protected static ?string $navigationGroup = 'Livianos';
 
@@ -278,7 +278,7 @@ class VehicleModelResource extends Resource
     }
 
     public static function getModelLabel(): string { return 'Modelo'; }
-    public static function getPluralModelLabel(): string { return 'MODELOS'; }
+    public static function getPluralModelLabel(): string { return 'Modelos'; }
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
