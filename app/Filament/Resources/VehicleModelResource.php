@@ -73,7 +73,7 @@ class VehicleModelResource extends Resource
                                         $merged = collect($baseCategories)
                                             ->merge($existing)
                                             ->map(fn ($item) => \Illuminate\Support\Str::ucfirst($item))
-                                            ->unique(fn ($item) => mb_strtolower($item, 'UTF-8'))
+                                            ->unique(fn ($item) => \Illuminate\Support\Str::slug($item))
                                             ->sort()
                                             ->values()
                                             ->toArray();
@@ -212,7 +212,7 @@ class VehicleModelResource extends Resource
                         $merged = collect($baseCategories)
                             ->merge($existing)
                             ->map(fn ($item) => \Illuminate\Support\Str::ucfirst($item))
-                            ->unique(fn ($item) => mb_strtolower($item, 'UTF-8'))
+                            ->unique(fn ($item) => \Illuminate\Support\Str::slug($item))
                             ->sort()
                             ->values()
                             ->toArray();
