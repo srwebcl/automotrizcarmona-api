@@ -32,4 +32,15 @@ Route::prefix('v1')->group(function () {
     // Camiones
     Route::get('/truck-brands', [App\Http\Controllers\Api\TruckController::class, 'getBrands']);
     Route::get('/truck-brands/{slug}/trucks', [App\Http\Controllers\Api\TruckController::class, 'getTrucksByBrand']);
+    
+    // Temporal DB Fix
+    Route::get('/fix-db', function () {
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('vehicle_models', 'includes_iva')) {
+            \Illuminate\Support\Facades\Schema::table('vehicle_models', function ($table) {
+                $table->boolean('includes_iva')->default(true);
+            });
+            return response()->json(['message' => 'Columna includes_iva agregada exitosamente a la base de datos web.']);
+        }
+        return response()->json(['message' => 'La columna ya existe en esta base de datos. Ninguna accion tomada.']);
+    });
 });
