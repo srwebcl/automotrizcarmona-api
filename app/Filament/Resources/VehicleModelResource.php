@@ -94,12 +94,13 @@ class VehicleModelResource extends Resource
                                                 Toggle::make('is_featured')->label('Destacado'),
                                                 Toggle::make('is_hybrid')->label('Híbrido'),
                                                 Toggle::make('is_electric')->label('Eléctrico'),
-                                                Toggle::make('is_promotion')->label('En Promoción'),
+                                                Toggle::make('is_promotion')->label('En Promoción')->live(),
                                             ])->columns(5),
                                     ])->columns(2),
 
-                                Tabs\Tab::make('Promociones e Inventario')
+                                Tabs\Tab::make('Promociones')
                                     ->icon('heroicon-o-tag')
+                                    ->visible(fn (\Filament\Forms\Get $get) => $get('is_promotion'))
                                     ->schema([
                                         Repeater::make('promotionUnits')
                                             ->relationship()
