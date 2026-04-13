@@ -38,10 +38,14 @@ class AdminPanelProvider extends PanelProvider
                 \Filament\View\PanelsRenderHook::HEAD_END,
                 fn (): string => new \Illuminate\Support\HtmlString('
                     <style>
-                        /* Fuerza el logo a NEGRO puro en el modo claro */
-                        .fi-logo img { filter: brightness(0) !important; }
-                        /* Fuerza el logo a BLANCO puro en el modo oscuro (por si lo activan) */
-                        .dark .fi-logo img { filter: brightness(0) invert(1) !important; }
+                        /* Fuerza implacablemente el logo a negro en cualquier pantalla de Filament (login, dashboard, etc) */
+                        img[src*="logo-carmona"] { 
+                            filter: brightness(0) !important; 
+                        }
+                        /* Lo revierte a blanco solo si el usuario enciende el dark mode del panel */
+                        .dark img[src*="logo-carmona"] { 
+                            filter: brightness(0) invert(1) !important; 
+                        }
                     </style>
                 '),
             )
