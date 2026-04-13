@@ -55,20 +55,26 @@ class VehicleModelResource extends Resource
                                     ->required()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
-                                Forms\Components\TagsInput::make('category')
-                                    ->label('Categorías (Escribir nuevas o seleccionar)')
-                                    ->suggestions([
-                                        'SUV',
-                                        'Sedán',
-                                        'Hatchback',
-                                        'Pickup',
-                                        'Coupé',
-                                        'Convertible',
-                                        'Van',
-                                        'Furgón',
-                                        'Camión',
-                                        'Moto',
-                                    ]),
+                                Forms\Components\Select::make('category')
+                                    ->label('Categorías')
+                                    ->multiple()
+                                    ->searchable()
+                                    ->preload()
+                                    ->options(function () {
+                                        $existing = \App\Models\VehicleModel::pluck('category')->flatten()->unique()->filter()->toArray();
+                                        $baseCategories = ['SUV', 'Sedán', 'Hatchback', 'Pickup', 'Coupé', 'Convertible', 'Van', 'Furgón', 'Camión', 'Moto'];
+                                        $merged = array_unique(array_merge($baseCategories, $existing));
+                                        sort($merged);
+                                        return array_combine($merged, $merged);
+                                    })
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('new_category')
+                                            ->label('Nombre de la Categoría Inédita')
+                                            ->required(),
+                                    ])
+                                    ->createOptionUsing(function (array $data) {
+                                        return $data['new_category'];
+                                    }),
                                         Forms\Components\Fieldset::make('Estado y Etiquetas')
                                             ->schema([
                                                 Toggle::make('is_active')->label('Activo')->default(true),
