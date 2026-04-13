@@ -55,22 +55,20 @@ class VehicleModelResource extends Resource
                                     ->required()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
-                                Select::make('category')
-                                    ->label('Categorías')
-                                    ->multiple()
-                                    ->options([
-                                        'SUV' => 'SUV',
-                                        'Sedán' => 'Sedán',
-                                        'Hatchback' => 'Hatchback',
-                                        'Pickup' => 'Pickup',
-                                        'Coupé' => 'Coupé',
-                                        'Convertible' => 'Convertible',
-                                        'Van' => 'Van',
-                                        'Furgón' => 'Furgón',
-                                        'Camión' => 'Camión',
-                                        'Moto' => 'Moto',
-                                    ])
-                                    ->preload(),
+                                Forms\Components\TagsInput::make('category')
+                                    ->label('Categorías (Escribir nuevas o seleccionar)')
+                                    ->suggestions([
+                                        'SUV',
+                                        'Sedán',
+                                        'Hatchback',
+                                        'Pickup',
+                                        'Coupé',
+                                        'Convertible',
+                                        'Van',
+                                        'Furgón',
+                                        'Camión',
+                                        'Moto',
+                                    ]),
                                         Forms\Components\Fieldset::make('Estado y Etiquetas')
                                             ->schema([
                                                 Toggle::make('is_active')->label('Activo')->default(true),
@@ -179,11 +177,23 @@ class VehicleModelResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('brand_id')->label('Marca')->multiple()->relationship('brand', 'name')->preload(),
                 Tables\Filters\SelectFilter::make('category')->label('Categoría')->multiple()
-                    ->options([
-                        'SUV' => 'SUV', 'Sedán' => 'Sedán', 'Hatchback' => 'Hatchback', 'Pickup' => 'Pickup',
-                        'Coupé' => 'Coupé', 'Convertible' => 'Convertible', 'Van' => 'Van', 'Furgón' => 'Furgón',
-                        'Camión' => 'Camión', 'Moto' => 'Moto'
-                    ])
+                    ->options(function () {
+                        // Recolectar todas las categorías dinámicamente inventadas y predeterminadas
+                        $existing = \App\Models\VehicleModel::pluck('category')
+                            ->flatten()
+                            ->unique()
+                            ->filter()
+                            ->toArray();
+                            
+                        $baseCategories = [
+                            'SUV', 'Sedán', 'Hatchback', 'Pickup', 'Coupé', 'Convertible', 'Van', 'Furgón', 'Camión', 'Moto'
+                        ];
+                        
+                        $merged = array_unique(array_merge($baseCategories, $existing));
+                        sort($merged);
+                        
+                        return array_combine($merged, $merged);
+                    })
                     ->query(fn ($query, $data) => $query->when($data['values'], fn ($q) => $q->whereJsonContains('category', $data['values']))),
             ])
             ->actions([
