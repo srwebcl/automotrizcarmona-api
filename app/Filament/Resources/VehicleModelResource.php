@@ -19,7 +19,6 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
-use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Support\Str;
 
 class VehicleModelResource extends Resource
@@ -223,8 +222,6 @@ class VehicleModelResource extends Resource
                     })
                     ->query(fn ($query, $data) => $query->when($data['values'], fn ($q) => $q->whereJsonContains('category', $data['values']))),
             ])
-            ->filtersLayout(FiltersLayout::AboveContent)
-            ->filtersFormColumns(2)
             ->actions([
                 Tables\Actions\EditAction::make('manage_versions')
                     ->label('Versiones')
