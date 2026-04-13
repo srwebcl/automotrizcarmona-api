@@ -38,11 +38,10 @@ class AdminPanelProvider extends PanelProvider
                 \Filament\View\PanelsRenderHook::HEAD_END,
                 fn (): string => new \Illuminate\Support\HtmlString('
                     <style>
-                        .fi-topbar { background-color: #111827 !important; border-bottom: 1px solid #1f2937 !important; }
-                        .fi-logo img { filter: brightness(0) invert(1) !important; }
-                        .fi-topbar nav { color: #ffffff !important; }
-                        .fi-topbar button, .fi-topbar a { color: #ffffff !important; }
-                        .fi-topbar .fi-topbar-item-label { color: #ffffff !important; }
+                        /* Fuerza el logo a NEGRO puro en el modo claro */
+                        .fi-logo img { filter: brightness(0) !important; }
+                        /* Fuerza el logo a BLANCO puro en el modo oscuro (por si lo activan) */
+                        .dark .fi-logo img { filter: brightness(0) invert(1) !important; }
                     </style>
                 '),
             )
