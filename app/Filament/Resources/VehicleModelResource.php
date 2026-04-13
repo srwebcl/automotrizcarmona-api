@@ -61,7 +61,13 @@ class VehicleModelResource extends Resource
                                     ->searchable()
                                     ->preload()
                                     ->options(function () {
-                                        $existing = \App\Models\VehicleModel::pluck('category')->flatten()->unique()->filter()->toArray();
+                                        $existing = \App\Models\VehicleModel::all()->pluck('category')
+                                            ->flatten()
+                                            ->flatMap(fn ($item) => is_string($item) ? explode(',', $item) : [$item])
+                                            ->map(fn ($item) => trim((string) $item))
+                                            ->unique()
+                                            ->filter()
+                                            ->toArray();
                                         $baseCategories = ['SUV', 'Sedán', 'Hatchback', 'Pickup', 'Coupé', 'Convertible', 'Van', 'Furgón', 'Camión', 'Moto'];
                                         $merged = array_unique(array_merge($baseCategories, $existing));
                                         sort($merged);
@@ -185,8 +191,10 @@ class VehicleModelResource extends Resource
                 Tables\Filters\SelectFilter::make('category')->label('Categoría')->multiple()
                     ->options(function () {
                         // Recolectar todas las categorías dinámicamente inventadas y predeterminadas
-                        $existing = \App\Models\VehicleModel::pluck('category')
+                        $existing = \App\Models\VehicleModel::all()->pluck('category')
                             ->flatten()
+                            ->flatMap(fn ($item) => is_string($item) ? explode(',', $item) : [$item])
+                            ->map(fn ($item) => trim((string) $item))
                             ->unique()
                             ->filter()
                             ->toArray();
