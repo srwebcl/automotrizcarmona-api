@@ -19,6 +19,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Support\Str;
 
 class VehicleModelResource extends Resource
@@ -27,11 +28,11 @@ class VehicleModelResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
     
-    protected static ?string $navigationLabel = 'Inventario';
+    protected static ?string $navigationLabel = 'MODELOS';
     
-    protected static ?string $pluralLabel = 'Inventario';
+    protected static ?string $pluralLabel = 'MODELOS';
     
-    protected static ?string $navigationGroup = 'Catálogo';
+    protected static ?string $navigationGroup = 'Livianos';
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -222,6 +223,8 @@ class VehicleModelResource extends Resource
                     })
                     ->query(fn ($query, $data) => $query->when($data['values'], fn ($q) => $q->whereJsonContains('category', $data['values']))),
             ])
+            ->filtersLayout(FiltersLayout::AboveContent)
+            ->filtersFormColumns(2)
             ->actions([
                 Tables\Actions\EditAction::make('manage_versions')
                     ->label('Versiones')
@@ -275,7 +278,7 @@ class VehicleModelResource extends Resource
     }
 
     public static function getModelLabel(): string { return 'Modelo'; }
-    public static function getPluralModelLabel(): string { return 'Inventario'; }
+    public static function getPluralModelLabel(): string { return 'MODELOS'; }
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {

@@ -24,7 +24,7 @@ class VehicleVersionResource extends Resource
     
     protected static ?string $pluralLabel = 'Lista de Precios';
     
-    protected static ?string $navigationGroup = 'Catálogo';
+    protected static ?string $navigationGroup = 'Livianos';
 
     public static function getModelLabel(): string
     {
