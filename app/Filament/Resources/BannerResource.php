@@ -32,74 +32,101 @@ class BannerResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('location')->label('Ubicación del Banner')
-                    ->options([
-                        'home_hero' => 'Home Slider Principal',
-                        'home_promotional' => 'Home Sección Destacados (Promocional)',
-                        'servicios' => 'Banner Servicios',
-                        'repuestos' => 'Banner Repuestos',
-                        'dyp' => 'Banner Desabolladura y Pintura',
-                    ])
-                    ->default('home_hero')
-                    ->required()
-                    ->live(),
-                Toggle::make('custom_data.show_text')
-                    ->label('Mostrar Textos sobre la Imagen')
-                    ->helperText('Aplica principalmente al Home Slider. Si está inactivo, el banner será solo la imagen con su enlace.')
-                    ->default(false)
-                    ->live(),
-                TextInput::make('title')
-                    ->label('Título (Interno y para Lectores de Pantalla)')
-                    ->required(),
-                TextInput::make('subtitle')
-                    ->label('Subtítulo')
-                    ->visible(fn (\Filament\Forms\Get $get) => $get('custom_data.show_text')),
-                TextInput::make('custom_data.cta')
-                    ->label('Texto del Botón (Opcional)')
-                    ->visible(fn (\Filament\Forms\Get $get) => $get('custom_data.show_text')),
+                Forms\Components\Grid::make(3)->schema([
+                    // Columna Izquierda (Archivos y Principal)
+                    Forms\Components\Group::make()->columnSpan(2)->schema([
+                        Forms\Components\Section::make('Enrutamiento y Título')->schema([
+                            Select::make('location')->label('Ubicación del Banner')
+                                ->options([
+                                    'home_hero' => 'Home Slider Principal',
+                                    'home_promotional' => 'Home Sección Destacados (Promocional)',
+                                    'servicios' => 'Banner Servicios',
+                                    'repuestos' => 'Banner Repuestos',
+                                    'dyp' => 'Banner Desabolladura y Pintura',
+                                ])
+                                ->default('home_hero')
+                                ->required()
+                                ->live(),
 
-                FileUpload::make('image_desktop')->label('Imagen Desktop')
-                    ->image()
-                    ->disk('r2')
-                    ->directory('banners')
-                    ->required(),
-                FileUpload::make('image_mobile')->label('Imagen Móvil (Opcional)')
-                    ->image()
-                    ->disk('r2')
-                    ->directory('banners'),
-                TextInput::make('link')->label('Enlace (URL) o Página')
-                    ->datalist(function () {
-                        $baseLinks = [
-                            '/',
-                            '/servicios',
-                            '/repuestos',
-                            '/dyp',
-                            '/noticias',
-                            '/nosotros',
-                            '/nuevos/volkswagen',
-                            '/nuevos/toyota',
-                            '/nuevos/audi',
-                            '/nuevos/seat',
-                            '/nuevos/cupra',
-                            '/nuevos/honda',
-                            '/nuevos/bmw',
-                            '/nuevos/maxus',
-                            '/nuevos/geely',
-                            '/nuevos/mg',
-                        ];
-                        
-                        $modelLinks = \App\Models\VehicleModel::with('brand')->get()->map(function($m) {
-                            return '/nuevos/' . $m->brand->slug . '/' . $m->slug;
-                        })->toArray();
-                        
-                        return array_merge($baseLinks, $modelLinks);
-                    })
-                    ->helperText('Puedes seleccionar una página del sistema, modelo, o escribir un link externo (ej: https://...).'),
-                TextInput::make('order')->label('Orden')
-                    ->numeric()
-                    ->default(0),
-                Toggle::make('active')->label('Activo')
-                    ->default(true),
+                            TextInput::make('title')
+                                ->label('Título Interno o Atributo ALT (Lector de pantalla)')
+                                ->required(),
+
+                            TextInput::make('link')->label('Enlace (URL)')
+                                ->datalist(function () {
+                                    $baseLinks = [
+                                        '/',
+                                        '/servicios',
+                                        '/repuestos',
+                                        '/dyp',
+                                        '/noticias',
+                                        '/nosotros',
+                                        '/nuevos/volkswagen',
+                                        '/nuevos/toyota',
+                                        '/nuevos/audi',
+                                        '/nuevos/seat',
+                                        '/nuevos/cupra',
+                                        '/nuevos/honda',
+                                        '/nuevos/bmw',
+                                        '/nuevos/maxus',
+                                        '/nuevos/geely',
+                                        '/nuevos/mg',
+                                    ];
+                                    
+                                    $modelLinks = \App\Models\VehicleModel::with('brand')->get()->map(function($m) {
+                                        return '/nuevos/' . $m->brand->slug . '/' . $m->slug;
+                                    })->toArray();
+                                    
+                                    return array_merge($baseLinks, $modelLinks);
+                                })
+                                ->helperText('Puedes seleccionar una página del sistema, modelo, o escribir un link externo (ej: https://...).')
+                                ->columnSpanFull(),
+                        ])->columns(2),
+
+                        Forms\Components\Section::make('Archivos Digitales')->schema([
+                            FileUpload::make('image_desktop')->label('Imagen Desktop')
+                                ->image()
+                                ->disk('r2')
+                                ->directory('banners')
+                                ->required(),
+                            FileUpload::make('image_mobile')->label('Imagen Móvil (Opcional)')
+                                ->image()
+                                ->disk('r2')
+                                ->directory('banners'),
+                        ])->columns(2),
+
+                        Forms\Components\Section::make('Textos Flotantes (Home Slider)')
+                            ->description('Aplica principalmente al Home Slider si el "Mostrar Textos" está activado a la derecha.')
+                            ->schema([
+                                TextInput::make('subtitle')
+                                    ->label('Subtítulo Objeto Flotante')
+                                    ->visible(fn (\Filament\Forms\Get $get) => $get('custom_data.show_text')),
+                                TextInput::make('custom_data.cta')
+                                    ->label('Texto del Botón Flotante')
+                                    ->visible(fn (\Filament\Forms\Get $get) => $get('custom_data.show_text')),
+                            ])->columns(2),
+                    ]),
+
+                    // Columna Derecha (Ajustes y Orden)
+                    Forms\Components\Group::make()->columnSpan(1)->schema([
+                        Forms\Components\Section::make('Ajustes y Estado')->schema([
+                            Toggle::make('active')->label('Activo')
+                                ->default(true)
+                                ->helperText('Controla la visualización pública en el sitio web.'),
+
+                            Toggle::make('custom_data.show_text')
+                                ->label('Mostrar Textos Incrustados')
+                                ->helperText('Enciende esta opción para usar el título, subtítulo y botón flotante.')
+                                ->default(false)
+                                ->live(),
+                                
+                            TextInput::make('order')->label('Orden de Aparición')
+                                ->numeric()
+                                ->default(0)
+                                ->helperText('Un número menor significa que se mostrará primero.'),
+                        ]),
+                    ])
+                ])
             ]);
     }
 
