@@ -49,7 +49,7 @@ class NewsResource extends Resource
 
                         Forms\Components\Section::make('Cuerpo de la Noticia')->schema([
                             RichEditor::make('content')->label('Contenido')
-                                ->disableLabel()
+                                ->columnSpanFull()
                                 ->required(),
                         ]),
                     ]),
