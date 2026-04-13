@@ -23,7 +23,7 @@ class BannerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-bar';
     
-    protected static ?string $navigationGroup = 'Marketing';
+    protected static ?string $navigationGroup = 'Configuraciones';
 
     protected static ?string $label = 'Banner';
     protected static ?string $pluralLabel = 'Banners';

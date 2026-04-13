@@ -22,7 +22,7 @@ class BranchResource extends Resource
 {
     protected static ?string $model = Branch::class;
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
-    protected static ?string $navigationGroup = 'Empresa';
+    protected static ?string $navigationGroup = 'Configuraciones';
     protected static ?string $label = 'Sucursal';
     protected static ?string $pluralLabel = 'Sucursales';
 

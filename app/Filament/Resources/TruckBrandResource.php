@@ -17,7 +17,7 @@ class TruckBrandResource extends Resource
 {
     protected static ?string $model = TruckBrand::class;
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-    protected static ?string $navigationGroup = '🚛 Camiones';
+    protected static ?string $navigationGroup = 'Camiones';
     protected static ?string $modelLabel = 'Marca de Camión';
     protected static ?string $pluralModelLabel = 'Marcas de Camiones';
 

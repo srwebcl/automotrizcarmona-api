@@ -17,7 +17,7 @@ class TruckResource extends Resource
 {
     protected static ?string $model = Truck::class;
     protected static ?string $navigationIcon = 'heroicon-o-truck';
-    protected static ?string $navigationGroup = '🚛 Camiones';
+    protected static ?string $navigationGroup = 'Camiones';
     protected static ?string $modelLabel = 'Modelo de Camión';
     protected static ?string $pluralModelLabel = 'Modelos de Camiones';
 

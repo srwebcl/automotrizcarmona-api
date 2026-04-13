@@ -23,7 +23,7 @@ class NewsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
     
-    protected static ?string $navigationGroup = 'Marketing';
+    protected static ?string $navigationGroup = 'Configuraciones';
 
     protected static ?string $label = 'Noticia';
     protected static ?string $pluralLabel = 'Noticias';

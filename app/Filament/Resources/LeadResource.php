@@ -22,7 +22,7 @@ class LeadResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
     
-    protected static ?string $navigationGroup = 'Ventas';
+    protected static ?string $navigationGroup = 'Configuraciones';
 
     protected static ?string $label = 'Lead / Contacto';
     protected static ?string $pluralLabel = 'Leads y Contactos';

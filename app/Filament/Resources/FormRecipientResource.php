@@ -18,7 +18,7 @@ class FormRecipientResource extends Resource
     protected static ?string $navigationLabel = 'Emails Formularios';
     protected static ?string $modelLabel = 'Configuración de Destinatario';
     protected static ?string $pluralModelLabel = 'Emails de Formularios';
-    protected static ?string $navigationGroup = 'Administración';
+    protected static ?string $navigationGroup = 'Configuraciones';
 
     public static function form(Form $form): Form
     {

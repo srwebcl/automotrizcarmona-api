@@ -22,7 +22,7 @@ class LegalDocumentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     
-    protected static ?string $navigationGroup = 'Configuración';
+    protected static ?string $navigationGroup = 'Configuraciones';
     
     protected static ?string $modelLabel = 'Legales y Condiciones';
     
