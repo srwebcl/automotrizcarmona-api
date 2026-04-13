@@ -34,6 +34,18 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => '#111827', // Black/dark theme primary
             ])
             ->font('Inter')
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::HEAD_END,
+                fn (): string => new \Illuminate\Support\HtmlString('
+                    <style>
+                        .fi-topbar { background-color: #111827 !important; border-bottom: 1px solid #1f2937 !important; }
+                        .fi-logo img { filter: brightness(0) invert(1) !important; }
+                        .fi-topbar nav { color: #ffffff !important; }
+                        .fi-topbar button, .fi-topbar a { color: #ffffff !important; }
+                        .fi-topbar .fi-topbar-item-label { color: #ffffff !important; }
+                    </style>
+                '),
+            )
             ->spa() // Activado para navegación instantánea sin recarga de Assets
             ->sidebarCollapsibleOnDesktop()
             ->maxContentWidth('full')
