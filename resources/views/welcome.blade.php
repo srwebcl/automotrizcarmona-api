@@ -159,7 +159,7 @@
 
         <div class="content">
             <p class="description">
-                Bienvenido al panel web de gestión de contenidos y leads para el ecosistema digital de Carmona.
+                Bienvenidos al administrador web de Automotriz Carmona.
             </p>
 
             <a href="{{ url('/admin') }}" class="btn btn-primary">
