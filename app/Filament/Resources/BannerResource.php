@@ -139,7 +139,17 @@ class BannerResource extends Resource
                     ->disk('r2')
                     ->square(),
                 TextColumn::make('title')->label('Título')->searchable(),
-                TextColumn::make('location')->label('Ubicación')->sortable(),
+                TextColumn::make('location')->label('Ubicación')->sortable()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'home_hero' => 'Home Slider Principal',
+                        'home_promotional' => 'Home Sección Destacados (Promocional)',
+                        'servicios' => 'Banner Servicios',
+                        'repuestos' => 'Banner Repuestos',
+                        'dyp' => 'Banner Desabolladura y Pintura',
+                        default => $state,
+                    })
+                    ->badge()
+                    ->color('gray'),
                 TextColumn::make('order')->label('Orden')->sortable(),
                 ToggleColumn::make('active')->label('Estado'),
             ])
