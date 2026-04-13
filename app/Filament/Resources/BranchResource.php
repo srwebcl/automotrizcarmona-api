@@ -109,11 +109,8 @@ class BranchResource extends Resource
                         Select::make('schedule')
                             ->label('Horario de Atención')
                             ->options([
-                                'L-V: 8:30 a 19:00 | Sáb: 9:00 a 14:00'  => 'L-V: 8:30 a 19:00 | Sáb: 9:00 a 14:00 (Ventas)',
-                                'L-V: 8:00 a 18:00 | Sáb: 9:00 a 13:00'  => 'L-V: 8:00 a 18:00 | Sáb: 9:00 a 13:00 (Servicio/Repuestos)',
-                                'L-V: 8:30 a 18:30 | Sáb: 9:00 a 13:00'  => 'L-V: 8:30 a 18:30 | Sáb: 9:00 a 13:00 (Repuestos)',
-                                'L-V: 8:00 a 18:00'                        => 'L-V: 8:00 a 18:00 (sin sábado)',
-                                'L-V: 8:30 a 18:30'                        => 'L-V: 8:30 a 18:30 (sin sábado)',
+                                'L-V: 09:30 a 19:00 | Sáb: 10:00 a 13:30'  => 'L-V: 09:30 a 19:00 | Sáb: 10:00 a 13:30',
+                                'L-V: 08:30 a 18:00'                       => 'L-V: 08:30 a 18:00',
                             ])
                             ->searchable()
                             ->createOptionForm([
