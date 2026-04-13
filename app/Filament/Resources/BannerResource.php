@@ -57,11 +57,7 @@ class BannerResource extends Resource
                 TextInput::make('custom_data.cta')
                     ->label('Texto del Botón (Opcional)')
                     ->visible(fn (\Filament\Forms\Get $get) => $get('custom_data.show_text')),
-                TextInput::make('custom_data.recipient_email')
-                    ->label('Email Destinatario Formulario')
-                    ->email()
-                    ->helperText('Solo aplica si el banner incluye un formulario de contacto.')
-                    ->visible(fn (\Filament\Forms\Get $get) => $get('location') === 'home_promotional'),
+
                 FileUpload::make('image_desktop')->label('Imagen Desktop')
                     ->image()
                     ->disk('r2')
