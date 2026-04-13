@@ -76,7 +76,7 @@ class BannerResource extends Resource
                                         return ['/nuevos/' . $m->brand->slug . '/' . $m->slug => 'Auto/Moto: ' . $m->brand->name . ' ' . $m->name];
                                     })->toArray();
                                     
-                                    $truckLinks = \App\Models\TruckModel::with('brand')->get()->mapWithKeys(function($m) {
+                                    $truckLinks = \App\Models\Truck::with('brand')->get()->mapWithKeys(function($m) {
                                         return ['/camiones/' . $m->brand->slug . '/' . $m->slug => 'Camión: ' . $m->brand->name . ' ' . $m->name];
                                     })->toArray();
                                     
