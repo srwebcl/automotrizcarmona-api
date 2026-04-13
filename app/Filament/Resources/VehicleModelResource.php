@@ -65,12 +65,19 @@ class VehicleModelResource extends Resource
                                             ->flatten()
                                             ->flatMap(fn ($item) => is_string($item) ? explode(',', $item) : [$item])
                                             ->map(fn ($item) => trim((string) $item))
-                                            ->unique()
                                             ->filter()
                                             ->toArray();
+                                            
                                         $baseCategories = ['SUV', 'Sedán', 'Hatchback', 'Pickup', 'Coupé', 'Convertible', 'Van', 'Furgón', 'Camión', 'Moto'];
-                                        $merged = array_unique(array_merge($baseCategories, $existing));
-                                        sort($merged);
+                                        
+                                        $merged = collect($baseCategories)
+                                            ->merge($existing)
+                                            ->map(fn ($item) => \Illuminate\Support\Str::ucfirst($item))
+                                            ->unique(fn ($item) => mb_strtolower($item, 'UTF-8'))
+                                            ->sort()
+                                            ->values()
+                                            ->toArray();
+                                            
                                         return array_combine($merged, $merged);
                                     })
                                     ->createOptionForm([
@@ -195,7 +202,6 @@ class VehicleModelResource extends Resource
                             ->flatten()
                             ->flatMap(fn ($item) => is_string($item) ? explode(',', $item) : [$item])
                             ->map(fn ($item) => trim((string) $item))
-                            ->unique()
                             ->filter()
                             ->toArray();
                             
@@ -203,9 +209,14 @@ class VehicleModelResource extends Resource
                             'SUV', 'Sedán', 'Hatchback', 'Pickup', 'Coupé', 'Convertible', 'Van', 'Furgón', 'Camión', 'Moto'
                         ];
                         
-                        $merged = array_unique(array_merge($baseCategories, $existing));
-                        sort($merged);
-                        
+                        $merged = collect($baseCategories)
+                            ->merge($existing)
+                            ->map(fn ($item) => \Illuminate\Support\Str::ucfirst($item))
+                            ->unique(fn ($item) => mb_strtolower($item, 'UTF-8'))
+                            ->sort()
+                            ->values()
+                            ->toArray();
+                            
                         return array_combine($merged, $merged);
                     })
                     ->query(fn ($query, $data) => $query->when($data['values'], fn ($q) => $q->whereJsonContains('category', $data['values']))),
