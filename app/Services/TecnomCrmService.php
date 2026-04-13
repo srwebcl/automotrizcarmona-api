@@ -81,11 +81,13 @@ class TecnomCrmService
         
         $rut = $data['customer']['rut'] ?? '';
         $company = $data['customer']['company'] ?? '';
+        $city = $data['customer']['city'] ?? '';
 
         $extraInfo = [];
         if (!empty($rut)) $extraInfo[] = "RUT: $rut";
         if (!empty($company)) $extraInfo[] = "Empresa: $company";
         if (!empty($vin)) $extraInfo[] = "VIN: $vin";
+        if (!empty($city)) $extraInfo[] = "Ciudad: $city";
         
         $extraStr = !empty($extraInfo) ? ' | ' . implode(' | ', $extraInfo) : '';
         $fullComments = "Origen: {$source} | Mensaje: {$message}{$extraStr}";
@@ -128,6 +130,13 @@ class TecnomCrmService
         if (!empty($phone)) {
             $prospect['customer']['contacts'][0]['phones'] = [
                 ['type' => 'cellphone', 'value' => $phone]
+            ];
+        }
+
+        // Añadir dirección con ciudad si existe
+        if (!empty($city)) {
+            $prospect['customer']['contacts'][0]['addresses'] = [
+                ['city' => $city]
             ];
         }
 
