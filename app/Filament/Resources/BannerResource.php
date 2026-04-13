@@ -52,34 +52,47 @@ class BannerResource extends Resource
                                 ->label('Título Interno o Atributo ALT (Lector de pantalla)')
                                 ->required(),
 
-                            TextInput::make('link')->label('Enlace (URL)')
-                                ->datalist(function () {
+                            Toggle::make('is_external_link')
+                                ->label('Enlace Externo (fuera del sitio red)')
+                                ->live()
+                                ->dehydrated(false)
+                                ->columnSpanFull(),
+
+                            Select::make('internal_link')
+                                ->label('Página del Sistema')
+                                ->options(function () {
                                     $baseLinks = [
-                                        '/',
-                                        '/servicios',
-                                        '/repuestos',
-                                        '/dyp',
-                                        '/noticias',
-                                        '/nosotros',
-                                        '/nuevos/volkswagen',
-                                        '/nuevos/toyota',
-                                        '/nuevos/audi',
-                                        '/nuevos/seat',
-                                        '/nuevos/cupra',
-                                        '/nuevos/honda',
-                                        '/nuevos/bmw',
-                                        '/nuevos/maxus',
-                                        '/nuevos/geely',
-                                        '/nuevos/mg',
+                                        '/' => 'Inicio',
+                                        '/servicios' => 'Servicio Técnico',
+                                        '/repuestos' => 'Repuestos y Accesorios',
+                                        '/dyp' => 'Desabolladura y Pintura',
+                                        '/noticias' => 'Noticias',
+                                        '/nosotros' => 'Nosotros',
+                                        '/nuevos' => 'Autos Nuevos (General)',
+                                        '/camiones' => 'Camiones y Buses (General)',
                                     ];
                                     
-                                    $modelLinks = \App\Models\VehicleModel::with('brand')->get()->map(function($m) {
-                                        return '/nuevos/' . $m->brand->slug . '/' . $m->slug;
+                                    $modelLinks = \App\Models\VehicleModel::with('brand')->get()->mapWithKeys(function($m) {
+                                        return ['/nuevos/' . $m->brand->slug . '/' . $m->slug => 'Auto/Moto: ' . $m->brand->name . ' ' . $m->name];
                                     })->toArray();
                                     
-                                    return array_merge($baseLinks, $modelLinks);
+                                    $truckLinks = \App\Models\TruckModel::with('brand')->get()->mapWithKeys(function($m) {
+                                        return ['/camiones/' . $m->brand->slug . '/' . $m->slug => 'Camión: ' . $m->brand->name . ' ' . $m->name];
+                                    })->toArray();
+                                    
+                                    return array_merge($baseLinks, $modelLinks, $truckLinks);
                                 })
-                                ->helperText('Puedes seleccionar una página del sistema, modelo, o escribir un link externo (ej: https://...).')
+                                ->searchable()
+                                ->visible(fn (\Filament\Forms\Get $get) => ! $get('is_external_link'))
+                                ->required(fn (\Filament\Forms\Get $get) => ! $get('is_external_link'))
+                                ->columnSpanFull(),
+
+                            TextInput::make('external_link')
+                                ->label('Enlace Externo (URL)')
+                                ->url()
+                                ->placeholder('https://ejemplo.com')
+                                ->visible(fn (\Filament\Forms\Get $get) => $get('is_external_link'))
+                                ->required(fn (\Filament\Forms\Get $get) => $get('is_external_link'))
                                 ->columnSpanFull(),
                         ])->columns(2),
 
