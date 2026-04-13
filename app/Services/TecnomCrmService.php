@@ -76,6 +76,17 @@ class TecnomCrmService
         $model = $data['vehicle']['model_name'] ?? '';
         $version = $data['vehicle']['version_name'] ?? '';
         $year = $data['vehicle']['year'] ?? '';
+        $vin = $data['vehicle']['vin'] ?? '';
+        
+        $rut = $data['customer']['rut'] ?? '';
+        $company = $data['customer']['company'] ?? '';
+
+        $extraInfo = [];
+        if (!empty($rut)) $extraInfo[] = "RUT: $rut";
+        if (!empty($company)) $extraInfo[] = "Empresa: $company";
+        if (!empty($vin)) $extraInfo[] = "VIN: $vin";
+        
+        $extraStr = !empty($extraInfo) ? ' | ' . implode(' | ', $extraInfo) : '';
 
         return <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -96,7 +107,7 @@ class TecnomCrmService
                 <email>{$email}</email>
                 <phone type="cell">{$phone}</phone>
             </contact>
-            <comments>Origen: {$source} | Mensaje: {$message}</comments>
+            <comments>Origen: {$source} | Mensaje: {$message}{$extraStr}</comments>
         </customer>
         <vendor>
             <vendorname>Automotriz Carmona</vendorname>
