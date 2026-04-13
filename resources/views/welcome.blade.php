@@ -180,7 +180,7 @@
         </div>
         
         <div class="footer">
-            &copy; {{ date('Y') }} AUTOMOTRIZ CARMONA ESPINOZA Y CIA LIMITADA.<br>Todos los derechos reservados.
+            &copy; {{ date('Y') }} AUTOMOTRIZ CARMONA Y CIA LIMITADA.<br>Todos los derechos reservados.
         </div>
     </div>
 </body>
