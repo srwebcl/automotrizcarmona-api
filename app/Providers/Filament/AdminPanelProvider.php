@@ -28,10 +28,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('Automotriz Carmona')
-            ->brandLogo(fn () => env('NEXT_PUBLIC_SITE_URL', 'https://automotrizcarmona.cl') . '/images/logo-carmona.avif')
+            ->brandLogo(fn () => asset('images/logo-carmona.avif'))
             ->brandLogoHeight('2rem')
             ->colors([
-                'primary' => '#d2001c',
+                'primary' => '#111827', // Black/dark theme primary
             ])
             ->font('Inter')
             ->spa() // Activado para navegación instantánea sin recarga de Assets
