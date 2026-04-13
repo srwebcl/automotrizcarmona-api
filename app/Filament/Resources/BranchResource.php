@@ -50,17 +50,19 @@ class BranchResource extends Resource
 
                 // ── MARCAS ──────────────────────────────────────────────────────
                 Section::make('Marcas que atiende')
-                    ->description('Escribe el nombre de cada marca y presiona Enter para agregarla.')
+                    ->description('Selecciona las marcas que esta sucursal atiende.')
                     ->schema([
-                        TagsInput::make('brands_list')
+                        Select::make('brands_list')
                             ->label('Marcas')
+                            ->multiple()
+                            ->searchable()
                             ->placeholder('Ej: Toyota, Volkswagen, Iveco...')
-                            ->suggestions([
-                                'Toyota', 'Volkswagen', 'Audi', 'Seat', 'Cupra',
-                                'Honda', 'BMW', 'BMW Motorrad', 'Mini', 'MG',
-                                'Maxus', 'Jetour', 'Geely', 'Dongfeng', 'Kaiyi',
-                                'Karry', 'Foton', 'Iveco', 'MAN',
-                                'VW Camiones', 'Foton Camiones',
+                            ->options([
+                                'Toyota' => 'Toyota', 'Volkswagen' => 'Volkswagen', 'Audi' => 'Audi', 'Seat' => 'Seat', 'Cupra' => 'Cupra',
+                                'Honda' => 'Honda', 'BMW' => 'BMW', 'BMW Motorrad' => 'BMW Motorrad', 'Mini' => 'Mini', 'MG' => 'MG',
+                                'Maxus' => 'Maxus', 'Jetour' => 'Jetour', 'Geely' => 'Geely', 'Dongfeng' => 'Dongfeng', 'Kaiyi' => 'Kaiyi',
+                                'Karry' => 'Karry', 'Foton' => 'Foton', 'Iveco' => 'Iveco', 'MAN' => 'MAN',
+                                'VW Camiones' => 'VW Camiones', 'Foton Camiones' => 'Foton Camiones',
                             ]),
                     ]),
 
