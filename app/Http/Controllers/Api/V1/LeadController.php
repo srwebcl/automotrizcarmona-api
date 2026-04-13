@@ -36,11 +36,17 @@ class LeadController extends Controller
             'crm_synced' => false,
         ]);
 
-        $directForms = ['contacto', 'reclamos', 'dyp'];
+        $directForms = ['contacto', 'reclamos', 'dyp', 'promociones'];
 
         if (in_array(strtolower($lead->source), $directForms)) {
-            // Obtenemos correos desde la Base de Datos
-            $recipientConfig = \App\Models\FormRecipient::where('identifier', strtolower($lead->source))->first();
+            // Aseguramos que exista el registro para que pueda ser gestionado desde "Emails Formularios" en Filament
+            $recipientConfig = \App\Models\FormRecipient::firstOrCreate(
+                ['identifier' => strtolower($lead->source)],
+                [
+                    'name' => 'Formulario: ' . ucfirst(strtolower($lead->source)), 
+                    'emails' => ['contacto@carmonaycia.cl']
+                ]
+            );
             
             if ($recipientConfig && !empty($recipientConfig->emails)) {
                 $emails = $recipientConfig->emails;
