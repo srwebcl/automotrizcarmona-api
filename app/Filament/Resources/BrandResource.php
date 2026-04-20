@@ -38,8 +38,10 @@ class BrandResource extends Resource
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
                         TextInput::make('slug')
-                            ->hidden()
-                            ->unique(ignoreRecord: true),
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->dehydrated()
+                            ->readonly(),
                         FileUpload::make('logo_url')
                             ->label('Logo de la Marca')
                             ->image()
