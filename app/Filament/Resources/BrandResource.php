@@ -95,6 +95,31 @@ class BrandResource extends Resource
                             ->collapsible()
                             ->itemLabel(fn (array $state): ?string => $state['title'] ?? 'Nuevo Banner'),
                     ]),
+                
+                Forms\Components\Section::make('Sección Descubre Más')
+                    ->description('Imágenes que se muestran en la sección "Descubre más" al final de la página de la marca.')
+                    ->schema([
+                        FileUpload::make('discover_servicio_image')
+                            ->label('Imagen Servicio Técnico')
+                            ->image()
+                            ->disk('r2')
+                            ->directory('brands/discover'),
+                        FileUpload::make('discover_repuestos_image')
+                            ->label('Imagen Repuestos')
+                            ->image()
+                            ->disk('r2')
+                            ->directory('brands/discover'),
+                        FileUpload::make('discover_usados_image')
+                            ->label('Imagen Usados')
+                            ->image()
+                            ->disk('r2')
+                            ->directory('brands/discover'),
+                        FileUpload::make('discover_sucursales_image')
+                            ->label('Imagen Sucursales')
+                            ->image()
+                            ->disk('r2')
+                            ->directory('brands/discover'),
+                    ])->columns(2),
             ]);
     }
 

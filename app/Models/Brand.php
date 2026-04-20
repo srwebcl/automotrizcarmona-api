@@ -11,7 +11,9 @@ class Brand extends Model
     protected $fillable = [
         'name', 'slug', 'logo_url', 'brand_color_css', 'seo_title', 
         'legal_text', 'hero_banners', 'is_active', 'category',
-        'show_in_services', 'show_in_parts', 'show_in_dyp'
+        'show_in_services', 'show_in_parts', 'show_in_dyp',
+        'discover_servicio_image', 'discover_repuestos_image',
+        'discover_usados_image', 'discover_sucursales_image'
     ];
 
     protected $casts = [
