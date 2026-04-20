@@ -44,6 +44,8 @@ class NewsResource extends Resource
                             TextInput::make('slug')->label('Slug (URL Amigable)')
                                 ->required()
                                 ->unique(ignoreRecord: true)
+                                ->dehydrated()
+                                ->readonly()
                                 ->helperText('Este texto se usa para formar el link de la noticia.'),
                         ])->columns(2),
 

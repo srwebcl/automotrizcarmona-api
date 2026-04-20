@@ -31,11 +31,13 @@ class TruckBrandResource extends Resource
                             ->label('Nombre de la Marca')
                             ->required()
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', \Illuminate\Support\Str::slug($state)) : null)
+                            ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('slug', \Illuminate\Support\Str::slug($state)))
                             ->maxLength(255),
                         Forms\Components\TextInput::make('slug')
-                            ->hidden()
-                            ->unique(TruckBrand::class, 'slug', ignoreRecord: true),
+                            ->required()
+                            ->unique(TruckBrand::class, 'slug', ignoreRecord: true)
+                            ->dehydrated()
+                            ->readonly(),
                         Forms\Components\FileUpload::make('logo_url')
                             ->label('Logo de la Marca')
                             ->disk('r2')

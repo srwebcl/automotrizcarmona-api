@@ -55,6 +55,11 @@ class VehicleModelResource extends Resource
                                     ->required()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
+                                TextInput::make('slug')
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->dehydrated()
+                                    ->readonly(),
                                 Forms\Components\Select::make('category')
                                     ->label('Categorías')
                                     ->multiple()

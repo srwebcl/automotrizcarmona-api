@@ -35,12 +35,14 @@ class TruckResource extends Resource
                     ->label('Nombre del Modelo')
                     ->required()
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', \Illuminate\Support\Str::slug($state)) : null)
+                    ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('slug', \Illuminate\Support\Str::slug($state)))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('slug')
                     ->label('Slug / URL')
                     ->required()
                     ->unique(Truck::class, 'slug', ignoreRecord: true)
+                    ->dehydrated()
+                    ->readonly()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image_url')
                     ->label('Miniatura del Camión')
