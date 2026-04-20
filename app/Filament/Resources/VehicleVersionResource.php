@@ -129,9 +129,6 @@ class VehicleVersionResource extends Resource
             ->defaultPaginationPageOption(10)
             ->headerActions([
                 Tables\Actions\CreateAction::make()->label('Nueva Versión'),
-                Tables\Actions\ExportAction::make()
-                    ->exporter(\App\Filament\Exports\VehicleVersionExporter::class)
-                    ->label('Exportar'),
             ])
             ->columns([
                 TextColumn::make('vehicleModel.brand.name')
