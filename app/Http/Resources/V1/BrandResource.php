@@ -27,6 +27,10 @@ class BrandResource extends JsonResource
             'show_in_services' => (bool)$this->show_in_services,
             'show_in_parts' => (bool)$this->show_in_parts,
             'show_in_dyp' => (bool)$this->show_in_dyp,
+            'discover_servicio_image' => $this->discover_servicio_image,
+            'discover_repuestos_image' => $this->discover_repuestos_image,
+            'discover_usados_image' => $this->discover_usados_image,
+            'discover_sucursales_image' => $this->discover_sucursales_image,
         ];
     }
 }
