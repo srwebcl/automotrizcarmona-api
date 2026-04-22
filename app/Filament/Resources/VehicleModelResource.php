@@ -116,9 +116,27 @@ class VehicleModelResource extends Resource
                                                     TextInput::make('version_name')->label('Versión Específica (Ej: 1.5 MT)'),
                                                     Toggle::make('is_active')->label('Disponible')->default(true),
                                                 ]),
-                                                Forms\Components\Grid::make(2)->schema([
-                                                    TextInput::make('promo_bonus')->label('Bono Promocional ($)')->numeric()->prefix('$')->required(),
-                                                    TextInput::make('promo_price')->label('Precio Final Promoción ($)')->numeric()->prefix('$')->required(),
+                                                Forms\Components\Grid::make(3)->schema([
+                                                    TextInput::make('list_price')
+                                                        ->label('Precio Lista ($)')
+                                                        ->numeric()
+                                                        ->prefix('$')
+                                                        ->required()
+                                                        ->live(onBlur: true)
+                                                        ->afterStateUpdated(fn ($get, $set) => $set('promo_price', max(0, (int)$get('list_price') - (int)$get('promo_bonus')))),
+                                                    TextInput::make('promo_bonus')
+                                                        ->label('Bono Liquidación ($)')
+                                                        ->numeric()
+                                                        ->prefix('$')
+                                                        ->required()
+                                                        ->live(onBlur: true)
+                                                        ->afterStateUpdated(fn ($get, $set) => $set('promo_price', max(0, (int)$get('list_price') - (int)$get('promo_bonus')))),
+                                                    TextInput::make('promo_price')
+                                                        ->label('Precio Liquidación ($)')
+                                                        ->numeric()
+                                                        ->prefix('$')
+                                                        ->required()
+                                                        ->helperText('Se calcula como: Precio Lista - Bono.'),
                                                 ]),
                                             ])
                                             ->itemLabel(fn (array $state): ?string => $state['vin'] ?? 'Nueva Unidad'),
