@@ -4,24 +4,16 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use Illuminate\Support\Facades\DB;
+
 return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('brands', function (Blueprint $table) {
-            if (!Schema::hasColumn('brands', 'discover_servicio_image')) {
-                $table->string('discover_servicio_image')->nullable();
-            }
-            if (!Schema::hasColumn('brands', 'discover_repuestos_image')) {
-                $table->string('discover_repuestos_image')->nullable();
-            }
-            if (!Schema::hasColumn('brands', 'discover_usados_image')) {
-                $table->string('discover_usados_image')->nullable();
-            }
-            if (!Schema::hasColumn('brands', 'discover_sucursales_image')) {
-                $table->string('discover_sucursales_image')->nullable();
-            }
-        });
+        DB::statement('ALTER TABLE brands ADD COLUMN IF NOT EXISTS discover_servicio_image VARCHAR(255) NULL');
+        DB::statement('ALTER TABLE brands ADD COLUMN IF NOT EXISTS discover_repuestos_image VARCHAR(255) NULL');
+        DB::statement('ALTER TABLE brands ADD COLUMN IF NOT EXISTS discover_usados_image VARCHAR(255) NULL');
+        DB::statement('ALTER TABLE brands ADD COLUMN IF NOT EXISTS discover_sucursales_image VARCHAR(255) NULL');
     }
 
     public function down(): void
