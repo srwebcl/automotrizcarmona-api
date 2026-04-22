@@ -30,6 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('Automotriz Carmona')
             ->brandLogo(fn () => asset('images/logo-carmona.avif'))
             ->brandLogoHeight('2rem')
+            ->favicon('https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/favicon.png')
             ->colors([
                 'primary' => '#111827', // Black/dark theme primary
             ])
