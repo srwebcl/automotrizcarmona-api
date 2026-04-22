@@ -9,10 +9,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('brands', function (Blueprint $table) {
-            $table->string('discover_servicio_image')->nullable();
-            $table->string('discover_repuestos_image')->nullable();
-            $table->string('discover_usados_image')->nullable();
-            $table->string('discover_sucursales_image')->nullable();
+            if (!Schema::hasColumn('brands', 'discover_servicio_image')) {
+                $table->string('discover_servicio_image')->nullable();
+            }
+            if (!Schema::hasColumn('brands', 'discover_repuestos_image')) {
+                $table->string('discover_repuestos_image')->nullable();
+            }
+            if (!Schema::hasColumn('brands', 'discover_usados_image')) {
+                $table->string('discover_usados_image')->nullable();
+            }
+            if (!Schema::hasColumn('brands', 'discover_sucursales_image')) {
+                $table->string('discover_sucursales_image')->nullable();
+            }
         });
     }
 
