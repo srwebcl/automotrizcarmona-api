@@ -13,8 +13,10 @@ class PromotionUnitResource extends JsonResource
             'id' => $this->id,
             'vin' => $this->vin,
             'version_name' => $this->version_name,
+            'list_price' => (int) $this->list_price,
             'promo_bonus' => (int) $this->promo_bonus,
             'promo_price' => (int) $this->promo_price,
+            'status' => $this->status,
             'is_active' => (bool) $this->is_active,
         ];
     }

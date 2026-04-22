@@ -11,8 +11,10 @@ class PromotionUnit extends Model
         'vehicle_model_id',
         'vin',
         'version_name',
+        'list_price',
         'promo_bonus',
         'promo_price',
+        'status',
         'is_active'
     ];
 
