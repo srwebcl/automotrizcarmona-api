@@ -135,14 +135,28 @@ class VehicleModelResource extends Resource
                                                     Toggle::make('is_active')->label('Disponible')->default(true),
                                                 ]),
                                                 Forms\Components\Grid::make(3)->schema([
-                                                    TextInput::make('list_price')
-                                                        ->label('Precio Lista ($)')
-                                                        ->numeric()
-                                                        ->prefix('$')
-                                                        ->required()
-                                                        ->disabled()
-                                                        ->dehydrated()
-                                                        ->helperText('Se obtiene de la versión original.'),
+                                                     TextInput::make('list_price')
+                                                         ->label('Precio Lista ($)')
+                                                         ->numeric()
+                                                         ->prefix('$')
+                                                         ->required()
+                                                         ->disabled()
+                                                         ->dehydrated()
+                                                         ->afterStateHydrated(function ($state, $set, $get) {
+                                                            if (!$state || $state == 0) {
+                                                                $versionName = $get('version_name');
+                                                                $modelId = $get('../../id');
+                                                                if ($versionName && $modelId) {
+                                                                    $version = \App\Models\VehicleVersion::where('vehicle_model_id', $modelId)
+                                                                        ->where('name', $versionName)
+                                                                        ->first();
+                                                                    if ($version) {
+                                                                        $set('list_price', $version->list_price);
+                                                                    }
+                                                                }
+                                                            }
+                                                         })
+                                                         ->helperText('Se obtiene de la versión original.'),
                                                     TextInput::make('promo_bonus')
                                                         ->label('Bono Liquidación ($)')
                                                         ->numeric()
