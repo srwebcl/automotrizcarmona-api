@@ -87,7 +87,7 @@ class CatalogController extends Controller
         
         $models = VehicleModel::where('brand_id', $brand->id)
             ->where('is_active', true)
-            ->with('vehicleVersions')
+            ->with(['vehicleVersions', 'promotionUnits'])
             ->orderBy('name')
             ->get();
 
@@ -115,7 +115,7 @@ class CatalogController extends Controller
 
         $model = VehicleModel::where('brand_id', $brand->id)
             ->where('slug', $model_slug)
-            ->with(['brand', 'vehicleVersions', 'features'])
+            ->with(['brand', 'vehicleVersions', 'features', 'promotionUnits'])
             ->firstOrFail();
 
         return new VehicleModelResource($model);
