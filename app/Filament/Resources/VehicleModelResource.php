@@ -113,7 +113,25 @@ class VehicleModelResource extends Resource
                                             ->schema([
                                                 Forms\Components\Grid::make(3)->schema([
                                                     TextInput::make('vin')->label('N° VIN / Chasis')->required(),
-                                                    TextInput::make('version_name')->label('Versión Específica (Ej: 1.5 MT)'),
+                                                     Forms\Components\Select::make('version_name')
+                                                        ->label('Seleccionar Versión')
+                                                        ->options(function ($get) {
+                                                            $modelId = $get('../../id');
+                                                            if (!$modelId) return [];
+                                                            return \App\Models\VehicleVersion::where('vehicle_model_id', $modelId)->pluck('name', 'name');
+                                                        })
+                                                        ->required()
+                                                        ->live()
+                                                        ->afterStateUpdated(function ($state, $set, $get) {
+                                                            $modelId = $get('../../id');
+                                                            $version = \App\Models\VehicleVersion::where('vehicle_model_id', $modelId)
+                                                                ->where('name', $state)
+                                                                ->first();
+                                                            if ($version) {
+                                                                $set('list_price', $version->list_price);
+                                                                $set('promo_price', max(0, (int)$version->list_price - (int)$get('promo_bonus')));
+                                                            }
+                                                        }),
                                                     Toggle::make('is_active')->label('Disponible')->default(true),
                                                 ]),
                                                 Forms\Components\Grid::make(3)->schema([
@@ -122,8 +140,9 @@ class VehicleModelResource extends Resource
                                                         ->numeric()
                                                         ->prefix('$')
                                                         ->required()
-                                                        ->live(onBlur: true)
-                                                        ->afterStateUpdated(fn ($get, $set) => $set('promo_price', max(0, (int)$get('list_price') - (int)$get('promo_bonus')))),
+                                                        ->disabled()
+                                                        ->dehydrated()
+                                                        ->helperText('Se obtiene de la versión original.'),
                                                     TextInput::make('promo_bonus')
                                                         ->label('Bono Liquidación ($)')
                                                         ->numeric()
