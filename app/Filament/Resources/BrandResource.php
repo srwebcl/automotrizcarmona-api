@@ -41,7 +41,7 @@ class BrandResource extends Resource
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->dehydrated()
-                            ->readonly(),
+                            ->disabled(),
                         FileUpload::make('logo_url')
                             ->label('Logo de la Marca')
                             ->image()

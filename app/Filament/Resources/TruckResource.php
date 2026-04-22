@@ -42,7 +42,7 @@ class TruckResource extends Resource
                     ->required()
                     ->unique(Truck::class, 'slug', ignoreRecord: true)
                     ->dehydrated()
-                    ->readonly()
+                    ->disabled()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image_url')
                     ->label('Miniatura del Camión')

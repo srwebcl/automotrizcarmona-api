@@ -37,7 +37,7 @@ class TruckBrandResource extends Resource
                             ->required()
                             ->unique(TruckBrand::class, 'slug', ignoreRecord: true)
                             ->dehydrated()
-                            ->readonly(),
+                            ->disabled(),
                         Forms\Components\FileUpload::make('logo_url')
                             ->label('Logo de la Marca')
                             ->disk('r2')

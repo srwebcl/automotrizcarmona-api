@@ -48,9 +48,15 @@ class VehicleVersionResource extends Resource
                             ->required(),
                         TextInput::make('name')
                             ->label('Nombre de la Versión')
-                            ->required(),
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
                         TextInput::make('slug')
                             ->label('Slug (URL)')
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->dehydrated()
+                            ->disabled()
                             ->helperText('Se genera automáticamente.'),
                     ])->columns(3),
 

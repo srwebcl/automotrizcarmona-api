@@ -37,6 +37,8 @@ class LandingResource extends Resource
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->placeholder('promociones, electromovilidad...')
+                            ->dehydrated()
+                            ->disabled()
                             ->helperText('Debe coincidir con la ruta en el frontend.'),
                         TextInput::make('title')
                             ->label('Título Hero')

@@ -45,7 +45,7 @@ class NewsResource extends Resource
                                 ->required()
                                 ->unique(ignoreRecord: true)
                                 ->dehydrated()
-                                ->readonly()
+                                ->disabled()
                                 ->helperText('Este texto se usa para formar el link de la noticia.'),
                         ])->columns(2),
 

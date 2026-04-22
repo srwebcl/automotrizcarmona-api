@@ -59,7 +59,7 @@ class VehicleModelResource extends Resource
                                     ->required()
                                     ->unique(ignoreRecord: true)
                                     ->dehydrated()
-                                    ->readonly(),
+                                    ->disabled(),
                                 Forms\Components\Select::make('category')
                                     ->label('Categorías')
                                     ->multiple()
