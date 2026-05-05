@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\CatalogController;
 use App\Http\Controllers\Api\V1\LeadController;
+use App\Http\Controllers\Api\V1\CarAdvisorController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -26,6 +27,10 @@ Route::prefix('v1')->group(function () {
     Route::get('/promotions', [CatalogController::class, 'promotions']);
     Route::get('/electromovilidad', [CatalogController::class, 'electromovilidad']);
     Route::get('/legal-documents', [CatalogController::class, 'legalDocuments']);
+
+    // Car Advisor (Grupo Porsche) — Proxy seguro con caché 24h
+    Route::get('/caradvisor', [CarAdvisorController::class, 'summary']);
+    Route::get('/caradvisor/refresh', [CarAdvisorController::class, 'refresh']);
 
     // Captura de Leads (Marketing & Ventas)
     Route::post('/leads', [LeadController::class, 'store']);
