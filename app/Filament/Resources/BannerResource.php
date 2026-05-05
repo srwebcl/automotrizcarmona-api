@@ -40,6 +40,7 @@ class BannerResource extends Resource
                                 ->options([
                                     'home_hero' => 'Home Slider Principal',
                                     'home_promotional' => 'Home Sección Destacados (Promocional)',
+                                    'home_discover' => '✨ Tarjetas Descubrir Más (Home)',
                                     'servicios' => 'Banner Servicios',
                                     'repuestos' => 'Banner Repuestos',
                                     'dyp' => 'Banner Desabolladura y Pintura',
@@ -156,6 +157,7 @@ class BannerResource extends Resource
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'home_hero' => 'Home Slider Principal',
                         'home_promotional' => 'Home Sección Destacados (Promocional)',
+                        'home_discover' => '✨ Tarjetas Descubrir Más (Home)',
                         'servicios' => 'Banner Servicios',
                         'repuestos' => 'Banner Repuestos',
                         'dyp' => 'Banner Desabolladura y Pintura',

@@ -202,4 +202,43 @@ class CatalogController extends Controller
 
         return response()->json($docs);
     }
+
+    /**
+     * Get discover items for the 'Más sobre Carmona y Cia' home section.
+     */
+    public function discoverItems(): \Illuminate\Http\JsonResponse
+    {
+        $items = Banner::where('active', true)
+            ->where('location', 'home_discover')
+            ->orderBy('order')
+            ->get()
+            ->map(function ($banner) {
+                // Resolve link: prefer external_link from custom_data, then internal_link, then link column
+                $customData = $banner->custom_data ?? [];
+                $link = $banner->link;
+                $isExternal = false;
+
+                if (!empty($customData['external_link'])) {
+                    $link = $customData['external_link'];
+                    $isExternal = true;
+                } elseif (!empty($customData['internal_link'])) {
+                    $link = $customData['internal_link'];
+                } elseif (!empty($banner->link)) {
+                    // Determine if it's external by checking if it starts with http
+                    $isExternal = str_starts_with($banner->link, 'http');
+                }
+
+                return [
+                    'id' => $banner->id,
+                    'title' => $banner->title,
+                    'subtitle' => $banner->subtitle,
+                    'image' => $banner->image_desktop,
+                    'link' => $link ?? '/',
+                    'external' => $isExternal,
+                    'order' => $banner->order,
+                ];
+            });
+
+        return response()->json($items);
+    }
 }

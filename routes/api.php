@@ -19,6 +19,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/branches', [CatalogController::class, 'branches']);
     Route::get('/news', [CatalogController::class, 'news']);
     Route::get('/news/{slug}', [CatalogController::class, 'newsBySlug']);
+    Route::get('/home/discover', [CatalogController::class, 'discoverItems']);
 
     // Landings & Especiales
     Route::get('/landings/{slug}', [CatalogController::class, 'landingInfo']);
