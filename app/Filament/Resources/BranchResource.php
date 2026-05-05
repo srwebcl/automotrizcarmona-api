@@ -10,6 +10,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -103,27 +105,34 @@ class BranchResource extends Resource
                             ->label('Teléfono')
                             ->placeholder('+56 9 1234 5678'),
 
+                        TextInput::make('whatsapp')
+                            ->label('WhatsApp')
+                            ->placeholder('+56 9 1234 5678')
+                            ->helperText('Solo números, ej: +56912345678 o 56912345678. Al menos para Servicio Técnico.'),
+
                         TextInput::make('email')
                             ->label('Email')
                             ->email()
                             ->placeholder('sucursal@carmonaycia.cl'),
 
                         // ── HORARIO ─────────────────────────────────────────────
-                        Select::make('schedule')
-                            ->label('Horario de Atención')
-                            ->options([
-                                'L-V: 09:30 a 19:00 | Sáb: 10:00 a 13:30'  => 'L-V: 09:30 a 19:00 | Sáb: 10:00 a 13:30',
-                                'L-V: 08:30 a 18:00'                       => 'L-V: 08:30 a 18:00',
-                            ])
-                            ->searchable()
-                            ->createOptionForm([
-                                TextInput::make('schedule')
-                                    ->label('Horario personalizado')
-                                    ->placeholder('L-V: 9:00 a 18:00 | Sáb: 9:00 a 13:00')
+                        Repeater::make('schedules')
+                            ->label('Horarios de Atención (Ley 40 hrs)')
+                            ->schema([
+                                TextInput::make('days')
+                                    ->label('Días')
+                                    ->placeholder('Ej: Lunes a Jueves')
+                                    ->required(),
+                                TextInput::make('hours')
+                                    ->label('Horario')
+                                    ->placeholder('Ej: 08:30 a 18:00')
                                     ->required(),
                             ])
-                            ->createOptionUsing(fn (array $data) => $data['schedule'])
-                            ->helperText('Selecciona un horario predefinido o escribe uno nuevo con "Crear".'),
+                            ->columns(2)
+                            ->columnSpanFull()
+                            ->defaultItems(1)
+                            ->addActionLabel('Agregar otro horario')
+                            ->helperText('Agrega los horarios de forma prolija, separando por días y horas.'),
 
                         // ── GOOGLE MAPS ────────────────────────────────────────
                         TextInput::make('map_link')

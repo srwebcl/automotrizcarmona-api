@@ -11,11 +11,12 @@ class Branch extends Model
 {
     protected $fillable = [
         'name', 'type', 'address', 'city', 'manager_name',
-        'schedule', 'phone', 'email', 'map_link', 'image_url', 'brands_list'
+        'schedule', 'schedules', 'phone', 'whatsapp', 'email', 'map_link', 'image_url', 'brands_list'
     ];
 
     protected $casts = [
         'brands_list' => 'array',
+        'schedules' => 'array',
     ];
 
     public function brands(): BelongsToMany
