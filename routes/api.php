@@ -28,6 +28,10 @@ Route::prefix('v1')->group(function () {
     Route::get('/electromovilidad', [CatalogController::class, 'electromovilidad']);
     Route::get('/legal-documents', [CatalogController::class, 'legalDocuments']);
 
+    // Scripts de Marketing (GTM, GA4, Hotjar, etc.) — caché 1h
+    Route::get('/layout/scripts', [CatalogController::class, 'marketingScripts']);
+    Route::get('/layout/scripts/refresh', [CatalogController::class, 'refreshMarketingScripts']);
+
     // Car Advisor (Grupo Porsche) — Proxy seguro con caché 24h
     Route::get('/caradvisor', [CarAdvisorController::class, 'summary']);
     Route::get('/caradvisor/refresh', [CarAdvisorController::class, 'refresh']);

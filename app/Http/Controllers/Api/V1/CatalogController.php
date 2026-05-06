@@ -13,9 +13,11 @@ use App\Models\Banner;
 use App\Models\Branch;
 use App\Models\Brand;
 use App\Models\Landing;
+use App\Models\MarketingScript;
 use App\Models\News;
 use App\Models\VehicleModel;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 
 class CatalogController extends Controller
 {
@@ -240,5 +242,42 @@ class CatalogController extends Controller
             });
 
         return response()->json($items);
+    }
+
+    /**
+     * Get active marketing scripts (GTM, GA4, Hotjar, etc.) for frontend injection.
+     * Cached for 1 hour — use /refresh to clear cache immediately.
+     */
+    public function marketingScripts(): \Illuminate\Http\JsonResponse
+    {
+        $scripts = Cache::remember('marketing_scripts', 3600, function () {
+            return MarketingScript::where('is_active', true)
+                ->orderBy('order')
+                ->get(['type', 'value', 'placement'])
+                ->toArray();
+        });
+
+        return response()->json($scripts);
+    }
+
+    /**
+     * Force-refresh the marketing scripts cache.
+     * Call this after making changes in the admin panel for immediate propagation.
+     */
+    public function refreshMarketingScripts(): \Illuminate\Http\JsonResponse
+    {
+        Cache::forget('marketing_scripts');
+
+        $scripts = MarketingScript::where('is_active', true)
+            ->orderBy('order')
+            ->get(['type', 'value', 'placement'])
+            ->toArray();
+
+        Cache::put('marketing_scripts', $scripts, 3600);
+
+        return response()->json([
+            'message' => 'Caché de scripts de marketing actualizado.',
+            'count'   => count($scripts),
+        ]);
     }
 }
