@@ -148,7 +148,6 @@ class BranchResource extends Resource
                     ->schema([
                         FileUpload::make('image_url')
                             ->label('Foto de la Sucursal')
-                            ->image()
                             ->disk('r2')
                             ->directory('branches')
                             ->visibility('public')

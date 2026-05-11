@@ -26,6 +26,7 @@ class VehicleVersionResource extends JsonResource
             'final_price' => (int) $this->finance_price,
             'airbags' => $this->airbags,
             'includes_iva' => $this->includes_iva,
+            'thumbnail' => $this->thumbnail,
         ];
     }
 }

@@ -49,7 +49,6 @@ class TruckResource extends Resource
                     ->disk('r2')
                     ->directory('trucks')
                     ->visibility('public')
-                    ->image()
                     ->imageEditor()
                     ->fetchFileInformation(false)
                     ->helperText('Sube la miniatura del camión directamente a Cloudflare R2.'),

@@ -58,6 +58,11 @@ class VehicleVersionResource extends Resource
                             ->dehydrated()
                             ->disabled()
                             ->helperText('Se genera automáticamente.'),
+                        Forms\Components\FileUpload::make('thumbnail')
+                            ->label('Miniatura (Thumbnail)')
+                            ->disk('r2')
+                            ->directory('models/versions')
+                            ->columnSpanFull(),
                     ])->columns(3),
 
                 Section::make('Características del Vehículo')

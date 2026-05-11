@@ -44,7 +44,6 @@ class BrandResource extends Resource
                             ->disabled(),
                         FileUpload::make('logo_url')
                             ->label('Logo de la Marca')
-                            ->image()
                             ->disk('r2')
                             ->directory('brands/logos'),
                     ])->columns(2),
@@ -77,17 +76,16 @@ class BrandResource extends Resource
                     ->schema([
                         Repeater::make('hero_banners')
                             ->label('Banners')
+                            ->addActionLabel('Añadir Banner')
                             ->schema([
                                 TextInput::make('title')
                                     ->label('Título del Banner'),
                                 FileUpload::make('desktop_image')
                                     ->label('Imagen Desktop')
-                                    ->image()
                                     ->disk('r2')
                                     ->directory('brands/banners'),
                                 FileUpload::make('mobile_image')
                                     ->label('Imagen Mobile')
-                                    ->image()
                                     ->disk('r2')
                                     ->directory('brands/banners'),
                             ])
@@ -101,22 +99,18 @@ class BrandResource extends Resource
                     ->schema([
                         FileUpload::make('discover_servicio_image')
                             ->label('Imagen Servicio Técnico')
-                            ->image()
                             ->disk('r2')
                             ->directory('brands/discover'),
                         FileUpload::make('discover_repuestos_image')
                             ->label('Imagen Repuestos')
-                            ->image()
                             ->disk('r2')
                             ->directory('brands/discover'),
                         FileUpload::make('discover_usados_image')
                             ->label('Imagen Usados')
-                            ->image()
                             ->disk('r2')
                             ->directory('brands/discover'),
                         FileUpload::make('discover_sucursales_image')
                             ->label('Imagen Sucursales')
-                            ->image()
                             ->disk('r2')
                             ->directory('brands/discover'),
                     ])->columns(2),

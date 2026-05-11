@@ -11,7 +11,7 @@ class VehicleVersion extends Model
         'vehicle_model_id', 'name', 'transmission', 'traction', 'fuel', 
         'engine', 'power_hp', 'torque_nm', 'mixed_performance', 'autonomy_km',
         'list_price', 'finance_price', 'brand_bonus', 'finance_bonus',
-        'includes_iva', 'airbags'
+        'includes_iva', 'airbags', 'thumbnail'
     ];
 
     protected $casts = [

@@ -56,13 +56,11 @@ class LandingResource extends Resource
                     ->schema([
                         FileUpload::make('desktop_banner_url')
                             ->label('Banner Desktop')
-                            ->image()
                             ->disk('r2')
                             ->directory('landings')
                             ->fetchFileInformation(false),
                         FileUpload::make('mobile_banner_url')
                             ->label('Banner Mobile')
-                            ->image()
                             ->disk('r2')
                             ->directory('landings')
                             ->fetchFileInformation(false),

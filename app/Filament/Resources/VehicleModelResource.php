@@ -59,7 +59,7 @@ class VehicleModelResource extends Resource
                                     ->required()
                                     ->unique(ignoreRecord: true)
                                     ->dehydrated()
-                                    ->disabled(),
+                                    ->readOnly(),
                                 Forms\Components\Select::make('category')
                                     ->label('Categorías')
                                     ->multiple()
@@ -109,6 +109,7 @@ class VehicleModelResource extends Resource
                                     ->visible(fn (\Filament\Forms\Get $get) => $get('is_promotion'))
                                     ->schema([
                                         Repeater::make('promotionUnits')
+                                            ->addActionLabel('Añadir Unidad en Promoción')
                                             ->relationship()
                                             ->schema([
                                                 Forms\Components\Grid::make(3)->schema([
@@ -178,17 +179,18 @@ class VehicleModelResource extends Resource
                         Tabs\Tab::make('Multimedia')
                             ->icon('heroicon-o-photo')
                             ->schema([
-                                FileUpload::make('thumbnail_url')->label('Miniatura')->image()->disk('r2')->directory('models/thumbnails')->fetchFileInformation(false)->columnSpanFull(),
-                                FileUpload::make('desktop_banner_url')->label('Banner Desktop')->image()->disk('r2')->directory('models/banners')->fetchFileInformation(false),
-                                FileUpload::make('mobile_banner_url')->label('Banner Mobile')->image()->disk('r2')->directory('models/banners')->fetchFileInformation(false),
+                                FileUpload::make('thumbnail_url')->label('Miniatura')->disk('r2')->directory('models/thumbnails')->fetchFileInformation(false)->columnSpanFull(),
+                                FileUpload::make('desktop_banner_url')->label('Banner Desktop')->disk('r2')->directory('models/banners')->fetchFileInformation(false),
+                                FileUpload::make('mobile_banner_url')->label('Banner Mobile')->disk('r2')->directory('models/banners')->fetchFileInformation(false),
                                 TextInput::make('video_url')->label('URL de Video')->url()->columnSpanFull(),
-                                FileUpload::make('gallery')->label('Galería')->multiple()->image()->disk('r2')->reorderable()->panelLayout('grid')->directory('models/galleries')->fetchFileInformation(false)->columnSpanFull(),
+                                FileUpload::make('gallery')->label('Galería')->multiple()->disk('r2')->reorderable()->panelLayout('grid')->directory('models/galleries')->fetchFileInformation(false)->columnSpanFull(),
                             ])->columns(2),
 
                         Tabs\Tab::make('Versiones y Especificaciones')
                             ->icon('heroicon-o-currency-dollar')
                             ->schema([
                                 Repeater::make('vehicleVersions')
+                                    ->addActionLabel('Añadir Versión')
                                     ->relationship()
                                     ->schema([
                                         Forms\Components\Grid::make(4)->schema([
@@ -216,6 +218,7 @@ class VehicleModelResource extends Resource
                                             TextInput::make('mixed_performance')->label('Consumo / Rendimiento'),
                                             TextInput::make('autonomy_km')->label('Autonomía'),
                                         ]),
+                                        FileUpload::make('thumbnail')->label('Miniatura (Thumbnail)')->disk('r2')->directory('models/versions')->columnSpanFull(),
                                     ])->columns(1)->collapsible()
                                     ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Nueva Versión'),
                             ]),
@@ -224,11 +227,12 @@ class VehicleModelResource extends Resource
                             ->icon('heroicon-o-star')
                             ->schema([
                                 Repeater::make('features')
+                                    ->addActionLabel('Añadir Equipamiento')
                                     ->relationship()
                                     ->schema([
                                         TextInput::make('title')->label('Título')->nullable(),
                                         TextInput::make('description')->label('Detalle')->nullable(),
-                                        FileUpload::make('image_url')->label('Icono/Imagen')->image()->disk('r2')->directory('models/features')->fetchFileInformation(false),
+                                        FileUpload::make('image_url')->label('Icono/Imagen')->disk('r2')->directory('models/features')->fetchFileInformation(false),
                                     ])->collapsible()
                             ]),
                     ])->columnSpanFull(),
@@ -288,13 +292,14 @@ class VehicleModelResource extends Resource
                     ->modalHeading(fn ($record) => "Precios y Versiones: {$record->name}")
                     ->form([
                         Forms\Components\Repeater::make('vehicleVersions')
+                            ->addActionLabel('Añadir Versión')
                             ->relationship()
                             ->schema([
                                 Forms\Components\Grid::make(4)->schema([
                                     TextInput::make('name')->label('Versión')->required(),
                                     TextInput::make('transmission')->label('Transmisión'),
                                     TextInput::make('traction')->label('Tracción'),
-                                    TextInput::make('fuel')->label('Fuel'),
+                                    TextInput::make('fuel')->label('Combustible'),
                                 ]),
                                 Forms\Components\Grid::make(4)->schema([
                                     TextInput::make('list_price')->label('Precio Lista')->numeric()->prefix('$')->live(onBlur: true)
@@ -311,6 +316,7 @@ class VehicleModelResource extends Resource
                                     TextInput::make('torque_nm')->label('Torque'),
                                     TextInput::make('mixed_performance')->label('Consumo'),
                                 ]),
+                                Forms\Components\FileUpload::make('thumbnail')->label('Miniatura (Thumbnail)')->disk('r2')->directory('models/versions')->columnSpanFull(),
                             ])->columns(1)->collapsible()
                             ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Nueva Versión'),
                     ]),

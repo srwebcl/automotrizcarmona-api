@@ -60,7 +60,6 @@ class NewsResource extends Resource
                     Forms\Components\Group::make()->columnSpan(1)->schema([
                         Forms\Components\Section::make('Archivo Multimedia')->schema([
                             FileUpload::make('image')->label('Imagen de Portada o Cabecera')
-                                ->image()
                                 ->disk('r2')
                                 ->directory('news')
                                 ->required(),

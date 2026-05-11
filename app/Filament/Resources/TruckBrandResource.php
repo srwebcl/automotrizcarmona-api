@@ -43,7 +43,6 @@ class TruckBrandResource extends Resource
                             ->disk('r2')
                             ->directory('truck-brands')
                             ->visibility('public')
-                            ->image()
                             ->imageEditor()
                             ->helperText('Sube el logo de la marca directamente a Cloudflare R2.'),
                     ]),
@@ -79,7 +78,6 @@ class TruckBrandResource extends Resource
                             ->disk('r2')
                             ->directory('truck-brands/banners')
                             ->visibility('public')
-                            ->image()
                             ->imageEditor()
                             ->helperText('Recomendado: 1920x600px'),
                         Forms\Components\FileUpload::make('hero_banner_mobile')
@@ -87,7 +85,6 @@ class TruckBrandResource extends Resource
                             ->disk('r2')
                             ->directory('truck-brands/banners')
                             ->visibility('public')
-                            ->image()
                             ->imageEditor()
                             ->helperText('Recomendado: 600x800px'),
                     ])->columns(2),

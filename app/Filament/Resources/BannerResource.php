@@ -99,12 +99,10 @@ class BannerResource extends Resource
 
                         Forms\Components\Section::make('Archivos Digitales')->schema([
                             FileUpload::make('image_desktop')->label('Imagen Desktop')
-                                ->image()
                                 ->disk('r2')
                                 ->directory('banners')
                                 ->required(),
                             FileUpload::make('image_mobile')->label('Imagen Móvil (Opcional)')
-                                ->image()
                                 ->disk('r2')
                                 ->directory('banners'),
                         ])->columns(2),
