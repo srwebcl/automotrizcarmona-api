@@ -38,4 +38,13 @@ class Brand extends Model
     {
         return $this->hasMany(LegalDocument::class);
     }
+
+    protected static function booted()
+    {
+        static::saving(function ($brand) {
+            if (empty($brand->slug) && !empty($brand->name)) {
+                $brand->slug = \Illuminate\Support\Str::slug($brand->name);
+            }
+        });
+    }
 }

@@ -40,8 +40,7 @@ class BrandResource extends Resource
                         TextInput::make('slug')
                             ->required()
                             ->unique(ignoreRecord: true)
-                            ->dehydrated()
-                            ->disabled(),
+                            ->readOnly(),
                         FileUpload::make('logo_url')
                             ->label('Logo de la Marca')
                             ->disk('r2')
