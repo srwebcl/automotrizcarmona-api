@@ -56,7 +56,6 @@ class BannerResource extends Resource
                             Toggle::make('is_external_link')
                                 ->label('Enlace Externo (fuera del sitio red)')
                                 ->live()
-                                ->dehydrated(false)
                                 ->columnSpanFull(),
 
                             Select::make('internal_link')
@@ -81,7 +80,15 @@ class BannerResource extends Resource
                                         return ['/camiones/' . $m->brand->slug . '/' . $m->slug => 'Camión: ' . $m->brand->name . ' ' . $m->name];
                                     })->toArray();
                                     
-                                    return array_merge($baseLinks, $modelLinks, $truckLinks);
+                                    $brandLinks = \App\Models\Brand::all()->mapWithKeys(function($b) {
+                                        return ['/nuevos/' . $b->slug => 'Marca (Autos): ' . $b->name];
+                                    })->toArray();
+                                    
+                                    $truckBrandLinks = \App\Models\TruckBrand::all()->mapWithKeys(function($b) {
+                                        return ['/camiones/' . $b->slug => 'Marca (Camiones): ' . $b->name];
+                                    })->toArray();
+                                    
+                                    return array_merge($baseLinks, $brandLinks, $truckBrandLinks, $modelLinks, $truckLinks);
                                 })
                                 ->searchable()
                                 ->visible(fn (\Filament\Forms\Get $get) => ! $get('is_external_link'))
