@@ -51,6 +51,10 @@ class VehicleVersionResource extends Resource
                             ->required()
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
+                        TextInput::make('sap_material_code')
+                            ->label('Código SAP / Option Code (Solo Toyota)')
+                            ->helperText('Obligatorio para que la cotización viaje a Salesforce.')
+                            ->nullable(),
                         TextInput::make('slug')
                             ->label('Slug (URL)')
                             ->required()
