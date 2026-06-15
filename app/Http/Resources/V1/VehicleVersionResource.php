@@ -27,6 +27,7 @@ class VehicleVersionResource extends JsonResource
             'airbags' => $this->airbags,
             'includes_iva' => $this->includes_iva,
             'thumbnail' => $this->thumbnail,
+            'sap_material_code' => $this->sap_material_code,
         ];
     }
 }
