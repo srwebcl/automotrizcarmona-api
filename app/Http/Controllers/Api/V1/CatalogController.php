@@ -90,6 +90,7 @@ class CatalogController extends Controller
         $models = VehicleModel::where('brand_id', $brand->id)
             ->where('is_active', true)
             ->with(['vehicleVersions', 'promotionUnits'])
+            ->orderBy('order')
             ->orderBy('name')
             ->get();
 

@@ -60,6 +60,10 @@ class VehicleModelResource extends Resource
                                     ->unique(ignoreRecord: true)
                                     ->dehydrated()
                                     ->readOnly(),
+                                TextInput::make('order')
+                                    ->label('Orden (Prioridad)')
+                                    ->numeric()
+                                    ->default(0),
                                 Forms\Components\Select::make('category')
                                     ->label('Categorías')
                                     ->multiple()
@@ -242,6 +246,8 @@ class VehicleModelResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderable('order')
+            ->defaultSort('order', 'asc')
             ->striped()
             ->columns([
                 ImageColumn::make('thumbnail_url')->label('Img')->disk('r2')->square()->size(40),
