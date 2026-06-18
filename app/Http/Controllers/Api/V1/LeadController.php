@@ -59,6 +59,52 @@ class LeadController extends Controller
                     ], 400); // 400 para q no devuelva 500
                 }
             }
+        } elseif (strtolower($lead->source) === 'servicio_tecnico') {
+            // Lógica especial para Servicio Técnico: Enviar email a encargado de sucursal
+            $city = $customerData['city'] ?? null;
+            $brandName = $validated['vehicle']['brand_name'] ?? null;
+            
+            $branchEmail = null;
+            if ($city && $brandName) {
+                // Buscamos sucursal de Servicio Técnico en la ciudad que coincida con la marca
+                $branch = \App\Models\Branch::where('city', $city)
+                    ->where(function($q) {
+                        $q->where('type', 'Servicio Técnico')
+                          ->orWhere('type', 'Desabolladura y Pintura');
+                    })
+                    ->get()
+                    ->filter(function ($b) use ($brandName) {
+                        $brands = array_map('strtolower', $b->brands_list ?? []);
+                        return in_array(strtolower($brandName), $brands);
+                    })->first();
+                    
+                if ($branch && !empty($branch->email)) {
+                    $branchEmail = $branch->email;
+                }
+            }
+            
+            // Email por defecto si no hay match
+            $toEmail = $branchEmail ?: 'cbolados@carmonaycia.cl';
+            
+            // Copias requeridas
+            $ccEmails = ['marketing@carmonaycia.cl', 'cbolados@carmonaycia.cl'];
+            
+            // Evitamos copiarnos a nosotros mismos si el $toEmail es uno de los copias
+            $ccEmails = array_values(array_diff($ccEmails, [$toEmail]));
+            
+            try {
+                \Illuminate\Support\Facades\Mail::to($toEmail)
+                    ->cc($ccEmails)
+                    ->send(new \App\Mail\ContactFormMail($lead));
+                    
+                // Opcional: marcamos como sincronizado para indicar que se gestionó localmente
+                $lead->update(['crm_synced' => true]);
+            } catch (\Throwable $e) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'MAIL_ERROR: ' . $e->getMessage() . ' en ' . $e->getFile() . ':' . $e->getLine()
+                ], 400);
+            }
         } else {
             // 2. Despachar Job para enviar al CRM (Background)
             SendLeadToTecnomJob::dispatch($lead, $validated);

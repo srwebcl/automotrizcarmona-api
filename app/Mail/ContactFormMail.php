@@ -34,7 +34,8 @@ class ContactFormMail extends Mailable
             'reclamos' => 'Formulario Sugerencias y Reclamos',
             'dyp' => 'Cotización Desabolladura y Pintura',
             'ventas' => 'Formulario de Contacto Ventas',
-            'promociones' => 'Solicitud Banner Promocional'
+            'promociones' => 'Solicitud Banner Promocional',
+            'servicio_tecnico' => 'Agendamiento de Servicio Técnico'
         ];
 
         $subject = 'Nuevo prospecto: ' . ($sourceNames[$this->lead->source] ?? 'Formulario Web');

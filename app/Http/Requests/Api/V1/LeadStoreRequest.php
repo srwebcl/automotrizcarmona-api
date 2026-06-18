@@ -27,6 +27,7 @@ class LeadStoreRequest extends FormRequest
             'customer.last_name' => 'required|string|max:255',
             'customer.email' => 'required|email|max:255',
             'customer.phone' => 'required|string|max:20',
+            'customer.city' => 'nullable|string',
             'vehicle' => 'nullable|array',
             'vehicle.brand_name' => 'nullable|string',
             'vehicle.model_name' => 'nullable|string',
