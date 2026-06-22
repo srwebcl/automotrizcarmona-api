@@ -34,5 +34,15 @@ class AppServiceProvider extends ServiceProvider
         \Filament\Forms\Components\TimePicker::configureUsing(function (\Filament\Forms\Components\TimePicker $component): void {
             $component->native(false);
         });
+
+        // Registrar consultas a base de datos que tarden más de 1 segundo
+        \Illuminate\Support\Facades\DB::listen(function ($query) {
+            if ($query->time > 1000) {
+                \Illuminate\Support\Facades\Log::warning("Consulta Lenta Detectada (>1s)", [
+                    'sql' => $query->sql,
+                    'time' => $query->time . 'ms'
+                ]);
+            }
+        });
     }
 }

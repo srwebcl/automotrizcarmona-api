@@ -34,11 +34,13 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => '#111827', // Black/dark theme primary
             ])
-            ->font('Inter')
+            // ->font('Inter') // Desactivado para evitar timeout de red en el servidor
             ->renderHook(
                 \Filament\View\PanelsRenderHook::HEAD_END,
                 fn (): string => new \Illuminate\Support\HtmlString('
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
                     <style>
+                        body { font-family: "Inter", sans-serif; }
                         /* Fuerza implacablemente el logo a negro en cualquier pantalla de Filament (login, dashboard, etc) */
                         img[src*="logo-carmona"] { 
                             filter: brightness(0) !important; 
