@@ -24,6 +24,7 @@ class TruckController extends Controller
             'brand' => $brand,
             'trucks' => Truck::where('truck_brand_id', $brand->id)
                 ->where('is_active', true)
+                ->orderBy('order', 'asc')
                 ->get()
         ]);
     }

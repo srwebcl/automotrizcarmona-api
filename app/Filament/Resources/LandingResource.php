@@ -81,6 +81,12 @@ class LandingResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('manage_order')
+                    ->label('Gestionar Orden')
+                    ->icon('heroicon-o-bars-3')
+                    ->color('success')
+                    ->url(fn ($record) => $record->slug === 'electromovilidad' ? EcoModelResource::getUrl() : ($record->slug === 'liquidacion' ? PromotionUnitResource::getUrl() : null))
+                    ->visible(fn ($record) => in_array($record->slug, ['electromovilidad', 'liquidacion'])),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

@@ -79,6 +79,8 @@ class TruckResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderable('order')
+            ->defaultSort('order', 'asc')
             ->columns([
                 Tables\Columns\TextColumn::make('brand.name')
                     ->label('Marca')

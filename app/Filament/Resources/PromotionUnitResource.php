@@ -17,13 +17,10 @@ class PromotionUnitResource extends Resource
 {
     protected static ?string $model = PromotionUnit::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-fire';
-    
-    protected static ?string $navigationLabel = 'Unidades en Liquidación';
-    
-    protected static ?string $pluralLabel = 'Unidades en Liquidación';
-    
-    protected static ?string $navigationGroup = 'Marketing';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Orden Liquidación';
+    protected static ?string $pluralLabel = 'Liquidación';
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {
@@ -31,85 +28,76 @@ class PromotionUnitResource extends Resource
             ->schema([
                 Forms\Components\Select::make('vehicle_model_id')
                     ->relationship('vehicleModel', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->label('Modelo de Vehículo'),
+                    ->required(),
                 Forms\Components\TextInput::make('vin')
                     ->required()
-                    ->maxLength(255)
-                    ->label('VIN / Chasis'),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('version_name')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('promo_bonus')
+                    ->required()
+                    ->numeric()
+                    ->default(0),
+                Forms\Components\TextInput::make('promo_price')
+                    ->required()
+                    ->numeric()
+                    ->default(0),
+                Forms\Components\Toggle::make('is_active')
+                    ->required(),
+                Forms\Components\TextInput::make('status')
                     ->required()
                     ->maxLength(255)
-                    ->label('Nombre de Versión'),
+                    ->default('disponible'),
                 Forms\Components\TextInput::make('list_price')
                     ->numeric()
+                    ->default(0),
+                Forms\Components\TextInput::make('order')
                     ->required()
-                    ->prefix('$')
-                    ->label('Precio de Lista'),
-                Forms\Components\TextInput::make('promo_price')
                     ->numeric()
-                    ->required()
-                    ->prefix('$')
-                    ->label('Precio Liquidación'),
-                Forms\Components\TextInput::make('promo_bonus')
-                    ->numeric()
-                    ->required()
-                    ->prefix('$')
-                    ->label('Bono de Descuento'),
-                Forms\Components\Select::make('status')
-                    ->options([
-                        'disponible' => 'Disponible',
-                        'reservado' => 'Reservado',
-                        'vendido' => 'Vendido',
-                    ])
-                    ->default('disponible')
-                    ->required()
-                    ->label('Estado'),
-                Forms\Components\Toggle::make('is_active')
-                    ->default(true)
-                    ->label('Activo')
+                    ->default(0),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderable('order')
+            ->defaultSort('order', 'asc')
             ->columns([
                 Tables\Columns\TextColumn::make('vehicleModel.name')
-                    ->searchable()
-                    ->sortable()
-                    ->label('Modelo'),
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('vin')
-                    ->searchable()
-                    ->label('VIN'),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('version_name')
-                    ->searchable()
-                    ->label('Versión'),
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('promo_bonus')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('promo_price')
-                    ->money('clp')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('is_active')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
                     ->sortable()
-                    ->label('Precio Liq.'),
-                Tables\Columns\SelectColumn::make('status')
-                    ->options([
-                        'disponible' => 'Disponible',
-                        'reservado' => 'Reservado',
-                        'vendido' => 'Vendido',
-                    ])
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
                     ->sortable()
-                    ->label('Estado'),
-                Tables\Columns\ToggleColumn::make('is_active')
-                    ->label('Activo'),
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('status')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('list_price')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('order')
+                    ->numeric()
+                    ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')
-                    ->options([
-                        'disponible' => 'Disponible',
-                        'reservado' => 'Reservado',
-                        'vendido' => 'Vendido',
-                    ])
-                    ->label('Estado'),
+                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

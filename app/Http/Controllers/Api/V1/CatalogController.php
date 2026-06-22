@@ -145,7 +145,9 @@ class CatalogController extends Controller
     {
         $models = VehicleModel::where('is_active', true)
             ->where('is_promotion', true)
-            ->with(['brand', 'promotionUnits'])
+            ->with(['brand', 'promotionUnits' => function ($query) {
+                $query->where('is_active', true)->orderBy('order', 'asc');
+            }])
             ->orderBy('name')
             ->get();
 
@@ -163,7 +165,7 @@ class CatalogController extends Controller
                       ->orWhere('is_electric', true);
             })
             ->with(['brand', 'vehicleVersions'])
-            ->orderBy('name')
+            ->orderBy('eco_order', 'asc')
             ->get();
 
         return VehicleModelResource::collection($models);

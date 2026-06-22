@@ -15,7 +15,8 @@ class PromotionUnit extends Model
         'promo_bonus',
         'promo_price',
         'status',
-        'is_active'
+        'is_active',
+        'order'
     ];
 
     protected $casts = [
