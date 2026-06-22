@@ -27,7 +27,7 @@ class EcoModelResource extends Resource
             ->reorderable('eco_order')
             ->defaultSort('eco_order', 'asc')
             ->columns([
-                Tables\Columns\ImageColumn::make('thumbnail_url')->label('Img')->disk('r2')->square(),
+                Tables\Columns\ImageColumn::make('thumbnail_url')->label('Img')->disk('r2')->square()->defaultImageUrl(url('/images/placeholder.png')),
                 Tables\Columns\TextColumn::make('brand.name')->label('Marca'),
                 Tables\Columns\TextColumn::make('name')->label('Modelo')->searchable(),
                 Tables\Columns\ToggleColumn::make('is_electric')->label('Eléctrico'),
@@ -41,6 +41,7 @@ class EcoModelResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->with(['brand'])
             ->where(function($q) {
                 $q->where('is_electric', true)
                   ->orWhere('is_hybrid', true);

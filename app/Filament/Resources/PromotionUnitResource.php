@@ -117,4 +117,10 @@ class PromotionUnitResource extends Resource
             'index' => Pages\ManagePromotionUnits::route('/'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['vehicleModel']);
+    }
 }
