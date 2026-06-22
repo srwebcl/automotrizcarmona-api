@@ -56,6 +56,7 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Livianos',
                 'Camiones',
+                'Landing Pages',
                 'Configuraciones',
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

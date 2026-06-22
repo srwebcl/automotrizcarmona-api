@@ -21,7 +21,8 @@ class LandingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-line';
     
-    protected static ?string $navigationGroup = 'Marketing';
+    protected static ?string $navigationGroup = 'Landing Pages';
+    protected static bool $shouldRegisterNavigation = false;
 
     protected static ?string $label = 'Configuración Landing';
     protected static ?string $pluralLabel = 'Configuración Landings';

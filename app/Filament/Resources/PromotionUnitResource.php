@@ -18,9 +18,9 @@ class PromotionUnitResource extends Resource
     protected static ?string $model = PromotionUnit::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Marketing';
-    protected static ?string $navigationLabel = 'Landing: Liquidación';
-    protected static ?string $pluralLabel = 'Landing: Liquidación';
+    protected static ?string $navigationGroup = 'Landing Pages';
+    protected static ?string $navigationLabel = 'Liquidación';
+    protected static ?string $pluralLabel = 'Liquidación';
     protected static bool $shouldRegisterNavigation = true;
 
     public static function form(Form $form): Form

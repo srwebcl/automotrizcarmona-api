@@ -15,9 +15,9 @@ class EcoModelResource extends Resource
     protected static ?string $model = VehicleModel::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
-    protected static ?string $navigationLabel = 'Landing: Electromovilidad';
-    protected static ?string $pluralLabel = 'Landing: Electromovilidad';
-    protected static ?string $navigationGroup = 'Marketing';
+    protected static ?string $navigationLabel = 'Electromovilidad';
+    protected static ?string $pluralLabel = 'Electromovilidad';
+    protected static ?string $navigationGroup = 'Landing Pages';
     
     protected static bool $shouldRegisterNavigation = true;
 
