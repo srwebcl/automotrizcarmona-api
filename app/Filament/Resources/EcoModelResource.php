@@ -15,12 +15,11 @@ class EcoModelResource extends Resource
     protected static ?string $model = VehicleModel::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
-    protected static ?string $navigationLabel = 'Orden Electromovilidad';
-    protected static ?string $pluralLabel = 'Electromovilidad';
-    protected static ?string $navigationGroup = 'Landing Pages';
+    protected static ?string $navigationLabel = 'Landing: Electromovilidad';
+    protected static ?string $pluralLabel = 'Landing: Electromovilidad';
+    protected static ?string $navigationGroup = 'Marketing';
     
-    // Lo ocultamos del menú principal para acceder desde Landings
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
 
     public static function table(Table $table): Table
     {
