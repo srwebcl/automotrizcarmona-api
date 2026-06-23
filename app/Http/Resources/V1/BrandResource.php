@@ -17,6 +17,15 @@ class BrandResource extends JsonResource
             'brand_color_css' => $this->brand_color_css,
             'seo_title' => $this->seo_title,
             'legal_text' => $this->legal_text,
+            'legal_documents' => $this->legalDocuments ? $this->legalDocuments->map(function ($doc) {
+                $plainText = strip_tags($doc->content);
+                return [
+                    'id' => $doc->id,
+                    'title' => $doc->title,
+                    'excerpt' => strlen($plainText) > 300 ? substr($plainText, 0, 300) . '...' : ($plainText ?: 'Ver condiciones y términos legales aplicables.'),
+                    'content' => $doc->content,
+                ];
+            }) : [],
             'hero_banners' => collect($this->hero_banners ?? [])->map(fn($b) => [
                 'title' => $b['title'] ?? '',
                 'desktop_image' => isset($b['desktop_image']) ? asset('storage/' . $b['desktop_image']) : null,

@@ -18,4 +18,9 @@ class Landing extends Model
     protected $casts = [
         'is_active' => 'boolean'
     ];
+
+    public function legalDocuments(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(LegalDocument::class, 'legalable');
+    }
 }

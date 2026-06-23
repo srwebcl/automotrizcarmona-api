@@ -16,6 +16,15 @@ class LandingResource extends JsonResource
             'desktop_banner_url' => $this->desktop_banner_url ? (str_starts_with($this->desktop_banner_url, 'http') ? $this->desktop_banner_url : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($this->desktop_banner_url, '/')) : null,
             'mobile_banner_url' => $this->mobile_banner_url ? (str_starts_with($this->mobile_banner_url, 'http') ? $this->mobile_banner_url : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($this->mobile_banner_url, '/')) : null,
             'is_active' => (bool) $this->is_active,
+            'legal_documents' => $this->legalDocuments ? $this->legalDocuments->map(function ($doc) {
+                $plainText = strip_tags($doc->content);
+                return [
+                    'id' => $doc->id,
+                    'title' => $doc->title,
+                    'excerpt' => strlen($plainText) > 300 ? substr($plainText, 0, 300) . '...' : ($plainText ?: 'Ver condiciones y términos legales aplicables.'),
+                    'content' => $doc->content,
+                ];
+            }) : [],
         ];
     }
 }

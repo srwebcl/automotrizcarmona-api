@@ -32,12 +32,19 @@ class LegalDocumentResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Asignación de Marca')
-                    ->description('Selecciona a qué marca aplica este documento.')
+                Forms\Components\Section::make('Asignación Universal')
+                    ->description('Selecciona si este documento aplica a una Marca o a una Landing Page.')
                     ->schema([
-                        Select::make('brand_id')
-                            ->label('Aplica a Marca de Autos/Motos')
-                            ->options(Brand::all()->pluck('name', 'id'))
+                        Forms\Components\MorphToSelect::make('legalable')
+                            ->label('Asignar a')
+                            ->types([
+                                Forms\Components\MorphToSelect\Type::make(Brand::class)
+                                    ->titleAttribute('name')
+                                    ->label('Marca de Autos/Motos'),
+                                Forms\Components\MorphToSelect\Type::make(\App\Models\Landing::class)
+                                    ->titleAttribute('title')
+                                    ->label('Landing Page'),
+                            ])
                             ->searchable()
                             ->nullable(),
                     ])->columns(1),
@@ -65,9 +72,18 @@ class LegalDocumentResource extends Resource
                     ->label('Título')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('brand.name')
-                    ->label('Marca')
-                    ->sortable()
+                TextColumn::make('legalable_id')
+                    ->label('Asignado a')
+                    ->getStateUsing(function ($record) {
+                        if (!$record->legalable) return 'Sin asignar';
+                        if ($record->legalable instanceof \App\Models\Brand) {
+                            return 'Marca: ' . $record->legalable->name;
+                        }
+                        if ($record->legalable instanceof \App\Models\Landing) {
+                            return 'Landing: ' . $record->legalable->title;
+                        }
+                        return 'Desconocido';
+                    })
                     ->badge(),
                 TextColumn::make('updated_at')
                     ->label('Última actualización')

@@ -34,9 +34,9 @@ class Brand extends Model
         return $this->belongsToMany(Branch::class);
     }
 
-    public function legalDocuments(): HasMany
+    public function legalDocuments(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
-        return $this->hasMany(LegalDocument::class);
+        return $this->morphMany(LegalDocument::class, 'legalable');
     }
 
     protected static function booted()

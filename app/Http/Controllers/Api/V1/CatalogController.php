@@ -188,20 +188,24 @@ class CatalogController extends Controller
      */
     public function legalDocuments(): \Illuminate\Http\JsonResponse
     {
-        $docs = \App\Models\LegalDocument::with(['brand:id,name,slug,logo_url'])
+        $docs = \App\Models\LegalDocument::with(['legalable'])
             ->orderBy('id', 'desc')
             ->get()
             ->map(function ($doc) {
                 $plainText = strip_tags($doc->content);
                 $excerpt = strlen($plainText) > 300 ? substr($plainText, 0, 300) . '...' : ($plainText ?: 'Ver condiciones y términos legales aplicables.');
+                
+                $brand = $doc->legalable instanceof \App\Models\Brand ? $doc->legalable : null;
+                $landing = $doc->legalable instanceof \App\Models\Landing ? $doc->legalable : null;
+                
                 return [
                     'id' => $doc->id,
                     'title' => $doc->title,
                     'excerpt' => $excerpt,
                     'content' => $doc->content,
-                    'brand_name' => $doc->brand ? $doc->brand->name : 'Carmona Auto',
-                    'brand_slug' => $doc->brand ? $doc->brand->slug : 'carmona',
-                    'logo_url' => $doc->brand ? $doc->brand->logo_url : null,
+                    'brand_name' => $brand ? $brand->name : ($landing ? $landing->title : 'Carmona Auto'),
+                    'brand_slug' => $brand ? $brand->slug : ($landing ? $landing->slug : 'carmona'),
+                    'logo_url' => $brand ? $brand->logo_url : null,
                 ];
             });
 

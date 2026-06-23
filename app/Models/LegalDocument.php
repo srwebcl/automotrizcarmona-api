@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class LegalDocument extends Model
 {
     protected $fillable = [
-        'brand_id',
+        'legalable_id',
+        'legalable_type',
         'title',
         'content',
     ];
 
-    public function brand()
+    public function legalable()
     {
-        return $this->belongsTo(Brand::class);
+        return $this->morphTo();
     }
 }
