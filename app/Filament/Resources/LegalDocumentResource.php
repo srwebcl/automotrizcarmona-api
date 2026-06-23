@@ -45,8 +45,7 @@ class LegalDocumentResource extends Resource
                                     ->titleAttribute('title')
                                     ->label('Landing Page'),
                             ])
-                            ->searchable()
-                            ->nullable(),
+                            ->searchable(),
                     ])->columns(1),
 
                 Forms\Components\Section::make('Contenido Legal')
