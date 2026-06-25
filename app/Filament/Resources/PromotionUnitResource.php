@@ -21,6 +21,16 @@ class PromotionUnitResource extends Resource
     protected static ?string $navigationGroup = 'Landing Pages';
     protected static ?string $navigationLabel = 'Liquidación';
     protected static ?string $pluralLabel = 'Liquidación';
+    
+    public static function getModelLabel(): string
+    {
+        return 'Unidad en Liquidación';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Unidades en Liquidación';
+    }
     protected static bool $shouldRegisterNavigation = true;
 
     public static function form(Form $form): Form
@@ -35,30 +45,45 @@ class PromotionUnitResource extends Resource
                     ->label('Modelo de Vehículo'),
                 Forms\Components\TextInput::make('vin')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->label('N° VIN / Chasis'),
                 Forms\Components\TextInput::make('version_name')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('promo_bonus')
-                    ->required()
+                    ->maxLength(255)
+                    ->label('Nombre de Versión'),
+                Forms\Components\TextInput::make('list_price')
                     ->numeric()
-                    ->default(0),
+                    ->default(0)
+                    ->prefix('$')
+                    ->label('Precio Lista ($)'),
                 Forms\Components\TextInput::make('promo_price')
                     ->required()
                     ->numeric()
-                    ->default(0),
-                Forms\Components\Toggle::make('is_active')
-                    ->required(),
-                Forms\Components\TextInput::make('status')
+                    ->default(0)
+                    ->prefix('$')
+                    ->label('Precio Liquidación ($)'),
+                Forms\Components\TextInput::make('promo_bonus')
                     ->required()
-                    ->maxLength(255)
-                    ->default('disponible'),
-                Forms\Components\TextInput::make('list_price')
                     ->numeric()
-                    ->default(0),
+                    ->default(0)
+                    ->prefix('$')
+                    ->label('Bono Liquidación ($)'),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'disponible' => 'Disponible',
+                        'reservado' => 'Reservado',
+                        'vendido' => 'Vendido',
+                    ])
+                    ->required()
+                    ->default('disponible')
+                    ->label('Estado'),
                 Forms\Components\TextInput::make('order')
                     ->required()
                     ->numeric()
-                    ->default(0),
+                    ->default(0)
+                    ->label('Orden de Visualización'),
+                Forms\Components\Toggle::make('is_active')
+                    ->required()
+                    ->label('Activo / Disponible'),
             ]);
     }
 
@@ -70,38 +95,62 @@ class PromotionUnitResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('vehicleModel.name')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->label('Modelo'),
                 Tables\Columns\TextColumn::make('vin')
-                    ->searchable(),
+                    ->searchable()
+                    ->label('VIN'),
                 Tables\Columns\TextColumn::make('version_name')
-                    ->searchable(),
+                    ->searchable()
+                    ->label('Versión'),
+                Tables\Columns\TextColumn::make('list_price')
+                    ->numeric()
+                    ->money('clp')
+                    ->sortable()
+                    ->label('Precio Lista'),
                 Tables\Columns\TextColumn::make('promo_bonus')
                     ->numeric()
-                    ->sortable(),
+                    ->money('clp')
+                    ->sortable()
+                    ->label('Bono Liq.'),
                 Tables\Columns\TextColumn::make('promo_price')
                     ->numeric()
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
+                    ->money('clp')
+                    ->sortable()
+                    ->label('Precio Liq.'),
+                Tables\Columns\SelectColumn::make('status')
+                    ->options([
+                        'disponible' => 'Disponible',
+                        'reservado' => 'Reservado',
+                        'vendido' => 'Vendido',
+                    ])
+                    ->sortable()
+                    ->label('Estado'),
+                Tables\Columns\TextColumn::make('order')
+                    ->numeric()
+                    ->sortable()
+                    ->label('Orden'),
+                Tables\Columns\ToggleColumn::make('is_active')
+                    ->label('Activo'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Creado'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('list_price')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('order')
-                    ->numeric()
-                    ->sortable(),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Actualizado'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'disponible' => 'Disponible',
+                        'reservado' => 'Reservado',
+                        'vendido' => 'Vendido',
+                    ])
+                    ->label('Estado'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
