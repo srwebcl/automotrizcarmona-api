@@ -166,6 +166,11 @@ class VehicleVersionResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                Tables\Columns\TextInputColumn::make('sap_material_code')
+                    ->label('Cód. SAP (Toyota)')
+                    ->visible(fn ($livewire) => $livewire->activeTab === 'toyota')
+                    ->extraAttributes(['style' => 'min-width: 150px;']),
+
                 Tables\Columns\TextInputColumn::make('list_price')
                     ->label('Precio Lista ($)')
                     ->type('number')
