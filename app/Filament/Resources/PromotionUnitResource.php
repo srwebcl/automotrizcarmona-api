@@ -29,7 +29,10 @@ class PromotionUnitResource extends Resource
             ->schema([
                 Forms\Components\Select::make('vehicle_model_id')
                     ->relationship('vehicleModel', 'name')
-                    ->required(),
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->label('Modelo de Vehículo'),
                 Forms\Components\TextInput::make('vin')
                     ->required()
                     ->maxLength(255),
