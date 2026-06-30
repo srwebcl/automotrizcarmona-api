@@ -84,7 +84,7 @@ class LeadController extends Controller
             }
             
             // Email por defecto si no hay match
-            $toEmail = $branchEmail ?: 'cbolados@carmonaycia.cl';
+            $toEmail = $branchEmail ?: 'marketing@carmonaycia.cl';
             
             // Copias requeridas
             $ccEmails = ['marketing@carmonaycia.cl'];
