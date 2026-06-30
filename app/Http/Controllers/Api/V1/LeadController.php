@@ -87,7 +87,7 @@ class LeadController extends Controller
             $toEmail = $branchEmail ?: 'cbolados@carmonaycia.cl';
             
             // Copias requeridas
-            $ccEmails = ['marketing@carmonaycia.cl', 'cbolados@carmonaycia.cl'];
+            $ccEmails = ['marketing@carmonaycia.cl'];
             
             // Evitamos copiarnos a nosotros mismos si el $toEmail es uno de los copias
             $ccEmails = array_values(array_diff($ccEmails, [$toEmail]));
