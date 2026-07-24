@@ -92,10 +92,54 @@ class LeadResource extends Resource
                         'repuestos' => 'Repuestos',
                         'reclamos' => 'Reclamos',
                     ]),
+                Tables\Filters\Filter::make('date_filter')
+                    ->form([
+                        Forms\Components\Select::make('rango')
+                            ->label('Fecha')
+                            ->options([
+                                'today' => 'Hoy',
+                                '7_days' => 'Últimos 7 días',
+                                '30_days' => 'Últimos 30 días',
+                                'this_month' => 'Este mes',
+                            ])
+                    ])
+                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
+                        return $query->when(
+                            $data['rango'] ?? null,
+                            function (\Illuminate\Database\Eloquent\Builder $query, $rango) {
+                                if ($rango === 'today') return $query->whereDate('created_at', today());
+                                if ($rango === '7_days') return $query->where('created_at', '>=', now()->subDays(7));
+                                if ($rango === '30_days') return $query->where('created_at', '>=', now()->subDays(30));
+                                if ($rango === 'this_month') return $query->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year);
+                                return $query;
+                            }
+                        );
+                    }),
                 Tables\Filters\Filter::make('brand_model')
                     ->form([
-                        Forms\Components\TextInput::make('brand')
-                            ->label('Filtrar por Marca'),
+                        Forms\Components\Select::make('brand')
+                            ->label('Filtrar por Marca')
+                            ->options([
+                                'Toyota' => 'Toyota',
+                                'Volkswagen' => 'Volkswagen',
+                                'MG' => 'MG',
+                                'Geely' => 'Geely',
+                                'Audi' => 'Audi',
+                                'Skoda' => 'Skoda',
+                                'Seat' => 'Seat',
+                                'Subaru' => 'Subaru',
+                                'Cupra' => 'Cupra',
+                                'Soueast' => 'Soueast',
+                                'Dongfeng' => 'Dongfeng',
+                                'JAC' => 'JAC',
+                                'GWM' => 'GWM',
+                                'Haval' => 'Haval',
+                                'Changan' => 'Changan',
+                                'Suzuki' => 'Suzuki',
+                                'Renault' => 'Renault',
+                                'Mazda' => 'Mazda',
+                            ])
+                            ->searchable(),
                         Forms\Components\TextInput::make('model')
                             ->label('Filtrar por Modelo'),
                     ])
