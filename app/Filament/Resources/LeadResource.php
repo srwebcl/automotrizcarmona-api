@@ -61,14 +61,28 @@ class LeadResource extends Resource
                     ->label('Nombre Completo')
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email'),
+                    ->label('Email')
+                    ->searchable(),
+                TextColumn::make('raw_request.vehicle.brand_name')
+                    ->label('Marca')
+                    ->searchable(query: function (\Illuminate\Database\Eloquent\Builder $query, string $search) {
+                        return $query->where('raw_request->vehicle->brand_name', 'like', "%{$search}%");
+                    })
+                    ->sortable(query: function (\Illuminate\Database\Eloquent\Builder $query, string $direction) {
+                        return $query->orderBy('raw_request->vehicle->brand_name', $direction);
+                    }),
+                TextColumn::make('vehicle_id')
+                    ->label('Modelo')
+                    ->searchable(),
                 TextColumn::make('source')
                     ->label('Origen')
                     ->badge(),
                 IconColumn::make('crm_synced')
                     ->boolean()
                     ->label('CRM'),
+                    ->label('CRM'),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('source')
                     ->label('Origen')
@@ -79,6 +93,24 @@ class LeadResource extends Resource
                         'repuestos' => 'Repuestos',
                         'reclamos' => 'Reclamos',
                     ]),
+                Tables\Filters\Filter::make('brand_model')
+                    ->form([
+                        Forms\Components\TextInput::make('brand')
+                            ->label('Filtrar por Marca'),
+                        Forms\Components\TextInput::make('model')
+                            ->label('Filtrar por Modelo'),
+                    ])
+                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
+                        return $query
+                            ->when(
+                                $data['brand'],
+                                fn (\Illuminate\Database\Eloquent\Builder $query, $brand): \Illuminate\Database\Eloquent\Builder => $query->where('raw_request->vehicle->brand_name', 'like', "%{$brand}%")
+                            )
+                            ->when(
+                                $data['model'],
+                                fn (\Illuminate\Database\Eloquent\Builder $query, $model): \Illuminate\Database\Eloquent\Builder => $query->where('vehicle_id', 'like', "%{$model}%")
+                            );
+                    }),
                 Tables\Filters\TernaryFilter::make('crm_synced')
                     ->label('Sincronizado'),
             ])
