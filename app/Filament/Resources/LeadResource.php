@@ -156,7 +156,7 @@ class LeadResource extends Resource
                     }),
                 Tables\Filters\TernaryFilter::make('crm_synced')
                     ->label('Sincronizado'),
-            ])
+            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\DeleteAction::make(),
