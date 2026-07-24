@@ -80,7 +80,6 @@ class LeadResource extends Resource
                 IconColumn::make('crm_synced')
                     ->boolean()
                     ->label('CRM'),
-                    ->label('CRM'),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
