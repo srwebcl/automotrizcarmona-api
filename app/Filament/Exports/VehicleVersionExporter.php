@@ -14,8 +14,12 @@ class VehicleVersionExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make('vehicleModel.brand.name')->label('Marca'),
-            ExportColumn::make('vehicleModel.name')->label('Modelo'),
+            ExportColumn::make('brand')
+                ->label('Marca')
+                ->state(fn ($record) => $record->vehicleModel?->brand?->name ?? 'N/A'),
+            ExportColumn::make('model')
+                ->label('Modelo')
+                ->state(fn ($record) => $record->vehicleModel?->name ?? 'N/A'),
             ExportColumn::make('name')->label('Versión'),
             ExportColumn::make('list_price')->label('Precio Lista'),
             ExportColumn::make('brand_bonus')->label('Bono Marca'),

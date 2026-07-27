@@ -66,7 +66,7 @@ class LeadResource extends Resource
                 TextColumn::make('raw_request.vehicle.brand_name')
                     ->label('Marca')
                     ->searchable(query: function (\Illuminate\Database\Eloquent\Builder $query, string $search) {
-                        return $query->where('raw_request->vehicle->brand_name', 'like', "%{$search}%");
+                        return $query->where('raw_request->vehicle->brand_name', 'ilike', "%{$search}%");
                     })
                     ->sortable(query: function (\Illuminate\Database\Eloquent\Builder $query, string $direction) {
                         return $query->orderBy('raw_request->vehicle->brand_name', $direction);
@@ -115,10 +115,10 @@ class LeadResource extends Resource
                             }
                         );
                     }),
-                Tables\Filters\Filter::make('brand_model')
+                Tables\Filters\Filter::make('brand')
                     ->form([
                         Forms\Components\Select::make('brand')
-                            ->label('Filtrar por Marca')
+                            ->label('Marca')
                             ->options([
                                 'Toyota' => 'Toyota',
                                 'Volkswagen' => 'Volkswagen',
@@ -140,23 +140,26 @@ class LeadResource extends Resource
                                 'Mazda' => 'Mazda',
                             ])
                             ->searchable(),
-                        Forms\Components\TextInput::make('model')
-                            ->label('Filtrar por Modelo'),
                     ])
                     ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
-                        return $query
-                            ->when(
-                                $data['brand'],
-                                fn (\Illuminate\Database\Eloquent\Builder $query, $brand): \Illuminate\Database\Eloquent\Builder => $query->where('raw_request->vehicle->brand_name', 'like', "%{$brand}%")
-                            )
-                            ->when(
-                                $data['model'],
-                                fn (\Illuminate\Database\Eloquent\Builder $query, $model): \Illuminate\Database\Eloquent\Builder => $query->where('vehicle_id', 'like', "%{$model}%")
-                            );
+                        return $query->when(
+                            $data['brand'] ?? null,
+                            fn (\Illuminate\Database\Eloquent\Builder $query, $brand): \Illuminate\Database\Eloquent\Builder => $query->where('raw_request->vehicle->brand_name', 'ilike', "%{$brand}%")
+                        );
                     }),
-                Tables\Filters\TernaryFilter::make('crm_synced')
-                    ->label('Sincronizado'),
+                Tables\Filters\Filter::make('model')
+                    ->form([
+                        Forms\Components\TextInput::make('model')
+                            ->label('Modelo'),
+                    ])
+                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
+                        return $query->when(
+                            $data['model'] ?? null,
+                            fn (\Illuminate\Database\Eloquent\Builder $query, $model): \Illuminate\Database\Eloquent\Builder => $query->where('vehicle_id', 'ilike', "%{$model}%")
+                        );
+                    }),
             ], layout: Tables\Enums\FiltersLayout::AboveContent)
+            ->filtersFormColumns(4)
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\DeleteAction::make(),
@@ -172,7 +175,7 @@ class LeadResource extends Resource
     {
         return [
             'index' => Pages\ListLeads::route('/'),
-            // 'create' => Pages\CreateLead::route('/create'), // Los leads no se crean manualmente
+            'reportes' => Pages\LeadReports::route('/reportes'),
             'edit' => Pages\EditLead::route('/{record}/edit'),
         ];
     }

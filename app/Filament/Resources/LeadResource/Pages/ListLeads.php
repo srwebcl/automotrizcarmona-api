@@ -13,7 +13,16 @@ class ListLeads extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('Reportes')
+                ->url(fn (): string => LeadResource::getUrl('reportes'))
+                ->icon('heroicon-m-chart-pie')
+                ->color('info'),
             Actions\CreateAction::make(),
         ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [];
     }
 }
