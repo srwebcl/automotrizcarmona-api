@@ -50,7 +50,7 @@ class TruckBrandResource extends Resource
                 Forms\Components\Section::make('Estado')
                     ->schema([
                         Forms\Components\Toggle::make('is_active')
-                            ->label('¿Está activa?')
+                            ->label('¿Activa en Ventas (Catálogo Camiones)?')
                             ->default(true)
                             ->required(),
                     ]),

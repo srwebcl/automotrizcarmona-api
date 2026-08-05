@@ -66,13 +66,23 @@ class CatalogController extends Controller
      */
     public function layoutBrands(): \Illuminate\Http\JsonResponse
     {
-        $cars = Brand::where('is_active', true)
+        $cars = Brand::where(function($query) {
+                $query->where('is_active', true)
+                      ->orWhere('show_in_services', true)
+                      ->orWhere('show_in_parts', true)
+                      ->orWhere('show_in_dyp', true);
+            })
             ->orderBy('name')
-            ->get(['name', 'slug', 'logo_url', 'show_in_services', 'show_in_parts', 'show_in_dyp']);
+            ->get(['name', 'slug', 'logo_url', 'is_active', 'show_in_services', 'show_in_parts', 'show_in_dyp']);
             
-        $trucks = \App\Models\TruckBrand::where('is_active', true)
+        $trucks = \App\Models\TruckBrand::where(function($query) {
+                $query->where('is_active', true)
+                      ->orWhere('show_in_services', true)
+                      ->orWhere('show_in_parts', true)
+                      ->orWhere('show_in_dyp', true);
+            })
             ->orderBy('name')
-            ->get(['name', 'slug', 'logo_url', 'show_in_services', 'show_in_parts', 'show_in_dyp']);
+            ->get(['name', 'slug', 'logo_url', 'is_active', 'show_in_services', 'show_in_parts', 'show_in_dyp']);
 
         return response()->json([
             'cars' => $cars,

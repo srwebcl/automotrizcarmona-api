@@ -50,7 +50,7 @@ class BrandResource extends Resource
                 Forms\Components\Section::make('Estado')
                     ->schema([
                         Forms\Components\Toggle::make('is_active')
-                            ->label('¿Marca Activa?')
+                            ->label('¿Activa en Ventas (Catálogo Nuevos)?')
                             ->default(true),
                     ]),
 
