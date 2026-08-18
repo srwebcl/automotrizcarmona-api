@@ -36,7 +36,10 @@ class LeadStoreRequest extends FormRequest
             'vehicle.vin' => 'nullable|string',
             'request_details' => 'nullable|array',
             'request_details.service_type' => 'nullable|string',
-            'request_details.message' => 'nullable|string'
+            'request_details.message' => 'nullable|string',
+            // Resultado del envío a Salesforce (integración Toyota, ver Next.js lib/salesforce.ts)
+            'salesforce_synced' => 'nullable|boolean',
+            'salesforce_error' => 'nullable|string',
         ];
     }
 }

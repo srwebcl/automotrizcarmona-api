@@ -38,7 +38,34 @@ class LeadController extends Controller
 
         $directForms = ['contacto', 'reclamos', 'dyp', 'promociones'];
 
-        if (in_array(strtolower($lead->source), $directForms)) {
+        $vehicleBrand = strtolower($validated['vehicle']['brand_name'] ?? '');
+        $isToyotaVentas = strtolower($lead->source) === 'ventas' && $vehicleBrand === 'toyota';
+
+        if ($isToyotaVentas) {
+            // Los leads Toyota de "ventas" ya se intentaron sincronizar con Salesforce desde el
+            // BFF de Next.js (ver lib/salesforce.ts). Nunca deben viajar a Tecnom. Si Salesforce
+            // falló, avisamos por correo para que se gestionen a mano en vez de perder el lead.
+            $salesforceSynced = (bool) ($validated['salesforce_synced'] ?? false);
+
+            if (!$salesforceSynced) {
+                $recipientConfig = \App\Models\FormRecipient::firstOrCreate(
+                    ['identifier' => 'salesforce_rejected'],
+                    [
+                        'name' => 'Alerta: Lead Toyota rechazado por Salesforce',
+                        'emails' => ['contacto@carmonaycia.cl']
+                    ]
+                );
+
+                if ($recipientConfig && !empty($recipientConfig->emails)) {
+                    try {
+                        \Illuminate\Support\Facades\Mail::to($recipientConfig->emails)
+                            ->send(new \App\Mail\SalesforceRejectedLeadMail($lead, $validated['salesforce_error'] ?? null));
+                    } catch (\Throwable $e) {
+                        Log::error("Error enviando alerta de lead Toyota rechazado por Salesforce: id={$lead->id} " . $e->getMessage());
+                    }
+                }
+            }
+        } elseif (in_array(strtolower($lead->source), $directForms)) {
             // Aseguramos que exista el registro para que pueda ser gestionado desde "Emails Formularios" en Filament
             $recipientConfig = \App\Models\FormRecipient::firstOrCreate(
                 ['identifier' => strtolower($lead->source)],
