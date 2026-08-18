@@ -13,6 +13,8 @@ class LandingResource extends JsonResource
             'slug' => $this->slug,
             'title' => $this->title,
             'subtitle' => $this->subtitle,
+            'badge_text' => $this->badge_text,
+            'badge_logo_url' => $this->badge_logo_url ? (str_starts_with($this->badge_logo_url, 'http') ? $this->badge_logo_url : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($this->badge_logo_url, '/')) : null,
             'desktop_banner_url' => $this->desktop_banner_url ? (str_starts_with($this->desktop_banner_url, 'http') ? $this->desktop_banner_url : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($this->desktop_banner_url, '/')) : null,
             'mobile_banner_url' => $this->mobile_banner_url ? (str_starts_with($this->mobile_banner_url, 'http') ? $this->mobile_banner_url : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($this->mobile_banner_url, '/')) : null,
             'is_active' => (bool) $this->is_active,
