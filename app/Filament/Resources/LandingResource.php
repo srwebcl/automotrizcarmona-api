@@ -53,6 +53,21 @@ class LandingResource extends Resource
                             ->default(true),
                     ])->columns(2),
 
+                Section::make('Tag / Badge de Tarjetas')
+                    ->description('Se muestra en cada tarjeta de vehículo. Si subes un logo, tiene prioridad sobre el texto. Si dejas ambos vacíos, se usa el texto "Liquidación" por defecto.')
+                    ->schema([
+                        TextInput::make('badge_text')
+                            ->label('Texto del Tag')
+                            ->placeholder('Ej: Liquidatón')
+                            ->helperText('Reemplaza el texto "Liquidación" del tag rojo en cada tarjeta.'),
+                        FileUpload::make('badge_logo_url')
+                            ->label('Logo del Tag (opcional)')
+                            ->disk('r2')
+                            ->directory('landings')
+                            ->fetchFileInformation(false)
+                            ->helperText('Si se sube un logo, reemplaza completamente el tag de texto.'),
+                    ])->columns(2),
+
                 Section::make('Multimedia (Banners)')
                     ->schema([
                         FileUpload::make('desktop_banner_url')

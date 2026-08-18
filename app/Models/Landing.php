@@ -10,6 +10,8 @@ class Landing extends Model
         'slug',
         'title',
         'subtitle',
+        'badge_text',
+        'badge_logo_url',
         'desktop_banner_url',
         'mobile_banner_url',
         'is_active'
