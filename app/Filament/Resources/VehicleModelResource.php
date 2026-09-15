@@ -100,13 +100,15 @@ class VehicleModelResource extends Resource
                                         Forms\Components\Fieldset::make('Estado y Etiquetas')
                                             ->schema([
                                                 Toggle::make('includes_iva')->label('Precios Incluyen IVA')->default(true)->columnSpanFull(),
+                                                // Fila 1: estado general del modelo
                                                 Toggle::make('is_active')->label('Activo')->default(true),
                                                 Toggle::make('is_featured')->label('Destacado'),
+                                                Toggle::make('is_promotion')->label('En Promoción')->live(),
+                                                // Fila 2: etiquetas de motorización/combustible
                                                 Toggle::make('is_hybrid')->label('Híbrido'),
                                                 Toggle::make('is_electric')->label('Eléctrico'),
                                                 Toggle::make('is_microhybrid')->label('Microhíbrido'),
-                                                Toggle::make('is_promotion')->label('En Promoción')->live(),
-                                            ])->columns(6),
+                                            ])->columns(3),
                                     ])->columns(2),
 
                                 Tabs\Tab::make('Promociones')
