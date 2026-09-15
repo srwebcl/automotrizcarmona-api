@@ -32,6 +32,7 @@ class EcoModelResource extends Resource
                 Tables\Columns\TextColumn::make('name')->label('Modelo')->searchable(),
                 Tables\Columns\ToggleColumn::make('is_electric')->label('Eléctrico'),
                 Tables\Columns\ToggleColumn::make('is_hybrid')->label('Híbrido'),
+                Tables\Columns\ToggleColumn::make('is_microhybrid')->label('Microhíbrido'),
             ])
             ->filters([])
             ->actions([])
@@ -44,7 +45,8 @@ class EcoModelResource extends Resource
             ->with(['brand'])
             ->where(function($q) {
                 $q->where('is_electric', true)
-                  ->orWhere('is_hybrid', true);
+                  ->orWhere('is_hybrid', true)
+                  ->orWhere('is_microhybrid', true);
             });
     }
 

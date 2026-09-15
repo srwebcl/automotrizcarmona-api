@@ -104,8 +104,9 @@ class VehicleModelResource extends Resource
                                                 Toggle::make('is_featured')->label('Destacado'),
                                                 Toggle::make('is_hybrid')->label('Híbrido'),
                                                 Toggle::make('is_electric')->label('Eléctrico'),
+                                                Toggle::make('is_microhybrid')->label('Microhíbrido'),
                                                 Toggle::make('is_promotion')->label('En Promoción')->live(),
-                                            ])->columns(5),
+                                            ])->columns(6),
                                     ])->columns(2),
 
                                 Tabs\Tab::make('Promociones')

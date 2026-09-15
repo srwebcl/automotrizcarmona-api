@@ -172,7 +172,8 @@ class CatalogController extends Controller
         $models = VehicleModel::where('is_active', true)
             ->where(function($query) {
                 $query->where('is_hybrid', true)
-                      ->orWhere('is_electric', true);
+                      ->orWhere('is_electric', true)
+                      ->orWhere('is_microhybrid', true);
             })
             ->with(['brand', 'vehicleVersions'])
             ->orderBy('eco_order', 'asc')

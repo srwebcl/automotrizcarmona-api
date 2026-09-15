@@ -20,6 +20,7 @@ class VehicleModelResource extends JsonResource
             'thumbnail_url' => $this->thumbnail_url ? (str_starts_with($this->thumbnail_url, 'http') ? $this->thumbnail_url : 'https://pub-5f17f36d654d46e6a6a748a95586b21f.r2.dev/' . ltrim($this->thumbnail_url, '/')) : null,
             'is_hybrid' => (bool) $this->is_hybrid,
             'is_electric' => (bool) $this->is_electric,
+            'is_microhybrid' => (bool) $this->is_microhybrid,
             'is_featured' => (bool) $this->is_featured,
             'is_active' => (bool) $this->is_active,
             'is_promotion' => (bool) $this->is_promotion,
