@@ -123,7 +123,7 @@ class VehicleVersionResource extends Resource
                                 $set('finance_price', max(0, $list - $brand - $fin));
                             }),
                         TextInput::make('vpp_bonus')
-                            ->label('Bono Vehículo en parte de pago (VPP) ($)')
+                            ->label('Bono VPP')
                             ->numeric()
                             ->prefix('$')
                             ->nullable()
