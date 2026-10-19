@@ -206,13 +206,14 @@ class VehicleModelResource extends Resource
                                             TextInput::make('traction')->label('Tracción'),
                                             TextInput::make('fuel')->label('Combustible'),
                                         ]),
-                                        Forms\Components\Grid::make(4)->schema([
+                                        Forms\Components\Grid::make(5)->schema([
                                             TextInput::make('list_price')->label('Precio Lista')->numeric()->prefix('$')->live(onBlur: true)
                                                 ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
                                             TextInput::make('brand_bonus')->label('Bono Marca')->numeric()->prefix('$')->live(onBlur: true)
                                                 ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
                                             TextInput::make('finance_bonus')->label('Bono Financ.')->numeric()->prefix('$')->live(onBlur: true)
                                                 ->afterStateUpdated(fn ($get, $set) => $set('finance_price', max(0, (int)$get('list_price') - (int)$get('brand_bonus') - (int)$get('finance_bonus')))),
+                                            TextInput::make('vpp_bonus')->label('Bono VPP')->numeric()->prefix('$')->nullable()->helperText('Vehículo en parte de pago'),
                                             TextInput::make('finance_price')->label('Precio Final')->numeric()->prefix('$')->disabled()->dehydrated(false),
                                         ]),
                                         Forms\Components\Grid::make(4)->schema([

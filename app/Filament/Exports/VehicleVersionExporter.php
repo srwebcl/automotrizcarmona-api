@@ -24,6 +24,7 @@ class VehicleVersionExporter extends Exporter
             ExportColumn::make('list_price')->label('Precio Lista'),
             ExportColumn::make('brand_bonus')->label('Bono Marca'),
             ExportColumn::make('finance_bonus')->label('Bono Financiamiento'),
+            ExportColumn::make('vpp_bonus')->label('Bono VPP'),
             ExportColumn::make('finance_price')->label('Precio con Financiamiento'),
         ];
     }

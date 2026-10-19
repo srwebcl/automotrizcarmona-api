@@ -122,6 +122,12 @@ class VehicleVersionResource extends Resource
                                 $fin = (int) $get('finance_bonus') ?: 0;
                                 $set('finance_price', max(0, $list - $brand - $fin));
                             }),
+                        TextInput::make('vpp_bonus')
+                            ->label('Bono Vehículo en parte de pago (VPP) ($)')
+                            ->numeric()
+                            ->prefix('$')
+                            ->nullable()
+                            ->helperText('Opcional. Bono al entregar vehículo usado en parte de pago.'),
                         TextInput::make('finance_price')
                             ->label('Precio con Financiamiento ($)')
                             ->numeric()
@@ -129,7 +135,7 @@ class VehicleVersionResource extends Resource
                             ->disabled()
                             ->dehydrated(false)
                             ->helperText('Auto-calculado al guardar'),
-                    ])->columns(4),
+                    ])->columns(5),
             ]);
     }
 
@@ -183,6 +189,11 @@ class VehicleVersionResource extends Resource
                     ->extraAttributes(['style' => 'min-width: 120px;']),
                 Tables\Columns\TextInputColumn::make('finance_bonus')
                     ->label('Bono Financ ($)')
+                    ->type('number')
+                    ->sortable()
+                    ->extraAttributes(['style' => 'min-width: 120px;']),
+                Tables\Columns\TextInputColumn::make('vpp_bonus')
+                    ->label('Bono VPP ($)')
                     ->type('number')
                     ->sortable()
                     ->extraAttributes(['style' => 'min-width: 120px;']),

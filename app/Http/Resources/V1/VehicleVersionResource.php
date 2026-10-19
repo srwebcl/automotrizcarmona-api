@@ -23,6 +23,7 @@ class VehicleVersionResource extends JsonResource
             'list_price' => (int) $this->list_price,
             'brand_bonus' => (int) $this->brand_bonus,
             'financing_bonus' => (int) $this->finance_bonus,
+            'vpp_bonus' => (int) ($this->vpp_bonus ?? 0),
             'final_price' => (int) $this->finance_price,
             'airbags' => $this->airbags,
             'includes_iva' => $this->includes_iva,

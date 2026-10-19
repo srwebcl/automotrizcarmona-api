@@ -10,7 +10,7 @@ class VehicleVersion extends Model
     protected $fillable = [
         'vehicle_model_id', 'name', 'sap_material_code', 'transmission', 'traction', 'fuel', 
         'engine', 'power_hp', 'torque_nm', 'mixed_performance', 'autonomy_km',
-        'list_price', 'finance_price', 'brand_bonus', 'finance_bonus',
+        'list_price', 'finance_price', 'brand_bonus', 'finance_bonus', 'vpp_bonus',
         'includes_iva', 'airbags', 'thumbnail'
     ];
 
@@ -19,6 +19,7 @@ class VehicleVersion extends Model
         'finance_price' => 'integer',
         'brand_bonus' => 'integer',
         'finance_bonus' => 'integer',
+        'vpp_bonus' => 'integer',
         'includes_iva' => 'boolean',
         'airbags' => 'integer',
     ];
