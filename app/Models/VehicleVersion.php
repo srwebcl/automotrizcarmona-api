@@ -34,7 +34,8 @@ class VehicleVersion extends Model
         static::saving(function ($version) {
             $brandBonus = $version->brand_bonus ?? 0;
             $financeBonus = $version->finance_bonus ?? 0;
-            $version->finance_price = max(0, ($version->list_price ?? 0) - $brandBonus - $financeBonus);
+            $vppBonus = $version->vpp_bonus ?? 0;
+            $version->finance_price = max(0, ($version->list_price ?? 0) - $brandBonus - $financeBonus - $vppBonus);
         });
     }
 }

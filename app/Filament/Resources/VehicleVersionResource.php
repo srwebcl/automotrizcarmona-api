@@ -98,7 +98,8 @@ class VehicleVersionResource extends Resource
                                 $list = (int) $get('list_price') ?: 0;
                                 $brand = (int) $get('brand_bonus') ?: 0;
                                 $fin = (int) $get('finance_bonus') ?: 0;
-                                $set('finance_price', max(0, $list - $brand - $fin));
+                                $vpp = (int) $get('vpp_bonus') ?: 0;
+                                $set('finance_price', max(0, $list - $brand - $fin - $vpp));
                             }),
                         TextInput::make('brand_bonus')
                             ->label('Bono Marca ($)')
@@ -109,7 +110,8 @@ class VehicleVersionResource extends Resource
                                 $list = (int) $get('list_price') ?: 0;
                                 $brand = (int) $get('brand_bonus') ?: 0;
                                 $fin = (int) $get('finance_bonus') ?: 0;
-                                $set('finance_price', max(0, $list - $brand - $fin));
+                                $vpp = (int) $get('vpp_bonus') ?: 0;
+                                $set('finance_price', max(0, $list - $brand - $fin - $vpp));
                             }),
                         TextInput::make('finance_bonus')
                             ->label('Bono Financiamiento ($)')
@@ -120,13 +122,22 @@ class VehicleVersionResource extends Resource
                                 $list = (int) $get('list_price') ?: 0;
                                 $brand = (int) $get('brand_bonus') ?: 0;
                                 $fin = (int) $get('finance_bonus') ?: 0;
-                                $set('finance_price', max(0, $list - $brand - $fin));
+                                $vpp = (int) $get('vpp_bonus') ?: 0;
+                                $set('finance_price', max(0, $list - $brand - $fin - $vpp));
                             }),
                         TextInput::make('vpp_bonus')
                             ->label('Bono VPP')
                             ->numeric()
                             ->prefix('$')
                             ->nullable()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
+                                $list = (int) $get('list_price') ?: 0;
+                                $brand = (int) $get('brand_bonus') ?: 0;
+                                $fin = (int) $get('finance_bonus') ?: 0;
+                                $vpp = (int) $get('vpp_bonus') ?: 0;
+                                $set('finance_price', max(0, $list - $brand - $fin - $vpp));
+                            })
                             ->helperText('Opcional. Bono al entregar vehículo usado en parte de pago.'),
                         TextInput::make('finance_price')
                             ->label('Precio con Financiamiento ($)')
