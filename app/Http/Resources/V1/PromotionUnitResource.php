@@ -12,11 +12,14 @@ class PromotionUnitResource extends JsonResource
         return [
             'id' => $this->id,
             'vin' => $this->vin,
+            'thumbnail' => $this->thumbnail,
             'version_name' => $this->version_name,
             'list_price' => (int) $this->list_price,
             'promo_bonus' => (int) $this->promo_bonus,
             'promo_price' => (int) $this->promo_price,
+            'price_type' => $this->price_type ?? 'financiamiento',
             'status' => $this->status,
+            'is_test_car' => (bool) $this->is_test_car,
             'is_active' => (bool) $this->is_active,
         ];
     }

@@ -10,11 +10,14 @@ class PromotionUnit extends Model
     protected $fillable = [
         'vehicle_model_id',
         'vin',
+        'thumbnail',
         'version_name',
         'list_price',
         'promo_bonus',
         'promo_price',
+        'price_type',
         'status',
+        'is_test_car',
         'is_active',
         'order'
     ];
@@ -22,6 +25,7 @@ class PromotionUnit extends Model
     protected $casts = [
         'promo_bonus' => 'integer',
         'promo_price' => 'integer',
+        'is_test_car' => 'boolean',
         'is_active' => 'boolean'
     ];
 

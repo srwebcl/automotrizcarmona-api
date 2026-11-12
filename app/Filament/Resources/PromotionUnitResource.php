@@ -47,6 +47,14 @@ class PromotionUnitResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->label('N° VIN / Chasis'),
+                Forms\Components\FileUpload::make('thumbnail')
+                    ->label('Miniatura Personalizada')
+                    ->disk('r2')
+                    ->directory('promotion-units')
+                    ->image()
+                    ->nullable()
+                    ->helperText('Opcional. Si no se carga, se usa la foto genérica del modelo.')
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('version_name')
                     ->maxLength(255)
                     ->label('Nombre de Versión'),
@@ -67,6 +75,15 @@ class PromotionUnitResource extends Resource
                     ->default(0)
                     ->prefix('$')
                     ->label('Bono Liquidación ($)'),
+                Forms\Components\Select::make('price_type')
+                    ->options([
+                        'financiamiento' => 'Precio con financiamiento',
+                        'todo_medio_pago' => 'Precio con todo medio de pago',
+                    ])
+                    ->required()
+                    ->default('financiamiento')
+                    ->label('Condición del Precio')
+                    ->helperText('Define el texto legal que se muestra bajo el precio en la web.'),
                 Forms\Components\Select::make('status')
                     ->options([
                         'disponible' => 'Disponible',
@@ -81,6 +98,9 @@ class PromotionUnitResource extends Resource
                     ->numeric()
                     ->default(0)
                     ->label('Orden de Visualización'),
+                Forms\Components\Toggle::make('is_test_car')
+                    ->label('Es Test Car')
+                    ->helperText('Marca esta unidad como vehículo de pruebas (tiene kilometraje de uso). Se muestra un badge "Test Car" en la web.'),
                 Forms\Components\Toggle::make('is_active')
                     ->required()
                     ->label('Activo / Disponible'),
@@ -93,6 +113,10 @@ class PromotionUnitResource extends Resource
             ->reorderable('order')
             ->defaultSort('order', 'asc')
             ->columns([
+                Tables\Columns\ImageColumn::make('thumbnail')
+                    ->disk('r2')
+                    ->label('Foto')
+                    ->square(),
                 Tables\Columns\TextColumn::make('vehicleModel.name')
                     ->numeric()
                     ->sortable()
@@ -118,6 +142,14 @@ class PromotionUnitResource extends Resource
                     ->money('clp')
                     ->sortable()
                     ->label('Precio Liq.'),
+                Tables\Columns\TextColumn::make('price_type')
+                    ->label('Tipo Precio')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => $state === 'todo_medio_pago' ? 'Todo medio de pago' : 'Financiamiento')
+                    ->color(fn (string $state): string => $state === 'todo_medio_pago' ? 'success' : 'gray'),
+                Tables\Columns\IconColumn::make('is_test_car')
+                    ->label('Test Car')
+                    ->boolean(),
                 Tables\Columns\SelectColumn::make('status')
                     ->options([
                         'disponible' => 'Disponible',
