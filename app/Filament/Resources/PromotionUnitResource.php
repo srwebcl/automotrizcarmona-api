@@ -51,7 +51,7 @@ class PromotionUnitResource extends Resource
                     ->label('Miniatura Personalizada')
                     ->disk('r2')
                     ->directory('promotion-units')
-                    ->image()
+                    ->fetchFileInformation(false)
                     ->nullable()
                     ->helperText('Opcional. Si no se carga, se usa la foto genérica del modelo.')
                     ->columnSpanFull(),
